@@ -1,2 +1,4 @@
-# slow-monitor
+pg-monitor
+==========
+
 Slow monitor using PostgreSQL
