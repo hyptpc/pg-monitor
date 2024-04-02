@@ -25,6 +25,14 @@ handlers:
   rich:
     class: rich.logging.RichHandler
     rich_tracebacks: True
+  recorderHandler:
+    class: logging.handlers.TimedRotatingFileHandler
+    filename: log/recorder.log
+    formatter: detailed
+    when: midnight
+    # interval: 1
+    backupCount: 10
+    encoding: utf-8
 loggers:
   __main__:
     handlers:
@@ -32,15 +40,10 @@ loggers:
     # - consoleHandler
     - fileHandler
     propagate: false
-  lower.sub:
+  recorder:
     handlers:
-    - consoleHandler
-    # - fileHandler
-    propagate: false
-  same_hierarchy:
-    handlers:
-    - consoleHandler
-    # - fileHandler
+    - rich
+    - recorderHandler
     propagate: false
 root:
   level: INFO
