@@ -73,7 +73,7 @@ class ESS:
       cursor.executemany(sql, insert_list)
       if alert:
         logger.warning('detect alert')
-        subprocess.run(['aplay', '/home/oper/postgres/e73/alert_sound.wav'])
+        subprocess.run(['aplay', '/home/oper/pg-monitor/sound/alert_sound.wav'])
     except (psycopg.Error or psycopg.OperationalError) as e:
       if connection is not None:
         connection.rollback()
