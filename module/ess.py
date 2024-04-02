@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+__author__ = 'Shuhei Hayakawa'
+
 import datetime
 import logging
 import pandas as pd
@@ -38,10 +40,11 @@ class ESS:
 
   def __updater(self):
     logger.debug(datetime.datetime.now())
-    connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
-    cursor = connection.cursor()
+    connection = None
     alert = False
     try:
+      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
       data = self.__parse()
@@ -71,9 +74,10 @@ class ESS:
       if alert:
         logger.warning('detect alert')
         subprocess.run(['aplay', '/home/oper/postgres/e73/alert_sound.wav'])
-    except psycopg.Error as e:
-      connection.rollback()
-      logger.error(e.diag.message_primary)
+    except (psycopg.Error or psycopg.OperationalError) as e:
+      if connection is not None:
+        connection.rollback()
+      logger.error(e)
       return
     except KeyboardInterrupt:
       return

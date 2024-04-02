@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+__author__ = 'Shuhei Hayakawa'
+
 import datetime
 import json
 import logging
@@ -66,7 +68,10 @@ class GL840(html.parser.HTMLParser):
   def __updater(self):
     self.parse()
     logger.debug(datetime.datetime.now())
+    connection = None
     try:
+      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      cursor = connection.cursor()
       insert_list = []
       data = self.get_data()
       for key in data:
@@ -78,18 +83,19 @@ class GL840(html.parser.HTMLParser):
         tap = (self.ip_address, now, channel, channel_name, value, unit)
         insert_list.append(tap)
       sql = 'insert into gl840 (ip_address, timestamp, channel, channel_name, value, unit) values(%s,%s,%s,%s,%s,%s)'
-      self.cursor.executemany(sql, insert_list)
-    except psycopg.Error as e:
-      self.connection.rollback()
-      logger.error(e.diag.message_primary)
+      cursor.executemany(sql, insert_list)
+    except (psycopg.Error or psycopg.OperationalError) as e:
+      if connection is not None:
+        connection.rollback()
+      logger.error(e)
       return
     except KeyboardInterrupt:
       return
-    self.connection.commit()
+    connection.commit()
+    cursor.close()
+    connection.close()
 
   def run(self):
-    self.connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
-    self.cursor = self.connection.cursor()
     base_time = time.time()
     next_time = 0
     while not self.will_stop:
@@ -103,8 +109,6 @@ class GL840(html.parser.HTMLParser):
         time.sleep(next_time)
       except KeyboardInterrupt:
         break
-    self.cursor.close()
-    self.connection.close()
 
   def start(self):
     logger.debug('start')

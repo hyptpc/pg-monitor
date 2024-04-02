@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+__author__ = 'Shuhei Hayakawa'
+
 import datetime
 import logging
 import pytz
@@ -21,9 +23,10 @@ class KIKUSUI:
 
   def __updater(self):
     logger.debug(datetime.datetime.now())
-    connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
-    cursor = connection.cursor()
+    connection = None
     try:
+      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
       device = pmx_a.PMX_A(self.ip_address, timeout=1.0, debug=False)
@@ -42,9 +45,10 @@ class KIKUSUI:
              '(ip_address, idn, channel, timestamp, output, meas_volt, meas_curr) '+
              'values(%s,%s,%s,%s, %s, %s, %s)')
       cursor.executemany(sql, insert_list)
-    except psycopg.Error as e:
-      connection.rollback()
-      logger.error(e.diag.message_primary)
+    except (psycopg.Error or psycopg.OperationalError) as e:
+      if connection is not None:
+        connection.rollback()
+      logger.error(e)
       return
     except KeyboardInterrupt:
       return

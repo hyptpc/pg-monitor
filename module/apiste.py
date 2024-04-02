@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+__author__ = 'Shuhei Hayakawa'
+
 from pyModbusTCP.client import ModbusClient
 import struct
 import datetime
@@ -53,9 +55,10 @@ class Apiste():
 
   def __updater(self):
     logger.debug(f'update {datetime.datetime.now()}')
-    connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
-    cursor = connection.cursor()
+    connection = None
     try:
+      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      cursor = connection.cursor()
       insert_list = []
       data = self.log()
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
@@ -65,9 +68,10 @@ class Apiste():
              '(ip_address, timestamp, status, tmon, tset) '
              +'values(%s,%s,%s,%s,%s)')
       cursor.executemany(sql, insert_list)
-    except psycopg.Error as e:
-      connection.rollback()
-      logger.error(e.diag.message_primary)
+    except (psycopg.Error or psycopg.OperationalError) as e:
+      if connection is not None:
+        connection.rollback()
+      logger.error(e)
       return
     except KeyboardInterrupt:
       return
