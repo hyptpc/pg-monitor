@@ -1,5 +1,8 @@
 *~
 \#*
+*.[ado]
+bin/
+old/
 __pycache__
 .DS_Store
 *.gz
