@@ -1,6 +1,6 @@
 CREATE TABLE scaler
-(ip_address  TEXT,
- timestamp   TIMESTAMP WITH TIME ZONE,
+(timestamp   TIMESTAMP WITH TIME ZONE,
+ ip_address  TEXT,
  trigger     TEXT,
  channel     INTEGER,
  name        TEXT,

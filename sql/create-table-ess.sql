@@ -1,6 +1,6 @@
 CREATE TABLE ess
-(name  TEXT,
- timestamp   TIMESTAMP WITH TIME ZONE,
+(timestamp   TIMESTAMP WITH TIME ZONE,
+ name  TEXT,
  electrode   TEXT,
  vset        REAL,
  vmon        REAL,

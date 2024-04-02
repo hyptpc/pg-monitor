@@ -1,6 +1,6 @@
 CREATE TABLE gl840
-(ip_address   TEXT,
- timestamp    TIMESTAMP WITH TIME ZONE,
+(timestamp    TIMESTAMP WITH TIME ZONE,
+ ip_address   TEXT,
  channel      INTEGER,
  channel_name TEXT,
  value	      REAL,

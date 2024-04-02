@@ -1,6 +1,6 @@
 CREATE TABLE caenhv
-(ip_address   TEXT,
- timestamp   TIMESTAMP WITH TIME ZONE,
+(timestamp   TIMESTAMP WITH TIME ZONE,
+ ip_address   TEXT,
  crate_type   TEXT,
  board_slot   INTEGER,
  board_name   TEXT,
