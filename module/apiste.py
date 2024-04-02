@@ -11,8 +11,11 @@ import pytz
 import threading
 import time
 
+import pgpass
+
 logger = logging.getLogger('__main__').getChild(__name__)
 
+#______________________________________________________________________________
 class Apiste():
   def __init__(self, ip_address='192.168.1.20', interval=10):
     self.interval = interval
@@ -57,7 +60,7 @@ class Apiste():
     logger.debug(f'update {datetime.datetime.now()}')
     connection = None
     try:
-      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       data = self.log()

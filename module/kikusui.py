@@ -10,6 +10,7 @@ import random
 import time
 import threading
 
+import pgpass
 import pmx_a
 
 logger = logging.getLogger('__main__').getChild(__name__)
@@ -25,7 +26,7 @@ class KIKUSUI:
     logger.debug(datetime.datetime.now())
     connection = None
     try:
-      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))

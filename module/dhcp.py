@@ -10,6 +10,8 @@ import re
 import threading
 import time
 
+import pgpass
+
 logger = logging.getLogger('__main__').getChild(__name__)
 
 class DHCP:
@@ -17,13 +19,6 @@ class DHCP:
     self.interval = interval
     self.dhcp_conf_path = '/misc/sbc-etc-dhcp/dhcpd.conf'
     self.dhcp_leases_path = '/misc/sbc-var-dhcpd/dhcpd.leases'
-    self.db_connection_info = {
-      'dbname': 'e73',
-      'user': 'postgres',
-      'password': 'pg',
-      'host': 'localhost',
-      'port': '5432'
-    }
     self.hosts = dict()
     self.will_stop = False
 
@@ -53,7 +48,7 @@ class DHCP:
   def __insert_hosts_to_postgres(self):
     conn = None
     try:
-      conn = psycopg.connect(**self.db_connection_info)
+      conn = psycopg.connect(pgpass.pgpass)
       cur = conn.cursor()
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
       for ip in self.hosts:

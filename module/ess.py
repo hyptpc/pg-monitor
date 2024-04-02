@@ -11,6 +11,8 @@ import subprocess
 import threading
 import time
 
+import pgpass
+
 logger = logging.getLogger('__main__').getChild(__name__)
 
 class ESS:
@@ -43,7 +45,7 @@ class ESS:
     connection = None
     alert = False
     try:
-      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))

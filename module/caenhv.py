@@ -14,6 +14,8 @@ import sys
 import time
 import threading
 
+import pgpass
+
 logger = logging.getLogger('__main__').getChild(__name__)
 
 tablename = 'caenhv'
@@ -63,7 +65,7 @@ class CAENHV:
     logger.debug(f'update {datetime.datetime.now()}')
     connection = None
     try:
-      connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
+      connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       data = self.__get_caen_data()
