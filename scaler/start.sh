@@ -5,7 +5,7 @@ top_dir=$(dirname $(readlink -f $0))
 name=pg-scaler
 
 session=`tmux ls | grep $name 2>/dev/null`
-command=$top_dir/bin/scaler
+command="while true; do $top_dir/bin/scaler; sleep 2; done"
 
 if [ -z "$session" ]; then
     echo "create new session $name"
