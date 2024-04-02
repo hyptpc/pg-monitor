@@ -14,10 +14,14 @@ handlers:
     formatter: simple
     # formatter: debug
     stream: ext://sys.stdout
-  # fileHandler:
-  #   class: logging.FileHandler
-  #   filename: /dev/null # to be replaced if you want to save file
-  #   formatter: simple
+  fileHandler:
+    class: logging.handlers.TimedRotatingFileHandler
+    filename: log/run.log
+    formatter: detailed
+    when: midnight
+    # interval: 1
+    backupCount: 10
+    encoding: utf-8
   rich:
     class: rich.logging.RichHandler
     rich_tracebacks: True
@@ -26,7 +30,7 @@ loggers:
     handlers:
     - rich # Rich output; You need to run 'conda install rich' in advance.
     # - consoleHandler
-    # - fileHandler
+    - fileHandler
     propagate: false
   lower.sub:
     handlers:
