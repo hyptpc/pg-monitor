@@ -1,5 +1,6 @@
-CREATE TABLE dhcp_hosts
-(ip_address  TEXT,
+CREATE TABLE dhcp
+(timestamp  TIMESTAMP WITH TIME ZONE,
+ ip_address  TEXT,
  host_name   TEXT,
  start_time  TIMESTAMP WITH TIME ZONE,
  end_time    TIMESTAMP WITH TIME ZONE,

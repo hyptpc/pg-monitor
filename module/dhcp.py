@@ -5,6 +5,7 @@ __author__ = 'Shuhei Hayakawa'
 import datetime
 import logging
 import psycopg
+import pytz
 import re
 import threading
 import time
@@ -54,6 +55,7 @@ class DHCP:
     try:
       conn = psycopg.connect(**self.db_connection_info)
       cur = conn.cursor()
+      now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
       for ip in self.hosts:
         host = self.hosts[ip]
         host_name = host['host_name'] if 'host_name' in host else ''
@@ -61,8 +63,8 @@ class DHCP:
         end_time = host['end_time'] if 'end_time' in host else None
         state = host['state'] if 'state' in host else None
         mac_address = host['mac_address'] if 'mac_address' in host else None
-        tap = (ip, host_name, start_time, end_time, state, mac_address)
-        cur.execute("INSERT INTO dhcp_hosts (ip_address, host_name, start_time, end_time, state, mac_address) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT (ip_address) DO UPDATE SET host_name=EXCLUDED.host_name, start_time=EXCLUDED.start_time, end_time=EXCLUDED.end_time, state=EXCLUDED.state, mac_address=EXCLUDED.mac_address;", tap)
+        tap = (now, ip, host_name, start_time, end_time, state, mac_address)
+        cur.execute("INSERT INTO dhcp (timestamp, ip_address, host_name, start_time, end_time, state, mac_address) VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (ip_address) DO UPDATE SET host_name=EXCLUDED.host_name, start_time=EXCLUDED.start_time, end_time=EXCLUDED.end_time, state=EXCLUDED.state, mac_address=EXCLUDED.mac_address;", tap)
         logger.debug(f'{tap}')
     except (psycopg.Error or psycopg.OperationalError) as e:
       if conn is not None:

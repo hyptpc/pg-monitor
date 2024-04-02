@@ -36,6 +36,7 @@ def signal_handler(signum, frame):
   for m in modules:
     m.stop()
 
+#______________________________________________________________________________
 def run():
   log_conf = os.path.join(top_dir, 'logging_config.yml')
   with open(log_conf, 'r') as f:
@@ -50,6 +51,7 @@ def run():
     t.join()
   logger.info('bye')
 
+#______________________________________________________________________________
 if __name__ == '__main__':
   run()
   
