@@ -10,6 +10,7 @@ import pytz
 import subprocess
 import threading
 import time
+import urllib
 
 import pgpass
 
@@ -23,7 +24,11 @@ class ESS:
     self.wait = True
 
   def __parse(self):
-    return pd.read_html(self.url)
+    try:
+      return pd.read_html(self.url)
+    except urllib.error.HTTPError as e:
+      logger.error(e)
+      return []
 
   def run(self):
     base_time = time.time()
@@ -45,13 +50,13 @@ class ESS:
     connection = None
     alert = False
     try:
+      data = self.__parse()
+      if len(data) < 3:
+        return
       connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-      data = self.__parse()
-      if len(data) < 3:
-        return
       for i in range(2):
         logger.debug(data[i])
         name = f'ESS{i+1}'
@@ -74,7 +79,7 @@ class ESS:
              +'values(%s,%s,%s,%s,%s,%s,%s)')
       cursor.executemany(sql, insert_list)
       if alert:
-        logger.warning('detect alert')
+        logger.warning(f'detect alert {insert_list}')
         subprocess.run(['aplay', '/home/oper/pg-monitor/sound/alert_sound.wav'])
     except (psycopg.Error or psycopg.OperationalError) as e:
       if connection is not None:

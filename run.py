@@ -18,6 +18,7 @@ top_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(top_dir, 'module'))
 
 ''' modules '''
+import accelerator
 import apiste
 import caenhv
 import dhcp
@@ -26,7 +27,7 @@ import gl840
 import kikusui
 
 logger = logging.getLogger(__name__)
-modules = [apiste, caenhv, dhcp, ess, gl840, kikusui]
+modules = [accelerator, apiste, caenhv, dhcp, ess, gl840, kikusui]
 
 #________________________________________________________________
 def signal_handler(signum, frame):
