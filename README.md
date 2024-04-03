@@ -10,7 +10,7 @@ Install several python packages.
 ``` sh
 sudo dnf install python3-pip perl-devel perl-FindBin
 pip3 install --user -U pip
-pip3 install --user -U psycopg pytz pandas lxml html5lib beautifulsoup4
+pip3 install --user -U psycopg pytz pandas lxml html5lib beautifulsoup4 pyepics
 ```
 
 Disable Firewall and SELinux.
@@ -50,4 +50,15 @@ Install EPICS base.
 ```sh
 cd epics
 ./build.sh
+```
+
+Add EPICS environment to .bash_profile.
+
+```sh
+export EPICS_TOP=/path/to/epics/base
+export PATH=$PATH:$EPICS_TOP/bin/linux-x86_64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EPICS_TOP/lib/linux-x86_64
+export EPICS_CA_AUTO_ADDR_LIST=no
+export EPICS_CA_ADDR_LIST=192.153.109.232 # jlandmzcagw01.j-parc.jp
+export PYEPICS_LIBCA=$EPICS_TOP/lib/linux-x86_64/libca.so
 ```
