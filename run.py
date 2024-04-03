@@ -25,12 +25,13 @@ import caenhv
 import dhcp
 import ess
 import gl840
+import hddaq
 import kikusui
 import magnet
 
 logger = logging.getLogger(__name__)
 modules = [accelerator, apiste, beam,
-           caenhv, dhcp, ess, gl840, kikusui,
+           caenhv, dhcp, ess, gl840, hddaq, kikusui,
            magnet]
 
 #________________________________________________________________
