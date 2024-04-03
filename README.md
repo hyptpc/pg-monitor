@@ -8,7 +8,7 @@ Try to create a slow monitor using PostgreSQL as a test.
 Install several python packages.
 
 ``` sh
-sudo dnf install python3-pip
+sudo dnf install python3-pip perl-devel perl-FindBin
 pip3 install --user -U pip
 pip3 install --user -U psycopg pytz pandas lxml html5lib beautifulsoup4
 ```
@@ -22,7 +22,7 @@ sudo nano /etc/selinux/config
 sudo reboot
 ```
 
-## Install PostgreSQL 16
+## Install PostgreSQL
 
 ``` sh
 # Install the repository RPM:
@@ -35,7 +35,7 @@ sudo dnf -qy module disable postgresql
 sudo dnf install -y postgresql16-server
 ```
 
-## Setup
+## Setup PostgreSQL
 
 ```sh
 # Initialize the database:
@@ -43,4 +43,11 @@ sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
 
 # Enable and start the server:
 sudo systemctl enable --now postgresql-16
+```
+
+Install EPICS base.
+
+```sh
+cd epics
+./build.sh
 ```
