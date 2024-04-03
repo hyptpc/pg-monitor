@@ -20,6 +20,7 @@ sys.path.append(os.path.join(top_dir, 'module'))
 ''' modules '''
 import accelerator
 import apiste
+import beam
 import caenhv
 import dhcp
 import ess
@@ -27,7 +28,8 @@ import gl840
 import kikusui
 
 logger = logging.getLogger(__name__)
-modules = [accelerator, apiste, caenhv, dhcp, ess, gl840, kikusui]
+modules = [accelerator, apiste, beam,
+           caenhv, dhcp, ess, gl840, kikusui]
 
 #________________________________________________________________
 def signal_handler(signum, frame):
