@@ -26,10 +26,12 @@ import dhcp
 import ess
 import gl840
 import kikusui
+import magnet
 
 logger = logging.getLogger(__name__)
 modules = [accelerator, apiste, beam,
-           caenhv, dhcp, ess, gl840, kikusui]
+           caenhv, dhcp, ess, gl840, kikusui,
+           magnet]
 
 #________________________________________________________________
 def signal_handler(signum, frame):
