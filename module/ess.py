@@ -3,6 +3,7 @@
 __author__ = 'Shuhei Hayakawa'
 
 import datetime
+import epics
 import logging
 import pandas as pd
 import psycopg
@@ -22,13 +23,16 @@ class ESS:
     self.url = 'http://www-cont.j-parc.jp/HD/separator'
     self.interval = interval
     self.wait = True
+    self.timeout = 1.0
 
   def __parse(self):
-    try:
-      return pd.read_html(self.url)
-    except urllib.error.HTTPError as e:
-      logger.error(e)
-      return []
+    ''' this method is obsolete '''
+    return
+    # try:
+    #   return pd.read_html(self.url)
+    # except urllib.error.HTTPError as e:
+    #   logger.error(e)
+    #   return []
 
   def run(self):
     base_time = time.time()
@@ -50,30 +54,30 @@ class ESS:
     connection = None
     alert = False
     try:
-      data = self.__parse()
-      if len(data) < 3:
-        return
       connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
       for i in range(2):
-        logger.debug(data[i])
         name = f'ESS{i+1}'
-        for row in data[i].itertuples():
-          electrode = row[1]
-          vset = row[2]
-          vmon = row[3]
-          imon = row[4]
+        pvhead = 'HDESS:K18_' + name + ':'
+        for electrode in ['POS', 'NEG']:
+          vset = epics.caget(pvhead+electrode+'_VSET',
+                             timeout=self.timeout)
+          vmon = epics.caget(pvhead+electrode+'_VMON',
+                             timeout=self.timeout)
+          imon = epics.caget(pvhead+electrode+'_IMON',
+                             timeout=self.timeout)
           if imon > 50:
             alert = True
-          insert_list.append((name, now, electrode, vset, vmon, imon, None))
-        #   insert_list.append(tap)
-      logger.debug(data[2])
-      for row in data[2].itertuples():
-        name = row[1]
-        vacuum = row[2].split()[0]
-        insert_list.append((name, now, None, None, None, None, vacuum))
+          tap = (name, now, electrode, vset, vmon, imon, None)
+          insert_list.append(tap)
+      for i in range(2):
+        name = f'ESS{i+1}'
+        pvname = 'HDESS:K18_' + name + ':CCG_PMON'
+        vacuum = epics.caget(pvname, timeout=self.timeout)
+        tap = (name, now, None, None, None, None, vacuum)
+        insert_list.append(tap)
       sql = ('insert into ess ' +
              '(name, timestamp, electrode, vset, vmon, imon, vacuum) '
              +'values(%s,%s,%s,%s,%s,%s,%s)')

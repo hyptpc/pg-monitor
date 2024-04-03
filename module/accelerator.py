@@ -3,6 +3,7 @@
 __author__ = 'Shuhei Hayakawa'
 
 import datetime
+import epics
 import logging
 import pandas as pd
 import psycopg
@@ -16,6 +17,7 @@ import pgpass
 
 logger = logging.getLogger('__main__').getChild(__name__)
 
+#______________________________________________________________________________
 class ACC:
   def __init__(self, interval=10):
     self.will_stop = False
@@ -24,11 +26,13 @@ class ACC:
     self.wait = True
 
   def __parse(self):
-    try:
-      return pd.read_html(self.url)
-    except urllib.error.HTTPError as e:
-      logger.error(e)
-      return []
+    ''' this method is obsolete '''
+    return
+    # try:
+    #   return pd.read_html(self.url)
+    # except urllib.error.HTTPError as e:
+    #   logger.error(e)
+    #   return []
 
   def run(self):
     base_time = time.time()
@@ -49,56 +53,37 @@ class ACC:
     logger.debug(datetime.datetime.now())
     connection = None
     try:
-      data = self.__parse()
-      if len(data) < 1:
-        return
-      data = data[0][1]
       connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-      run_number = data[1]
-      shot_number = data[2]
-      last_shot = '20' + data[3]
-      mr_power = data[4].split()[0]
-      mr_intensity = data[5].split()[0]
-      mr_cycle = float(data[6].split()[0])*1e-3
-      sx_duty = data[7].split()[0]
-      sx_spill_length = data[8].split()[0]
-      sx_extraction_efficiency = data[9].split()[0]
-      hd_status = data[10]
-      hd_mode = data[11]
-      hd_mps_setting = data[12]
-      hd_power_syim = data[13].split()[0]
-      hd_intensity_syim = data[14].split()[0]
-      hd_intensity_rgicm = data[15].split()[0]
-      hd_b_intensity_bdmpim = data[16].split()[0]
-      hd_b_intensity_bic = data[17].split()[0]
-      insert_list.append((now,
-                          run_number,
-                          shot_number,
-                          last_shot,
-                          mr_power,
-                          mr_intensity,
-                          mr_cycle,
-                          sx_duty,
-                          sx_spill_length,
-                          sx_extraction_efficiency,
-                          hd_status,
-                          hd_mode,
-                          hd_mps_setting,
-                          hd_power_syim,
-                          hd_intensity_syim,
-                          hd_intensity_rgicm,
-                          hd_b_intensity_bdmpim,
-                          hd_b_intensity_bic))
+      timeout = 1.0
+      run_number = epics.caget('HDSYS:RUN_NO', timeout=timeout)
+      shot_number = epics.caget('HDSYS:SHOT_NO', timeout=timeout)
+      mr_power = epics.caget('MRMON:DCCT_073_1:VAL:MRPWR', timeout=timeout)
+      mr_intensity = epics.caget('HDMON:MR_P3:INTENSITY', timeout=timeout)
+      mr_cycle = epics.caget('HDSYS:MR_CYCLE', timeout=timeout)
+      sx_duty = epics.caget('MRSLW:SXOPR_D2:VAL:DUTY', timeout=timeout)
+      sx_spill_length = epics.caget('MRSLW:SXOPR_D2:VAL:SpLen', timeout=timeout)
+      sx_extraction_efficiency = epics.caget('MRSLW:SXOPR_D2:VAL:ExtEffi', timeout=timeout)
+      hd_mode = epics.caget('HDSYS:OPR:MODE', timeout=timeout, as_string=True)
+      hd_power_syim = epics.caget('HDMON:SYIM:POWER', timeout=timeout)
+      hd_intensity_syim = epics.caget('HDMON:SYIM:INTENSITY', timeout=timeout)
+      hd_intensity_rgicm = epics.caget('HDMON:BDMPIM:INTENSITY', timeout=timeout)
+      tap = (now, run_number, shot_number,
+             mr_power, mr_intensity, mr_cycle,
+             sx_duty, sx_spill_length, sx_extraction_efficiency,
+             hd_mode, hd_power_syim, hd_intensity_syim,
+             hd_intensity_rgicm)
+      logger.debug(tap)
+      insert_list.append(tap)
       sql = ('insert into accelerator ' +
-             '(timestamp, run_number, shot_number, last_shot, ' +
+             '(timestamp, run_number, shot_number, ' +
              'mr_power, mr_intensity, mr_cycle, sx_duty, sx_spill_length, ' +
-             'sx_extraction_efficiency, hd_status, hd_mode, ' +
-             'hd_mps_setting, hd_power_syim, hd_intensity_syim, ' +
-             'hd_intensity_rgicm, hd_b_intensity_bdmpim, hd_b_intensity_bic) '
-             +'values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)')
+             'sx_extraction_efficiency, hd_mode, ' +
+             'hd_power_syim, hd_intensity_syim, ' +
+             'hd_intensity_rgicm) '
+             +'values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)')
       cursor.executemany(sql, insert_list)
     except (psycopg.Error or psycopg.OperationalError) as e:
       if connection is not None:
@@ -131,5 +116,6 @@ def stop():
   a.stop()
 
 if __name__ == '__main__':
+  from rich import print
   a = ACC()
   a.run()
