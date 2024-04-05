@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 
-__author__ = 'Shuhei Hayakawa'
-
 import datetime
 import epics
 import logging
-import pandas as pd
 import psycopg
 import pytz
 import subprocess
 import threading
 import time
-import urllib
 
 import pgpass
 
@@ -24,15 +20,6 @@ class ESS:
     self.interval = interval
     self.wait = True
     self.timeout = 1.0
-
-  def __parse(self):
-    ''' this method is obsolete '''
-    return
-    # try:
-    #   return pd.read_html(self.url)
-    # except urllib.error.HTTPError as e:
-    #   logger.error(e)
-    #   return []
 
   def run(self):
     base_time = time.time()

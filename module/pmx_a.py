@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-__author__ = 'Shuhei Hayakawa'
-
 import logging
 import socket
 import time
@@ -10,7 +8,7 @@ logger = logging.getLogger('__main__').getChild(__name__)
 
 #______________________________________________________________________________
 class PMX_A():
-  PORT = 5025 # fixed
+  PORT = 5025
 
   #____________________________________________________________________________
   def __init__(self, host, timeout=0.1, debug=False):

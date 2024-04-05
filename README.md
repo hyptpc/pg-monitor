@@ -10,7 +10,7 @@ Install several python packages.
 ``` sh
 sudo dnf install python3-pip perl-devel perl-FindBin
 pip3 install --user -U pip
-pip3 install --user -U psycopg pytz pandas lxml html5lib beautifulsoup4 pyepics
+pip3 install --user -U psycopg pytz lxml html5lib beautifulsoup4 pyepics pyModbusTCP rich
 ```
 
 Disable Firewall and SELinux.

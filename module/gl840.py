@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-__author__ = 'Shuhei Hayakawa'
-
 import datetime
 import json
 import logging

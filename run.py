@@ -44,6 +44,9 @@ def signal_handler(signum, frame):
 
 #______________________________________________________________________________
 def run():
+  if not os.path.exists(os.path.join(top_dir, 'log')):
+    print('Plese prepare log directory.')
+    return
   log_conf = os.path.join(top_dir, 'logging_config.yml')
   with open(log_conf, 'r') as f:
     logging.config.dictConfig(yaml.safe_load(f))

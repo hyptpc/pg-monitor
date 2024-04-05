@@ -30,11 +30,14 @@ tables = None
 
 #______________________________________________________________________________
 def execute_sql(sql):
-  with psycopg.connect(pgpass.pgpass) as connection:
-    with connection.cursor() as cursor:
-      logger.debug(sql)
-      cursor.execute(sql)
-      return cursor.fetchall()
+  try:
+    with psycopg.connect(pgpass.pgpass) as connection:
+      with connection.cursor() as cursor:
+        logger.debug(sql)
+        cursor.execute(sql)
+        return cursor.fetchall()
+  except psycopg.OperationalError as e:
+    logger.error(e)
 
 #______________________________________________________________________________
 def __make_rotator(table_name):
@@ -44,7 +47,8 @@ def __make_rotator(table_name):
     rotator = logging.getLogger(table_name)
     rotator.setLevel(logging.DEBUG)
     rotator.debug(f'make rotator {table_name}')
-    file_name = os.path.join(top_dir, 'log', f'pg-{pgpass.dbname}-{table_name}.csv.gz')
+    file_name = os.path.join(top_dir, 'log',
+                             f'pg-{pgpass.dbname}-{table_name}.csv.gz')
     handler = logging.handlers.RotatingFileHandler(file_name, backupCount=7)
     rotator.addHandler(handler)
     rotators[table_name] = (file_name, rotator, handler)
@@ -54,13 +58,16 @@ def __record_single(table_name, sql, file_name, doRollover=True):
   logger.info(f'start {table_name} ({file_name})')
   if doRollover:
     rotators[table_name][2].doRollover()
-  with psycopg.connect(pgpass.pgpass) as connection:
-    with connection.cursor() as cursor:
-      logger.debug(sql)
-      with cursor.copy(sql) as copy:
-        with gzip.open(file_name, 'wb') as f:
-          for data in copy:
-            f.write(data)
+  try:
+    with psycopg.connect(pgpass.pgpass) as connection:
+      with connection.cursor() as cursor:
+        logger.debug(sql)
+        with cursor.copy(sql) as copy:
+          with gzip.open(file_name, 'wb') as f:
+            for data in copy:
+              f.write(data)
+  except psycopg.OperationalError as e:
+    logger.error(e)
   logger.info(f'recorded {table_name} ({file_name})')
 
 #______________________________________________________________________________
@@ -68,6 +75,9 @@ def __record_all():
   global tables
   try:
     tables = execute_sql('SELECT relname FROM pg_stat_user_tables')
+    if tables is None:
+      logger.error('table is None')
+      return
     for t in tables:
       if len(t) != 1:
         continue
@@ -118,6 +128,9 @@ def __record_one_day():
 
 #______________________________________________________________________________
 def run(interval=60*60*24):
+  if not os.path.exists(os.path.join(top_dir, 'log')):
+    print('Plese prepare log directory.')
+    return
   log_conf = os.path.join(top_dir, 'logging_config.yml')
   with open(log_conf, 'r') as f:
     logging.config.dictConfig(yaml.safe_load(f))

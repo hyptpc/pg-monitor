@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 
-__author__ = 'Shuhei Hayakawa'
-
 import datetime
 import epics
 import logging
-import pandas as pd
 import psycopg
 import pytz
 import subprocess
 import threading
 import time
-import urllib
 
 import pgpass
 

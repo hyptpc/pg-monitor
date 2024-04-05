@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-__author__ = 'Shuhei Hayakawa'
-
 from pyModbusTCP.client import ModbusClient
 import struct
 import datetime
@@ -23,13 +21,12 @@ class Apiste():
     self.wait = True
     self.ip_address = ip_address
     self.client = ModbusClient(self.ip_address)
-    self.open()
-    logger.debug(f'open Apiste {self.ip_address}')
-    logger.info(f'{self.log()}')
-    logger.info(f'{self.status(0x1040)}')
 
   def open(self):
     self.client.open()
+    logger.debug(f'open Apiste {self.ip_address}')
+    logger.info(f'{self.log()}')
+    logger.info(f'{self.status(0x1040)}')
 
   def close(self):
     self.client.close()
@@ -99,6 +96,7 @@ class Apiste():
 
   def start(self):
     logger.debug('start')
+    self.open()
     t = threading.Thread(target=self.run)
     t.daemon = True
     t.start()
@@ -116,7 +114,6 @@ def stop():
   a.stop()
 
 if __name__ == "__main__":
-  a = Apiste()
   a.run()
   # a=Apiste()
   # dt = datetime.datetime.now()
