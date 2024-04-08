@@ -15,7 +15,7 @@ bool
 insert(const char* ip_address, const char* trigger_flag, double duration,
        const std::map<int, unsigned long long>& scaler_map)
 {
-  char pghost[] = "192.168.1.248";
+  char pghost[] = "192.168.1.157";
   char pgport[] = "5432";
   char dbName[] = "e73";
   char login[] = "postgres";
