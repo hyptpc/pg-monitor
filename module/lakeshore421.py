@@ -34,4 +34,7 @@ if __name__ == '__main__':
   l = Lakeshore421()
   print(l.read())
   print(l.unit())
-  
+  # print(l.ask('AUTO 0'))
+  # print(l.ask('RANGE 0'))
+  # print(l.ask('RANGE?'))
+  # print(l.ask('AUTO?'))
