@@ -1,0 +1,8 @@
+{
+	"ssl":{
+		"keyfile":"./vcom.pem",
+		"rootca":"./rootCA.pem",
+		"password":"password",
+		"accept_expired_key":"disable"
+	}
+}
