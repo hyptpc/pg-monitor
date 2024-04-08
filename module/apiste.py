@@ -25,8 +25,8 @@ class Apiste():
   def open(self):
     self.client.open()
     logger.debug(f'open Apiste {self.ip_address}')
-    logger.info(f'{self.log()}')
-    logger.info(f'{self.status(0x1040)}')
+    logger.debug(f'{self.log()}')
+    logger.debug(f'{self.status(0x1040)}')
 
   def close(self):
     self.client.close()

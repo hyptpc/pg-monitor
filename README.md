@@ -45,14 +45,14 @@ sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
 sudo systemctl enable --now postgresql-16
 ```
 
-Install EPICS base.
+### Install EPICS base.
 
 ```sh
 cd epics
 ./build.sh
 ```
 
-Add EPICS environment to .bash_profile.
+### Add EPICS environment to .bash_profile.
 
 ```sh
 export EPICS_TOP=/path/to/epics/base
@@ -61,4 +61,15 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EPICS_TOP/lib/linux-x86_64
 export EPICS_CA_AUTO_ADDR_LIST=no
 export EPICS_CA_ADDR_LIST=192.153.109.232 # jlandmzcagw01.j-parc.jp
 export PYEPICS_LIBCA=$EPICS_TOP/lib/linux-x86_64/libca.so
+```
+
+### Setup serial device server for Tesla meters
+
+```sh
+cd Advantech-VCOM-Linux-Driver-2.3.4
+make
+sudo make install
+sudo advman -o insert
+sudo advman -o start
+sudo chmod 777 /dev/ttyADV*
 ```
