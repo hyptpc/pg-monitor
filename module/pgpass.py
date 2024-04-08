@@ -4,4 +4,8 @@ host = 'localhost'
 dbname = 'e73'
 user = 'postgres'
 password = 'pg'
+
 pgpass = f'host={host} dbname={dbname} user={user} password={password}'
+
+def eval():
+  return f'host={host} dbname={dbname} user={user} password={password}'
