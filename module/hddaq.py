@@ -36,11 +36,17 @@ class HDDAQ:
       
   def __parse_event_number(self):
     with open(self.evnum_txt, 'r') as f:
-      self.evnum = int(f.read())
+      try:
+        self.evnum = int(f.read())
+      except ValueError:
+        pass
 
   def __parse_run_number(self):
     with open(self.runno_txt, 'r') as f:
-      self.runno = int(f.read())
+      try:
+        self.runno = int(f.read())
+      except ValueError:
+        pass
 
   def __parse_comment(self):
     with open(self.comment_txt, 'r') as f:
