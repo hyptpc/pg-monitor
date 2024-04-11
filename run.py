@@ -29,11 +29,12 @@ import gl840
 import hddaq
 import kikusui
 import magnet
+import scaler
 
 logger = logging.getLogger(__name__)
 modules = [accelerator, apiste, beam,
            caenhv, dhcp, ess, field, gl840, hddaq, kikusui,
-           magnet]
+           magnet, scaler]
 
 #________________________________________________________________
 def signal_handler(signum, frame):
