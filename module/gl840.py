@@ -120,13 +120,16 @@ class GL840(html.parser.HTMLParser):
     logger.debug('stop')
     self.will_stop = True
 
-g = GL840('192.168.1.113')
+devices = [GL840('192.168.1.113'),
+           GL840('192.168.1.114')]
 
 def start():
-  g.start()
+  for d in devices:
+    d.start()
 
 def stop():
-  g.stop()
+  for d in devices:
+    d.stop()
 
 #______________________________________________________________________________
 if __name__ == '__main__':
