@@ -18,14 +18,25 @@ class HDDAQ:
   def __init__(self, interval=10):
     self.interval = interval
     # self.top_dir = '/misc/oper/e73_ctrl'
-    self.top_dir = '/misc/data/e73'
+    self.top_dir = '/misc/data/e73_2024'
+    self.recorder_log = os.path.join(self.top_dir, 'recorder.log')
     self.runno_txt = os.path.join(self.top_dir, 'misc/runno.txt')
+    self.evnum_txt = os.path.join(self.top_dir, 'misc/evnum.txt')
     self.comment_txt = os.path.join(self.top_dir, 'misc/comment.txt')
     self.starttime_txt = os.path.join(self.top_dir, 'misc/starttime.txt')
     self.will_stop = False
     self.runno = None
     self.comment = None
     self.starttime = None
+
+  def parse_recorder_log(self):
+    with open(self.recorder_log, 'r') as f:
+      for line in f.readlines():
+        print(line.split())
+      
+  def __parse_event_number(self):
+    with open(self.evnum_txt, 'r') as f:
+      self.evnum = int(f.read())
 
   def __parse_run_number(self):
     with open(self.runno_txt, 'r') as f:
@@ -51,7 +62,7 @@ class HDDAQ:
       connection = psycopg.connect(pgpass.pgpass)
       cursor = connection.cursor()
       # now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-      tap = ('NOW()', self.runno, None, self.starttime, self.comment)
+      tap = ('NOW()', self.runno, self.evnum, self.starttime, self.comment)
       cursor.execute("INSERT INTO hddaq (timestamp, run_number, event_number, start_time, comment) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (run_number) DO UPDATE SET timestamp=NOW()", tap)
       logger.debug(f'{tap}')
     except (psycopg.Error or psycopg.OperationalError) as e:
@@ -67,6 +78,7 @@ class HDDAQ:
 
   def __updater(self):
     self.__parse_run_number()
+    self.__parse_event_number()
     self.__parse_comment()
     self.__parse_starttime()
     self.__insert()
@@ -105,4 +117,5 @@ def stop():
 
 if __name__ == '__main__':
   d = HDDAQ()
-  d.run()
+  # d.run()
+  d.parse_recorder_log()
