@@ -28,7 +28,7 @@ class KIKUSUI:
       cursor = connection.cursor()
       insert_list = []
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-      device = pmx_a.PMX_A(self.ip_address, timeout=1.0, debug=False)
+      device = pmx_a.PMX_A(self.ip_address, timeout=3.0, debug=False)
       if not device.is_open:
         logger.warning(f'{self.__class__.__name__} cannot connect to {self.ip_address}')
         return

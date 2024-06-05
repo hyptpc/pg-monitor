@@ -39,7 +39,7 @@ class PMX_A():
           logger.debug('R', data)
         return data
       except socket.timeout:
-        return ''
+        return 0
 
   #____________________________________________________________________________
   def __write(self, data, readback=False):
@@ -49,7 +49,7 @@ class PMX_A():
       data += '\n'
       self.sock.send(data.encode())
     if readback:
-      time.sleep(0.02)
+      time.sleep(0.5)
       return self.__read()
 
   #____________________________________________________________________________

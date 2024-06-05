@@ -16,10 +16,6 @@ logger = logging.getLogger('__main__').getChild(__name__)
 
 #______________________________________________________________________________
 class GL840(html.parser.HTMLParser):
-  data_dict = dict()
-  ch = None
-  val = None
-  unit = None
 
   #____________________________________________________________________________
   def __init__(self, ip_address='localhost', interval=10):
@@ -28,6 +24,10 @@ class GL840(html.parser.HTMLParser):
     self.interval = interval
     self.wait = True
     self.will_stop = False
+    self.data_dict = dict()
+    self.ch = None
+    self.val = None
+    self.unit = None
 
   #____________________________________________________________________________
   def handle_data(self, data):
@@ -51,9 +51,9 @@ class GL840(html.parser.HTMLParser):
       self.data_dict[self.ch] = (self.val, self.unit)
 
   #____________________________________________________________________________
-  def get_data(self, ch=None):
-    if ch in self.data_dict:
-      return self.data_dict[ch]
+  def get_data(self):
+    if self.ch in self.data_dict:
+      return self.data_dict[self.ch]
     else:
       return self.data_dict
 
@@ -84,6 +84,7 @@ class GL840(html.parser.HTMLParser):
         insert_list.append(tap)
       sql = 'insert into gl840 (ip_address, timestamp, channel, channel_name, value, unit) values(%s,%s,%s,%s,%s,%s)'
       cursor.executemany(sql, insert_list)
+      # print(sql, insert_list)
     except (psycopg.Error or psycopg.OperationalError) as e:
       if connection is not None:
         connection.rollback()
@@ -126,6 +127,7 @@ devices = [GL840('192.168.1.113'),
 def start():
   for d in devices:
     d.start()
+    time.sleep(1)
 
 def stop():
   for d in devices:
@@ -133,6 +135,13 @@ def stop():
 
 #______________________________________________________________________________
 if __name__ == '__main__':
-  gl840 = GL840('192.168.1.113')
-  gl840.parse()
-  gl840.run()
+  # gl840_1 = GL840('192.168.1.113')
+  # gl840_2 = GL840('192.168.1.113')
+  # gl840.parse()
+  # gl840_1.run()
+  # gl840_2.run()
+  start()
+  thread_list = threading.enumerate()
+  thread_list.remove(threading.main_thread())
+  for t in thread_list:
+    t.join()

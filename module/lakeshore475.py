@@ -32,5 +32,8 @@ class Lakeshore475(serial_instrument.SerialInstrument):
 
 if __name__ == '__main__':
   l = Lakeshore475()
+  print(l.idn())
+  # print(l.ask('AUTO?'))
+  # print(l.ask('UNIT 2'))
   print(l.read())
   print(l.unit())

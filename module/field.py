@@ -51,9 +51,12 @@ class FIELD:
       now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
       device = self.cls(port=self.port)
       if device.serial is not None:
-        logger.debug(device.idn)
+        idn = device.idn()
+        logger.debug(idn)
+        if 'MODEL475' in idn:
+          device.ask('UNIT 2')
         val = device.read()
-        unit = device.unit()
+        # unit = device.unit()
         order = 22 if self.name == 'DORA' else 21 if self.name == 'K18BRD5' else 0
         tap = (now, self.name, order, val)
         logger.debug(tap)
@@ -66,7 +69,6 @@ class FIELD:
       if connection is not None:
         connection.rollback()
       logger.error(e)
-      print(e)
       return
     except KeyboardInterrupt:
       return

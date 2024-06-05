@@ -136,8 +136,8 @@ class CAENHV:
 caenhvs = [CAENHV(ip_address='192.168.1.171', crate_type='SY1527'),
            CAENHV(ip_address='192.168.1.172', crate_type='SY1527'),
            CAENHV(ip_address='192.168.1.173', crate_type='SY1527'),
-           CAENHV(ip_address='192.168.1.174', crate_type='SY4527'),
-           CAENHV(ip_address='192.168.1.175', crate_type='SY4527'),
+#           CAENHV(ip_address='192.168.1.174', crate_type='SY4527'),
+#           CAENHV(ip_address='192.168.1.175', crate_type='SY4527'),
            ]
 
 def start():
