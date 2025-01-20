@@ -39,14 +39,20 @@ class Apiste():
 
   def is_running(self):
     val=self.client.read_holding_registers(0x2F00,2)
+    if val is None:
+      return val
     return val[0]
 
   def read(self,reg=0x0000):
     val=self.client.read_holding_registers(reg,2)
+    if val is None:
+      return val
     return val[0]*0.01
 
   def status(self,reg=0x2f00):
     val=self.client.read_holding_registers(reg,2)
+    if val is None:
+      return val
     return val[0]
 
   def log(self):

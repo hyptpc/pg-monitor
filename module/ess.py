@@ -55,7 +55,7 @@ class ESS:
                              timeout=self.timeout)
           imon = epics.caget(pvhead+electrode+'_IMON',
                              timeout=self.timeout)
-          if imon > 50:
+          if imon is not None and imon > 50:
             alert = True
           tap = (name, now, electrode, vset, vmon, imon, None)
           insert_list.append(tap)
