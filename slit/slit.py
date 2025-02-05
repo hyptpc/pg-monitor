@@ -14,7 +14,8 @@ import time
 import keithley
 import pgpass
 
-pgpass.host = '192.168.1.157'
+# pgpass.host = '192.168.1.157'
+pgpass.host = '192.168.1.242'
 
 logger = logging.getLogger('__main__')
 
@@ -26,6 +27,7 @@ class SLIT:
     self.wait = True
     self.will_stop = False
     self.device = keithley.Keithley(port=self.port)
+    logger.debug(self.device.idn())
     self.device.setup_scan()
     self.calib_params = [
       (34.647, -145.5), # ifh-
@@ -68,30 +70,33 @@ class SLIT:
       for row in csv.reader(ret.strip().splitlines()):
         for column in row:
           raw_values.append(float(column))
-      for i in range(len(self.calib_params)):
-        c = raw_values[i] * self.calib_params[i][0] + self.calib_params[i][1]
-        cor_values.append(c)
-      tap = (now,
-             raw_values[0], raw_values[1],
-             raw_values[3], raw_values[2],
-             raw_values[4], raw_values[5],
-             raw_values[7], raw_values[6],
-             cor_values[0], cor_values[1],
-             cor_values[3], cor_values[2],
-             cor_values[4], cor_values[5],
-             cor_values[7], cor_values[6],
-      )
-      logger.debug(tap)
-      insert_list.append(tap)
-      sql = ('insert into slit ' +
-             '(timestamp, ' +
-             'ifh_minus_raw, ifh_plus_raw, ifv_minus_raw, ifv_plus_raw, ' +
-             'mom_minus_raw, mom_plus_raw, mass1_minus_raw, mass1_plus_raw, ' +
-             'ifh_minus_cor, ifh_plus_cor, ifv_minus_cor, ifv_plus_cor, ' +
-             'mom_minus_cor, mom_plus_cor, mass1_minus_cor, mass1_plus_cor) ' +
-             'values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)')
-      cursor.executemany(sql, insert_list)
-      logger.info(f'success query: {tap}')
+      if len(raw_values) >= 8:
+        for i in range(len(self.calib_params)):
+          c = raw_values[i] * self.calib_params[i][0] + self.calib_params[i][1]
+          cor_values.append(c)
+        tap = (now,
+               raw_values[0], raw_values[1],
+               raw_values[3], raw_values[2],
+               raw_values[4], raw_values[5],
+               raw_values[7], raw_values[6],
+               cor_values[0], cor_values[1],
+               cor_values[3], cor_values[2],
+               cor_values[4], cor_values[5],
+               cor_values[7], cor_values[6],
+        )
+        logger.debug(tap)
+        insert_list.append(tap)
+        sql = ('insert into slit ' +
+               '(timestamp, ' +
+               'ifh_minus_raw, ifh_plus_raw, ifv_minus_raw, ifv_plus_raw, ' +
+               'mom_minus_raw, mom_plus_raw, ' +
+               'mass1_minus_raw, mass1_plus_raw, ' +
+               'ifh_minus_cor, ifh_plus_cor, ifv_minus_cor, ifv_plus_cor, ' +
+               'mom_minus_cor, mom_plus_cor, ' +
+               'mass1_minus_cor, mass1_plus_cor) ' +
+               'values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)')
+        cursor.executemany(sql, insert_list)
+        logger.info(f'success query: {tap}')
     except (psycopg.Error or psycopg.OperationalError) as e:
       if connection is not None:
         connection.rollback()
@@ -128,7 +133,7 @@ def stop():
 
 if __name__ == '__main__':
   logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(name)s %(funcName)s : %(message)s',
     handlers=[rich.logging.RichHandler(rich_tracebacks=True)],
   )

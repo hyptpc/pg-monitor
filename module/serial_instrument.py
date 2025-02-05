@@ -25,6 +25,7 @@ class SerialInstrument(object):
         rtscts = False,
         dsrdtr = False
       )
+      # print(self.serial, self.idn())
     except serial.serialutil.SerialException:
       print("WARNING: serial port could not be found!")
 

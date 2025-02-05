@@ -55,7 +55,7 @@ class Keithley(serial_instrument.SerialInstrument):
     return str(result[1:-1*self.remove]).strip().replace('+','')
 
 if __name__ == '__main__':
-  k=Keithley()
+  k=Keithley(port='/dev/ttyUSB0')
   k.setup_scan()    
   while True:
     print('---------')
