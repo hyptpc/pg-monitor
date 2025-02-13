@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 api_key=$(<api-token)
 grafana_host=192.168.1.242
 port=3000
