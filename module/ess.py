@@ -71,7 +71,7 @@ class ESS:
       cursor.executemany(sql, insert_list)
       if alert:
         logger.warning(f'detect alert {insert_list}')
-        subprocess.run(['aplay', '/home/oper/pg-monitor/sound/alert_sound.wav'])
+        subprocess.run(['ssh', 'k18br-nuc7.intra.j-parc.jp', 'aplay', '/home/oper/pg-monitor/sound/alert_sound.wav'])
     except (psycopg.Error or psycopg.OperationalError) as e:
       if connection is not None:
         connection.rollback()

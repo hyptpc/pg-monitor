@@ -20,7 +20,7 @@ tablename = 'caenhv'
 read_caenhv = '/home/oper/monitor-tools/CAENHV/read-caenhv/bin/read-caenhv'
 
 class CAENHV:
-  def __init__(self, ip_address, crate_type, interval=10):
+  def __init__(self, ip_address, crate_type, interval=30):
     self.interval = interval
     self.ip_address = ip_address
     self.crate_type = crate_type
@@ -134,9 +134,9 @@ class CAENHV:
 
 
 caenhvs = [CAENHV(ip_address='192.168.1.171', crate_type='SY1527'),
-           CAENHV(ip_address='192.168.1.172', crate_type='SY1527'),
+           # CAENHV(ip_address='192.168.1.172', crate_type='SY1527'),
            CAENHV(ip_address='192.168.1.173', crate_type='SY1527'),
-#           CAENHV(ip_address='192.168.1.174', crate_type='SY4527'),
+           # CAENHV(ip_address='192.168.1.174', crate_type='SY4527'),
 #           CAENHV(ip_address='192.168.1.175', crate_type='SY4527'),
            ]
 

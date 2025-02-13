@@ -33,7 +33,8 @@ import scaler
 
 logger = logging.getLogger(__name__)
 modules = [accelerator, apiste, beam,
-           caenhv, dhcp, ess, field, gl840, hddaq, kikusui,
+           caenhv,
+           dhcp, ess, field, gl840, hddaq, kikusui,
            magnet, scaler]
 
 #________________________________________________________________
