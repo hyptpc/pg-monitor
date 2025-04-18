@@ -1,16 +1,24 @@
-#!/usr/bin/env python3
-
-import datetime
+import argparse
+from datetime import datetime
 import json
 import logging
 import html.parser
 import pytz
-import psycopg
+import psycopg2
 import requests
-import threading
 import time
 
-logger = logging.getLogger('__main__').getChild(__name__)
+logging.basicConfig(level=logging.INFO,
+                    format='%(levelname)s %(message)s')
+logger = logging.getLogger()
+
+DB_CONFIG = {
+  'host': 'localhost',
+  'port': 5432,
+  'dbname': 'e72',
+  'user': 'oper',
+  'password': 'himitsu'
+}
 
 #______________________________________________________________________________
 class GL840(html.parser.HTMLParser):
@@ -58,74 +66,48 @@ class GL840(html.parser.HTMLParser):
   #____________________________________________________________________________
   def parse(self):
     try:
-      ret = requests.get(f'http://{self.ip_address}/digital.cgi?chg=0')
+      ret = requests.get(f'http://{self.ip_address}/digital.cgi?chg=0',
+                         auth=('GL840', 'GL840'))
       self.feed(ret.text)
     except:
       pass
 
-  def __updater(self):
-    self.parse()
-    logger.debug(datetime.datetime.now())
-    try:
-      insert_list = []
-      data = self.get_data()
-      for key in data:
-        now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-        channel = key
-        channel_name = f'ch{key:02d}'
-        value = data[key][0]
-        unit = data[key][1]
-        tap = (self.ip_address, now, channel, channel_name, value, unit)
-        insert_list.append(tap)
-      sql = 'insert into gl840 (ip_address, timestamp, channel, channel_name, value, unit) values(%s,%s,%s,%s,%s,%s)'
-      self.cursor.executemany(sql, insert_list)
-    except psycopg.Error as e:
-      self.connection.rollback()
-      logger.error(e.diag.message_primary)
-      return
-    except KeyboardInterrupt:
-      return
-    self.connection.commit()
-
   def run(self):
-    self.connection = psycopg.connect('host=localhost dbname=e73 user=postgres password=pg')
-    self.cursor = self.connection.cursor()
-    base_time = time.time()
-    next_time = 0
-    while not self.will_stop:
+    while True:
       try:
-        t = threading.Thread(target=self.__updater)
-        t.daemon = True
-        t.start()
-        if self.wait:
-          t.join()
-        next_time = ((base_time - time.time()) % self.interval) or self.interval
-        time.sleep(next_time)
-      except KeyboardInterrupt:
-        break
-    self.cursor.close()
-    self.connection.close()
-
-  def start(self):
-    logger.debug('start')
-    t = threading.Thread(target=self.run)
-    t.daemon = True
-    t.start()
-
-  def stop(self):
-    logger.debug('stop')
-    self.will_stop = True
-
-g = GL840('192.168.1.113')
-
-def start():
-  g.start()
-
-def stop():
-  g.stop()
+        timestamp = datetime.now(pytz.timezone('Asia/Tokyo'))
+        self.parse()
+        logger.debug(self.get_data())
+        logger.debug(datetime.now())
+        with psycopg2.connect(**DB_CONFIG) as conn:
+          with conn.cursor() as cur:
+            insert_list = []
+            data = self.get_data()
+            values = [self.ip_address]
+            for key in data:
+              channel = key
+              channel_name = f'ch{key:02d}'
+              value = data[key][0]
+              unit = data[key][1]
+              values.append(value)
+              values.append(unit)
+            sql = """
+              INSERT INTO gl840 (timestamp, ip_address, {channels})
+              VALUES (%s, {plaseholders})
+              """.format(
+                channels=', '.join([f'ch{str(i).zfill(2)}_value, ch{str(i).zfill(2)}_unit' for i in range(1, 21)]),
+                plaseholders=', '.join(['%s'] * len(values))
+              )
+            logger.debug(f'{sql}, {values}')
+            cur.execute(sql, [timestamp] + values)
+      except Exception as e:
+        logger.error(e)
+      time.sleep(10)
 
 #______________________________________________________________________________
 if __name__ == '__main__':
-  gl840 = GL840('192.168.1.113')
-  gl840.parse()
+  parser = argparse.ArgumentParser()
+  parser.add_argument('ip_address')
+  parsed, unparsed = parser.parse_known_args()
+  gl840 = GL840(parsed.ip_address)
   gl840.run()
