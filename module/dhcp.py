@@ -5,22 +5,12 @@ from datetime import datetime, timezone
 import time
 import socket
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(levelname)s %(message)s')
-logger = logging.getLogger()
+from myenv import db_config, get_logger
 
-db_config = {
-  'host': 'localhost',
-  'port': 5432,
-  'dbname': 'e72',
-  'user': 'oper',
-  'password': 'himitsu'
-}
+logger = get_logger('dhcp')
 
-#-------------------------------
 interfaces = ["enp1s0f0"]
 sleep_interval = 600
-# -----------------------------------
 
 conn = psycopg2.connect(**db_config)
 cur = conn.cursor()

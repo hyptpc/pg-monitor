@@ -1,13 +1,11 @@
 [Unit]
-Description=ESS TimescaleDB Logger
+Description=PostgreSQL TimescaleDB Updater %i
 After=network.target
 
 [Service]
 EnvironmentFile=/home/oper/share/pg-monitor/systemd/epics.env
-Type=simple
-# User=oper
-ExecStart=/usr/bin/python /home/oper/share/pg-monitor/module/ess.py
-WorkingDirectory=/home/oper
+ExecStart=/home/oper/share/pg-monitor/script/pg-updater %i
+WorkingDirectory=/home/oper/share/pg-monitor
 Restart=always
 RestartSec=3
 StandardOutput=journal

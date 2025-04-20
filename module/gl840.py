@@ -1,4 +1,3 @@
-import argparse
 from datetime import datetime
 import json
 import logging
@@ -8,17 +7,11 @@ import psycopg2
 import requests
 import time
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(levelname)s %(message)s')
-logger = logging.getLogger()
+from myenv import db_config, get_logger
 
-DB_CONFIG = {
-  'host': 'localhost',
-  'port': 5432,
-  'dbname': 'e72',
-  'user': 'oper',
-  'password': 'himitsu'
-}
+logger = get_logger('gl840')
+
+ip_address = '192.168.10.61'
 
 #______________________________________________________________________________
 class GL840(html.parser.HTMLParser):
@@ -79,7 +72,7 @@ class GL840(html.parser.HTMLParser):
         self.parse()
         logger.debug(self.get_data())
         logger.debug(datetime.now())
-        with psycopg2.connect(**DB_CONFIG) as conn:
+        with psycopg2.connect(**db_config) as conn:
           with conn.cursor() as cur:
             insert_list = []
             data = self.get_data()
@@ -106,8 +99,5 @@ class GL840(html.parser.HTMLParser):
 
 #______________________________________________________________________________
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser()
-  parser.add_argument('ip_address')
-  parsed, unparsed = parser.parse_known_args()
-  gl840 = GL840(parsed.ip_address)
+  gl840 = GL840(ip_address)
   gl840.run()

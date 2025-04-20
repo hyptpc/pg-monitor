@@ -4,17 +4,9 @@ from epics import caget
 import psycopg2
 import logging
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(levelname)s %(message)s')
-logger = logging.getLogger()
+from myenv import db_config, get_logger
 
-DB_CONFIG = {
-  'host': 'localhost',
-  'port': 5432,
-  'dbname': 'e72',
-  'user': 'oper',
-  'password': 'himitsu'
-}
+logger = get_logger('ess')
 
 PV_MAP = {
   'HDESS:K18_ESS1:NEG_VSET': 'neg_vset1',
@@ -39,7 +31,7 @@ def main():
     try:
       timestamp = datetime.now(timezone.utc)
       values = {col: caget(pv) for pv, col in PV_MAP.items()}
-      with psycopg2.connect(**DB_CONFIG) as conn:
+      with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
           sql = """
             INSERT INTO ess (timestamp, {columns})

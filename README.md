@@ -44,3 +44,11 @@ sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
 # Enable and start the server:
 sudo systemctl enable --now postgresql-16
 ```
+
+
+## systemd
+
+```sh
+ln -s $PWD/systemd $HOME/.config/systemd/user
+systemctl --user start pg-logger-ess
+```
