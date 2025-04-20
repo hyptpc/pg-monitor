@@ -1,0 +1,5 @@
+#!/bin/sh
+
+instance=$1
+
+exec python3 /home/oper/share/pg-monitor/module/${instance}.py
