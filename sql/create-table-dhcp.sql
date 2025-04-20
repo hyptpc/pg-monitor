@@ -1,8 +1,11 @@
-CREATE TABLE dhcp_hosts
-(ip_address  TEXT,
- host_name   TEXT,
- start_time  TIMESTAMP WITH TIME ZONE,
- end_time    TIMESTAMP WITH TIME ZONE,
- state       TEXT,
- mac_address TEXT,
- CONSTRAINT dhcp_hosts_pkey PRIMARY KEY (ip_address));
+CREATE TABLE dhcp (
+  timestamp     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ip_address    INET        NOT NULL,
+  mac_address   TEXT,
+  vendor        TEXT,
+  interface     TEXT,
+  hostname      TEXT, -- short hostname (e.g. vme01)
+  domain        TEXT, -- domain name (e.g. daq.k18br)
+  status        BOOLEAN,
+  PRIMARY KEY (ip_address, interface, timestamp)
+);

@@ -1,0 +1,17 @@
+[Unit]
+Description=DHCP TimescaleDB Logger
+After=network.target
+
+[Service]
+# EnvironmentFile=/home/oper/share/pg-monitor/systemd/epics.env
+Type=simple
+# User=oper
+ExecStart=/usr/bin/python /home/oper/share/pg-monitor/module/dhcp.py
+WorkingDirectory=/home/oper
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
