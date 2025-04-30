@@ -9,14 +9,21 @@ from myenv import db_config, get_logger
 logger = get_logger('daily-recorder')
 
 BACKUP_BASE_DIR = '/home/oper/share/pg-monitor/csv'
-TABLES = ['dhcp', 'ess', 'gl840']
 
 if __name__ == '__main__':
   conn = psycopg2.connect(**db_config)
   conn.autocommit = True
   cur = conn.cursor()
-
-  for table in TABLES:
+  cur.execute("""
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+    AND table_type = 'BASE TABLE';
+  """)
+  tables = cur.fetchall()
+  print(tables)
+  for table in tables:
+    table = table[0]
     logger.info(f'▶ Processing table: {table}')
     output_dir = os.path.join(BACKUP_BASE_DIR, table)
     os.makedirs(output_dir, exist_ok=True)

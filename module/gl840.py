@@ -11,7 +11,7 @@ from myenv import db_config, get_logger
 
 logger = get_logger('gl840')
 
-ip_address = '192.168.10.61'
+ip_address = 'logger1.monitor.k18br'
 
 #______________________________________________________________________________
 class GL840(html.parser.HTMLParser):

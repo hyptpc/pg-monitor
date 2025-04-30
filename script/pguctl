@@ -1,0 +1,10 @@
+#!/bin/sh
+
+script_path=$(dirname $(readlink -f $0))
+services_file=$script_path/services.txt
+action=${1:-status}
+
+systemctl --user "$action" \
+	  $(while read -r name
+	    do echo pg-updater@"$name"
+	    done < "$services_file")
