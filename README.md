@@ -50,5 +50,5 @@ sudo systemctl enable --now postgresql-16
 
 ```sh
 ln -s $PWD/systemd $HOME/.config/systemd/user
-systemctl --user start pg-logger-ess
+systemctl --user enable --now pg-updater@ess
 ```
