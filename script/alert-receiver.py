@@ -61,17 +61,20 @@ class AlertHandler(BaseHTTPRequestHandler):
       self.send_response(200)
       self.send_header("Content-Type", "text/html; charset=utf-8")
       self.end_headers()
-      self.wfile.write(b"<html><head><meta http-equiv='refresh' content='5'><style> body { margin: 10px;   font-family: monospace; font-size: 14px; background-color: white; color: black; } @media (prefers-color-scheme: dark) { body { background-color: #111; color: #ddd; } } </style></head><body>")
+      self.wfile.write(b"<html><head><meta http-equiv='refresh' content='5'><title>Grafana Alert Log</title><style> body { margin: 10px;   font-family: monospace; font-size: 14px; background-color: white; color: black; } @media (prefers-color-scheme: dark) { body { background-color: #111; color: #ddd; } } </style></head><body>")
       self.wfile.write(b"<h2>Alert Log (Last 100)</h2><pre>")
       for line in log_buffer:
         self.wfile.write(line.encode('utf-8') + b"\n")
-      self.wfile.write(b"</pre></body></html>")
+      self.wfile.write(b"</pre>")
+      self.wfile.write(b"<script>window.onload = function() { window.scrollTo(0, document.body.scrollHeight); };</script>")
+      self.wfile.write(b"</body></html>")
     else:
       self.send_response(404)
       self.end_headers()
 
   def log_message(self, format, *args):
-    logger.info(f"[dim]HTTP {self.command} {self.path} from {self.client_address[0]}[/dim]")
+    pass
+    # logger.info(f"[dim]HTTP {self.command} {self.path} from {self.client_address[0]}[/dim]")
 
 if __name__ == "__main__":
   try:

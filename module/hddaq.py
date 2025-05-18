@@ -118,7 +118,7 @@ def main():
       upsert_to_postgresql(runs)
     except Exception as e:
       logger.error(e)
-    time.sleep(30)
+    time.sleep(10)
 
 #______________________________________________________________________________
 if __name__ == '__main__':
