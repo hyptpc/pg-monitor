@@ -11,12 +11,13 @@ from myenv import db_config, get_logger
 module_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = get_logger(module_name)
 
-def get_ida_all():
+def query(command):
   host = 'omniace'
   port = 2300
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.settimeout(2.0)
     s.connect((host, port))
-    s.sendall(b'IDA A\r\n')
+    s.sendall((command+'\r\n').encode())
     response = s.recv(4096)
     data = response.decode().strip()
     data = [float(x) if x != '?' else math.nan for x in data.split(',')]
@@ -27,7 +28,7 @@ def run():
   with psycopg2.connect(**db_config) as conn:
     with conn.cursor() as cur:
       timestamp = datetime.now(timezone.utc)
-      values = get_ida_all()
+      values = query('IDA A')
       placeholders = ','.join(['%s'] * (1 + len(values)))
       columns = ['timestamp'] + [f'ch{str(i+1).zfill(2)}' for i in range(18)]
       logger.debug(columns)

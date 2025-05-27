@@ -1,10 +1,12 @@
 acc
+cryomag
 dhcp
 ess
 gl840-logger1
 gl840-logger2
 hddaq
 magnet
+omniace
 pps
 service
 shs

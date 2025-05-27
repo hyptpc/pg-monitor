@@ -20,25 +20,40 @@ def parse_float(response):
     if (c.isdigit() or c == '.' or c == '-' )))
 
 def query(command):
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((host, port))
-    s.sendall((command+'\r\n').encode())
-    response = s.recv(4096)
-    data = response.decode().strip()
-    logger.debug(data)
-    return data
+  try:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+      s.settimeout(2.0)
+      s.connect((host, port))
+      s.sendall((command+'\r\n').encode())
+      response = s.recv(4096)
+      data = response.decode().strip()
+      logger.debug(data)
+      return data
+  except socket.timeout:
+    return 'timeout'
 
 def run():
   with psycopg2.connect(**db_config) as conn:
     with conn.cursor() as cur:
       timestamp = datetime.now(timezone.utc)
-      iout = parse_float(query('IOUT?'))
-      vout = parse_float(query('VOUT?'))
-      imag = parse_float(query('IMAG?'))
-      vmag = parse_float(query('VMAG?'))
-      sweep = query('SWEEP?')
-      mode = query('MODE?')
-      pshtr = query('PSHTR?') == '1'
+      idn = query('*IDN?')
+      logger.info(idn)
+      if idn == 'timeout':
+        iout = 0
+        vout = 0
+        imag = 0
+        vmag = 0
+        sweep = 'off'
+        mode = 'off'
+        pshtr = False
+      else:
+        iout = parse_float(query('IOUT?'))
+        vout = parse_float(query('VOUT?'))
+        imag = parse_float(query('IMAG?'))
+        vmag = parse_float(query('VMAG?'))
+        sweep = query('SWEEP?')
+        mode = query('MODE?')
+        pshtr = query('PSHTR?') == '1'
       values = (timestamp, iout, vout, imag, vmag, sweep, mode, pshtr)
       placeholders = ','.join(['%s'] * len(values))
       columns = ['timestamp', 'iout', 'vout', 'imag', 'vmag', 'sweep', 'mode', 'ps_heater']
