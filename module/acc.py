@@ -6,7 +6,8 @@ import logging
 
 from myenv import db_config, get_logger
 
-logger = get_logger('acc')
+module_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = get_logger(module_name)
 
 pv_map = {
   'HDSYS:RUN_NO': 'run_no',
@@ -52,7 +53,7 @@ def main():
           conn.commit()
       logger.debug("Logged values at %s", timestamp.isoformat())
     except Exception as e:
-      logger.error("Error during logging: %s", e)
+      logger.error(e)
     time.sleep(4)
 
 if __name__ == '__main__':
