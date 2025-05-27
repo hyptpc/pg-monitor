@@ -123,7 +123,7 @@ def main():
       conn.close()
     except Exception as e:
       logger.error(e)
-    time.sleep(20)
+    time.sleep(5)
 
 if __name__ == '__main__':
   main()
