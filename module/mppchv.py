@@ -38,16 +38,15 @@ def main():
                 vset = float(row[base + 3]) if row[base + 3] != 'None' else None
                 imon = float(row[base + 4]) if row[base + 4] != 'None' else None
                 temp = float(row[base + 5]) if row[base + 5] != 'None' else None
-                logger.info(f'{timestamp} {host} {ch} {hvon} {overcurrent} {vmon} {vset} {imon} {temp}')
+                logger.debug(f'{timestamp} {host} {ch} {hvon} {overcurrent} {vmon} {vset} {imon} {temp}')
                 sql = """
                 INSERT INTO mppchv (timestamp, host, channel, hvon, overcurrent, vmon, vset, imon, temp)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (timestamp) DO NOTHING
                 """
-                cur.execute(sql, [timestamp, host, ch, hvon, overcurrent, vmon, vset, imon, temp])
+                cur.execute(sql, (timestamp, host, ch, hvon, overcurrent, vmon, vset, imon, temp))
             last_offset = f.tell()
         conn.commit()
-        logger.info('sleeping...')
     except Exception as e:
       logger.error(e)
     time.sleep(10)

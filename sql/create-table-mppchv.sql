@@ -8,7 +8,7 @@ CREATE TABLE mppchv (
     vset        REAL,
     imon        REAL,
     temp        REAL,
-    PRIMARY KEY (timestamp, channel)
+    PRIMARY KEY (timestamp)
 );
 
 SELECT create_hypertable('mppchv', 'timestamp', migrate_data => TRUE);
