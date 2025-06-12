@@ -23,11 +23,12 @@ def main():
         with conn.cursor() as cur:
           file_name='/home/oper/share/monitor-tmp/mppc_monitor_value.txt'
           with open(file_name, 'r') as f:
-            f.seek(last_offset)
             reader = csv.reader(f, delimiter="\t")
-            if last_offset == 0:
-              headers = next(reader)
-              ch_count = (len(headers) - 1) // 6
+            headers = next(reader)
+            ch_count = (len(headers) - 1) // 6
+            if last_offset != 0:
+              f.seek(last_offset)
+              reader = csv.reader(f, delimiter="\t")
             for row in reader:
               timestamp = datetime.fromisoformat(row[0])
               for ch in range(ch_count):
@@ -45,8 +46,8 @@ def main():
                 ON CONFLICT (timestamp) DO NOTHING
                 """
                 cur.execute(sql, (timestamp, host, ch, hvon, overcurrent, vmon, vset, imon, temp))
+                conn.commit()
             last_offset = f.tell()
-        conn.commit()
     except Exception as e:
       logger.error(e)
     time.sleep(10)
