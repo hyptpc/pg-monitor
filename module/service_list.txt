@@ -6,6 +6,8 @@ gl840-logger1
 gl840-logger2
 hddaq
 magnet
+massflow
+mpod
 omniace
 pps
 service

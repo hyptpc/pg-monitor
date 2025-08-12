@@ -17,24 +17,33 @@ def main():
   while True:
     try:
       massflow_list = [
-        MQV0002(host='192.168.20.14', port=4001, addr=1),
+        MQV0002(host='192.168.20.14', port=4001, addr=1), # nport1 - input
+        MQV0002(host='192.168.20.17', port=4196, addr=1), # waveshare1 - output
       ]
       timestamp = datetime.now(timezone.utc)
-      values = massflow_list[0].info()
-      logger.debug(f'{values}')
-      with psycopg2.connect(**db_config) as conn:
-        with conn.cursor() as cur:
-          sql = """
-            INSERT INTO {name} ({keys})
-            VALUES ({placeholders})
-            """.format(
-              name=module_name,
-              keys=', '.join(values.keys()),
-              placeholders=', '.join(['%s'] * len(values))
-            )
-          cur.execute(sql, list(values.values()))
-          conn.commit()
-      logger.debug("Logged values at %s", timestamp.isoformat())
+      rows = []
+      for mf in massflow_list:
+        try:
+          values = mf.info()
+          values["timestamp"] = timestamp
+          rows.append(values)
+          logger.debug(f'{mf.host}:{mf.port}/addr{getattr(mf,"addr",None)} -> {values}')
+        except Exception as de:
+          logger.error(f'read failed: {mf}: {de}')
+      if not rows:
+        logger.warning('no data rows collected; skip insert')
+      else:
+        keys = list(rows[0].keys())
+        placeholders = ', '.join(['%s'] * len(keys))
+        sql = f"""
+          INSERT INTO {module_name} ({', '.join(keys)})
+          VALUES ({placeholders})
+        """
+        with psycopg2.connect(**db_config) as conn:
+          with conn.cursor() as cur:
+            cur.executemany(sql, [ [r[k] for k in keys] for r in rows ])
+            conn.commit()
+        logger.debug("Logged %d rows at %s", len(rows), timestamp.isoformat())
     except Exception as e:
       logger.error(e)
     time.sleep(60)
