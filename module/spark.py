@@ -1,8 +1,6 @@
 import os
 import pathlib
-import math
 import psycopg
-import socket
 from datetime import datetime, timezone
 import time
 
@@ -17,7 +15,6 @@ allow = {".jpg", ".jpeg", ".png"}
 def created_ts(p):
   st = p.stat()
   mtime = datetime.fromtimestamp(st.st_mtime, tz=timezone.utc)
-  # GNU stat の %W（birth=作成時刻, 無いFSは -1）
   try:
     out = subprocess.run(["stat", "-c", "%W", str(p)],
                          capture_output=True, text=True, check=True).stdout.strip()

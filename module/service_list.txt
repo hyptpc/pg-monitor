@@ -1,9 +1,11 @@
 acc
+caenhv3
 cryomag
 dhcp
 ess
 gl840-logger1
 gl840-logger2
+hallprobe-shs1
 hddaq
 magnet
 massflow
@@ -12,4 +14,5 @@ omniace
 pps
 service
 shs
+spark
 trigger
