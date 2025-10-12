@@ -37,7 +37,7 @@ def run():
     with conn.cursor() as cur:
       timestamp = datetime.now(timezone.utc)
       idn = query('*IDN?')
-      logger.info(idn)
+      logger.debug(idn)
       if idn == 'timeout':
         iout = 0
         vout = 0

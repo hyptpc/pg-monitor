@@ -1,50 +1,82 @@
+from datetime import datetime, timezone
 import os
 import pathlib
 import psycopg
-from datetime import datetime, timezone
+import requests
 import time
 
 from myenv import db_config, get_logger
 
+import mdo3032
+
 module_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = get_logger(module_name)
 
-spark_dir = '/home/oper/share/spark'
+spark_dir = mdo3032.SAVE_DIR
 allow = {".jpg", ".jpeg", ".png"}
 
-def created_ts(p):
-  st = p.stat()
-  mtime = datetime.fromtimestamp(st.st_mtime, tz=timezone.utc)
-  try:
-    out = subprocess.run(["stat", "-c", "%W", str(p)],
-                         capture_output=True, text=True, check=True).stdout.strip()
-    w = int(out)
-    return datetime.fromtimestamp(w, tz=timezone.utc) if w > 0 else mtime
-  except Exception:
-    return mtime
+WEBHOOK_URL = 'https://discord.com/api/webhooks/1424709205130088468/FAWcP01LDWF7xi1ETLs93aOEeTepHB4yVoZ0awPFUEpE8DidTQ2KqdqzFxPANaeKQDGD' # E72 spark
 
+#______________________________________________________________________________
 def run():
-  base = pathlib.Path(spark_dir).resolve()
+  ts, out, vth = mdo3032.run()
   with psycopg.connect(**db_config) as conn, conn.cursor() as cur:
-    for p in sorted(base.glob("*")):
-      if not p.is_file() or p.suffix.lower() not in allow:
-        continue
-      ts = created_ts(p)
-      sql = """
-      INSERT INTO spark (timestamp, filepath, voltage, threshold)
-      VALUES (%s, %s, NULL, NULL)
-      ON CONFLICT (timestamp) DO NOTHING;
+    sql = """
+    INSERT INTO spark (timestamp, filepath, threshold)
+    VALUES (to_timestamp(%s), %s, %s)
+    ON CONFLICT (timestamp) DO NOTHING;
+    """
+    cur.execute(sql, (ts, str(out.resolve()), vth))
+
+    vmon = dict()
+    imon = dict()
+    msg = ''
+    for key in ['Cathode', 'GEM',]:
+      sql = f"""
+      SELECT timestamp, vmon, imon from caenhv
+      where channel_name = '{key}' and ip_address = 'caenhv3'
+      order by timestamp desc limit 1
       """
-      cur.execute(sql, (ts, str(p)))
-    conn.commit()
+      cur.execute(sql)
+      key = key[:3].lower()
+      row = cur.fetchone()
+      if row is not None and len(row) == 3:
+        vmon[key] = f"{row[1]:.0f} V"
+        imon[key] = f"{row[2]:.2f} uA"
+      else:
+        vmon[key] = None
+        imon[key] = None
+      msg += f'\nv{key} = {vmon[key]}, i{key} = {imon[key]}'
+    send_image(out, f"image: `{out}`{msg}")
 
+#______________________________________________________________________________
+def send_image(file_path, content="Captured image", wait=True):
+  """Send the saved image to Discord webhook (best-effort)."""
+  params = {"wait": "true"} if wait else None
+  data = {"content": content}
+  try:
+    with open(file_path, "rb") as f:
+      files = {"file": (pathlib.Path(file_path).name, f)}
+      requests.post(WEBHOOK_URL, params=params,
+                    data=data, files=files, timeout=20)
+  except Exception as e:
+    logger.error(f"Webhook post failed: {e}")
+
+#______________________________________________________________________________
 def main():
-  while True:
-    try:
-      run()
-    except Exception as e:
-      logger.error(e)
-    time.sleep(20)
+  try:
+    mdo3032.initialize()
+    while True:
+      try:
+        run()
+      except Exception as e:
+        logger.error(e)
+      time.sleep(20)
+  except Exception as e:
+    logger.error(e)
+  finally:
+    mdo3032.finalize()
 
+#______________________________________________________________________________
 if __name__ == '__main__':
   main()
