@@ -118,7 +118,10 @@ def finalize():
       inst.close()
     except Exception:
       pass
-  rm.close()
+  try:
+    rm.close()
+  except Exception:
+    pass
   logger.info('close')
 
 #______________________________________________________________________________
@@ -214,8 +217,8 @@ def run():
     pos_now = inst.query("HOR:POSition?").strip()
   except Exception:
     pos_now = "N/A"
-  logger.info(f"saved {out.name}  size={len(jpg)}  "
-              f"wait={t_wait:.2f}s  grab={t_grab:.2f}s  trig={vth_str}")
+  logger.debug(f"saved {out.name}  size={len(jpg)}  "
+               f"wait={t_wait:.2f}s  grab={t_grab:.2f}s  trig={vth_str}")
   return t1, out, vth
 
 #______________________________________________________________________________

@@ -4,6 +4,7 @@ import pathlib
 import psycopg
 import requests
 import time
+import signal, sys, atexit, threading
 
 from myenv import db_config, get_logger
 
@@ -16,6 +17,14 @@ spark_dir = mdo3032.SAVE_DIR
 allow = {".jpg", ".jpeg", ".png"}
 
 WEBHOOK_URL = 'https://discord.com/api/webhooks/1424709205130088468/FAWcP01LDWF7xi1ETLs93aOEeTepHB4yVoZ0awPFUEpE8DidTQ2KqdqzFxPANaeKQDGD' # E72 spark
+
+shutdown = threading.Event()
+
+#______________________________________________________________________________
+def _handler(signum, frame):
+  shutdown.set()
+  mdo3032.finalize()
+  sys.exit(0)
 
 #______________________________________________________________________________
 def run():
@@ -48,6 +57,8 @@ def run():
         imon[key] = None
       msg += f'\nv{key} = {vmon[key]}, i{key} = {imon[key]}'
     send_image(out, f"image: `{out}`{msg}")
+    msg = msg.replace('\n', ', ')
+    logger.info(f"image: {out}{msg}")
 
 #______________________________________________________________________________
 def send_image(file_path, content="Captured image", wait=True):
@@ -64,9 +75,13 @@ def send_image(file_path, content="Captured image", wait=True):
 
 #______________________________________________________________________________
 def main():
+  atexit.register(mdo3032.finalize)
+  for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+    signal.signal(sig, _handler)
+
   try:
     mdo3032.initialize()
-    while True:
+    while not shutdown.is_set():
       try:
         run()
       except Exception as e:
@@ -74,8 +89,6 @@ def main():
       time.sleep(20)
   except Exception as e:
     logger.error(e)
-  finally:
-    mdo3032.finalize()
 
 #______________________________________________________________________________
 if __name__ == '__main__':
