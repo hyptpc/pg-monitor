@@ -34,7 +34,7 @@ inst = None # main instrument object
 
 #______________________________________________________________________________
 def now_name():
-  return dt.datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
+  return dt.datetime.now().strftime("%Y%m%d_%H%M%S")
 
 #______________________________________________________________________________
 def open_scope():

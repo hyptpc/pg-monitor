@@ -17,7 +17,7 @@ db_config['host'] = 'urazato'
 
 #_________________________________
 def main():
-  s = serial.Serial(device,
+  s = serial.Serial(device, # lakeshore 425
                     parity=serial.PARITY_ODD,
                     baudrate=57600,
                     timeout=0.5)

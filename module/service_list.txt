@@ -6,6 +6,7 @@ ess
 gl840-logger1
 gl840-logger2
 hallprobe-shs1
+hallprobe-shs2
 hddaq
 magnet
 massflow
