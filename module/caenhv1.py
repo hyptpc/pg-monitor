@@ -10,8 +10,8 @@ from myenv import db_config, get_logger
 module_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = get_logger(module_name)
 
-host = '192.168.20.58' # caenhv3
-systype = 'SY5527'
+host = '192.168.20.51' # caenhv1
+systype = 'SY1527'
 linktype = 'TCPIP'
 
 #______________________________________________________________________________
@@ -81,14 +81,14 @@ def main():
                   rup, rdown, pw, channel_status ) VALUES (
                   %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s );
                   """
-                  val = [now, 'caenhv3', systype, board.slot,
+                  val = [now, 'caenhv1', systype, board.slot,
                          board.model + board.description, bd_values['BdStatus'], ch,
                          ch_name, ch_values['V0Set'],
                          ch_values['I0Set'], ch_values['VMon'], ch_values['IMon'],
                          ch_values['RUp'], ch_values['RDWn'], (ch_values['Pw']==1),
                          ch_values['Status']]
                   cur.execute(sql, val)
-          time.sleep(1)
+          time.sleep(10)
   except KeyboardInterrupt:
     pass
 
