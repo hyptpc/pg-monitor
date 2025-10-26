@@ -86,7 +86,7 @@ def main():
         run()
       except Exception as e:
         logger.error(e)
-      time.sleep(20)
+      time.sleep(0.1)
   except Exception as e:
     logger.error(e)
 
