@@ -15,7 +15,7 @@ CREATE TABLE caenhv (
     rdown        REAL,
     pw           BOOLEAN,
     channel_status   TEXT,
-    PRIMARY KEY (timestamp, channel_name)
+    -- PRIMARY KEY (timestamp, channel_name)
 );
 
 SELECT create_hypertable('caenhv', 'timestamp', migrate_data => true);
