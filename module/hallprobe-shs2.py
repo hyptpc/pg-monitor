@@ -13,6 +13,7 @@ TERM = b'\r\n'
 
 def send(sock, command):
   sock.send(command + TERM)
+  time.sleep(0.1)
   data = sock.recv(1024)
   return data.decode().strip()
 
@@ -49,7 +50,7 @@ def main():
           break
         except Exception as e:
           print(e)
-        time.sleep(1)
+        time.sleep(0.5)
   except Exception as e:
     print(e)
 

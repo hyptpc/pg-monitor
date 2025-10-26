@@ -10,7 +10,7 @@ from myenv import db_config, get_logger
 module_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = get_logger(module_name)
 
-device = '/dev/ttyUSB0'
+device = '/dev/ttyUSB1'
 term = '\r\n'
 
 db_config['host'] = 'urazato'
