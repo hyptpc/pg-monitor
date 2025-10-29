@@ -19,37 +19,31 @@ def send(sock, command):
 
 def main():
   try:
-    with socket.create_connection(('192.168.20.18', 4196)) as sock:
+    with socket.create_connection(('192.168.20.19', 4196)) as sock:
       sock.settimeout(3.0)
       logger.info('connected')
       idn = send(sock, b'*IDN?')
-      a = send(sock, b'auto?')
-      r = send(sock, b'range?')
-      logger.info(f'idn={idn}, auto={a}, range={r}')
+      u = send(sock, b'UNIT?')
+      a = send(sock, b'AUTO?')
+      r = send(sock, b'RANGE?')
+      logger.info(f'idn={idn}, unit={u}, auto={a}, range={r}')
       while True:
         try:
-          f = send(sock, b'field?')
-          m = send(sock, b'fieldm?')
-          if m == 'm': m = 1.e-3
-          elif m == '': m = 1.
-          elif m == 'k': m = 1.e3
-          f = float(f) * m
-          u = send(sock, b'unit?')
-          r = send(sock, b'range?')
-          logger.debug(f'{f:.3f} {u}')
+          f = float(send(sock, b'RDGFIELD?'))
+          logger.debug(f'{f} {u}')
           with psycopg.connect(**db_config) as conn:
             with conn.cursor() as cur:
               sql = """
               INSERT INTO field (
               name, field ) VALUES ( %s, %s )
               """
-              cur.execute(sql, ['shs2', f])
+              cur.execute(sql, ['d5', f])
         except KeyboardInterrupt:
           print('Ctrl-C detected')
           break
         except Exception as e:
           print(e)
-        time.sleep(0.5)
+        # time.sleep(0.1)
   except Exception as e:
     print(e)
 
