@@ -60,7 +60,7 @@ def run():
           conn.commit()
     except Exception as e:
       logger.error(e)
-    time.sleep(10)
+    time.sleep(4)
 
 #______________________________________________________________________________
 def fetch_mpod_status(url):
