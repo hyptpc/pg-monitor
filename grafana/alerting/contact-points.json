@@ -1,0 +1,30 @@
+[
+  {
+    "disableResolveMessage": false,
+    "name": "AlertSound",
+    "settings": {
+      "url": "http://urazato.intra.j-parc.jp:9000/"
+    },
+    "type": "webhook",
+    "uid": "feiv13ll16tj4e"
+  },
+  {
+    "disableResolveMessage": false,
+    "name": "Discord alert",
+    "settings": {
+      "url": "${CP_DISCORD_ALERT_URL}",
+      "use_discord_username": false
+    },
+    "type": "discord",
+    "uid": "cepdxp78tmku8b"
+  },
+  {
+    "disableResolveMessage": false,
+    "name": "email receiver",
+    "settings": {
+      "addresses": "${CP_EMAIL_RECEIVER_ADDRESSES}"
+    },
+    "type": "email",
+    "uid": ""
+  }
+]

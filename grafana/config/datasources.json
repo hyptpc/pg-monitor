@@ -1,0 +1,63 @@
+[
+  {
+    "access": "proxy",
+    "basicAuth": false,
+    "basicAuthUser": "",
+    "database": "",
+    "isDefault": true,
+    "jsonData": {
+      "connMaxLifetime": 14400,
+      "database": "e72",
+      "maxIdleConns": 100,
+      "maxIdleConnsAuto": true,
+      "maxOpenConns": 100,
+      "postgresVersion": 1500,
+      "sslmode": "disable",
+      "timeInterval": "1s",
+      "timescaledb": true
+    },
+    "name": "grafana-postgresql-datasource",
+    "secureJsonData": {
+      "password": "${DS_GRAFANA_POSTGRESQL_DATASOURCE_PASSWORD}"
+    },
+    "type": "grafana-postgresql-datasource",
+    "uid": "deiuvse1meygwe",
+    "url": "localhost:5432",
+    "user": "oper",
+    "withCredentials": false
+  },
+  {
+    "access": "proxy",
+    "basicAuth": false,
+    "basicAuthUser": "",
+    "database": "",
+    "isDefault": false,
+    "jsonData": {},
+    "name": "netdatacloud-netdata-datasource",
+    "secureJsonData": {
+      "apiToken": "${DS_NETDATACLOUD_NETDATA_DATASOURCE_APITOKEN}"
+    },
+    "type": "netdatacloud-netdata-datasource",
+    "uid": "eekjmq55qm4u8d",
+    "url": "",
+    "user": "",
+    "withCredentials": false
+  },
+  {
+    "access": "proxy",
+    "basicAuth": false,
+    "basicAuthUser": "",
+    "database": "",
+    "isDefault": false,
+    "jsonData": {
+      "httpMethod": "POST",
+      "timeInterval": "5s"
+    },
+    "name": "prometheus",
+    "type": "prometheus",
+    "uid": "df007ec6g9p8gc",
+    "url": "http://urazato.intra.j-parc.jp:9090/",
+    "user": "",
+    "withCredentials": false
+  }
+]

@@ -1,0 +1,1007 @@
+[
+  {
+    "folderUid": "aeiv1lxk3wagwf",
+    "interval": 10,
+    "rules": [
+      {
+        "annotations": {
+          "__dashboardUid__": "eekkq2558fk74f",
+          "__panelId__": "11",
+          "summary": "Differential Pressure = {{ $values.C.Value }}\nGas Flow = {{ $values.G.Value }}\nAlarmBit = {{ $values.H.Value }}"
+        },
+        "condition": "F",
+        "data": [
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "instant": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "range": true,
+              "rawQuery": true,
+              "rawSql": "SELECT timestamp, ch02_value as diffpres FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC LIMIT 1",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "queryType": "",
+            "refId": "A",
+            "relativeTimeRange": {
+              "from": 604800,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "instant": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "range": true,
+              "rawQuery": true,
+              "rawSql": "SELECT timestamp, fmon FROM massflow\nORDER BY timestamp DESC LIMIT 1",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "queryType": "",
+            "refId": "B",
+            "relativeTimeRange": {
+              "from": 604800,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "rawQuery": true,
+              "rawSql": "SELECT alarm FROM massflow ORDER BY timestamp DESC LIMIT 1",
+              "refId": "H",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "queryType": "",
+            "refId": "H",
+            "relativeTimeRange": {
+              "from": 600,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "C"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "A",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "reducer": "last",
+              "refId": "C",
+              "type": "reduce"
+            },
+            "queryType": "",
+            "refId": "C",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      20
+                    ],
+                    "type": "lt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "D"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "C",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "D",
+              "type": "threshold"
+            },
+            "queryType": "",
+            "refId": "D",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      150,
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": []
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "C",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "E",
+              "type": "threshold"
+            },
+            "queryType": "",
+            "refId": "E",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      0,
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": []
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "$D + $E + $H > 0",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "F",
+              "type": "math"
+            },
+            "queryType": "",
+            "refId": "F",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      0,
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": []
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "B",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "reducer": "last",
+              "refId": "G",
+              "type": "reduce"
+            },
+            "queryType": "",
+            "refId": "G",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          }
+        ],
+        "execErrState": "Error",
+        "folderUID": "aeiv1lxk3wagwf",
+        "for": "0s",
+        "isPaused": false,
+        "keep_firing_for": "0s",
+        "noDataState": "NoData",
+        "notification_settings": {
+          "receiver": "AlertSound"
+        },
+        "orgID": 1,
+        "record": null,
+        "ruleGroup": "10s interval",
+        "title": "Differential pressure",
+        "uid": "aepdxfmtp5728e"
+      },
+      {
+        "annotations": {
+          "__dashboardUid__": "eekkq2558fk74f",
+          "__panelId__": "8",
+          "summary": "Differential Pressure = {{ $values.C.Value }} Pa, Gas Flow = {{ $values.G.Value }} L/min"
+        },
+        "condition": "F",
+        "data": [
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "instant": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "range": true,
+              "rawQuery": true,
+              "rawSql": "SELECT timestamp, ch02_value as diffpres FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC LIMIT 1",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "queryType": "",
+            "refId": "A",
+            "relativeTimeRange": {
+              "from": 604800,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "instant": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "range": true,
+              "rawQuery": true,
+              "rawSql": "SELECT timestamp, fmon FROM massflow\nORDER BY timestamp DESC LIMIT 1",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "queryType": "",
+            "refId": "B",
+            "relativeTimeRange": {
+              "from": 604800,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "C"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "A",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "reducer": "last",
+              "refId": "C",
+              "type": "reduce"
+            },
+            "queryType": "",
+            "refId": "C",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      20
+                    ],
+                    "type": "lt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "D"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "C",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "D",
+              "type": "threshold"
+            },
+            "queryType": "",
+            "refId": "D",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      150,
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": []
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "C",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "E",
+              "type": "threshold"
+            },
+            "queryType": "",
+            "refId": "E",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      0,
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": []
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "$D + $E > 0",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "F",
+              "type": "math"
+            },
+            "queryType": "",
+            "refId": "F",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      0,
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": []
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "B",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "reducer": "last",
+              "refId": "G",
+              "type": "reduce"
+            },
+            "queryType": "",
+            "refId": "G",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          }
+        ],
+        "execErrState": "Error",
+        "folderUID": "aeiv1lxk3wagwf",
+        "for": "10m",
+        "isPaused": false,
+        "keep_firing_for": "5m",
+        "noDataState": "NoData",
+        "notification_settings": {
+          "group_interval": "10s",
+          "receiver": "Discord alert",
+          "repeat_interval": "10m"
+        },
+        "orgID": 1,
+        "record": null,
+        "ruleGroup": "10s interval",
+        "title": "Differential pressure (discord)",
+        "uid": "bepdy8etuksn4a"
+      },
+      {
+        "annotations": {
+          "__dashboardUid__": "c1ad6aa1-7414-4b43-9ab6-4b69eb9ec0db",
+          "__panelId__": "2"
+        },
+        "condition": "C",
+        "data": [
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "instant": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "range": true,
+              "rawQuery": true,
+              "rawSql": "WITH s AS (\n  SELECT max(timestamp) AS max_ts\n  FROM spark\n  WHERE $__timeFilter(timestamp)\n)\nSELECT\n  now() AS \"time\",\n  CASE WHEN now() - s.max_ts <= interval '30 seconds' THEN 1 ELSE 0 END AS value\nFROM s;",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "queryType": "",
+            "refId": "A",
+            "relativeTimeRange": {
+              "from": 21600,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "B"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "A",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "reducer": "last",
+              "refId": "B",
+              "type": "reduce"
+            },
+            "queryType": "",
+            "refId": "B",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      0
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "C"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "B",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "C",
+              "type": "threshold"
+            },
+            "queryType": "",
+            "refId": "C",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          }
+        ],
+        "execErrState": "Error",
+        "folderUID": "aeiv1lxk3wagwf",
+        "for": "0s",
+        "isPaused": false,
+        "keep_firing_for": "0s",
+        "noDataState": "NoData",
+        "notification_settings": {
+          "receiver": "AlertSound"
+        },
+        "orgID": 1,
+        "record": null,
+        "ruleGroup": "10s interval",
+        "title": "Spark (every 10 min)",
+        "uid": "eeztc82g9qq68b"
+      },
+      {
+        "annotations": {
+          "__dashboardUid__": "deiuy5tnommm8c",
+          "__panelId__": "5",
+          "summary": "value = {{ $values.B.Value }}, threshold = 50"
+        },
+        "condition": "C",
+        "data": [
+          {
+            "datasourceUid": "deiuvse1meygwe",
+            "model": {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "deiuvse1meygwe"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "instant": false,
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "range": true,
+              "rawQuery": true,
+              "rawSql": "SELECT timestamp, GREATEST(neg_imon1, pos_imon1, neg_imon2, pos_imon2) as imon FROM ess\nORDER BY timestamp DESC\nLIMIT 1",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"timestamp\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "parameters": [
+                      {
+                        "name": "neg_vset1",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ess"
+            },
+            "queryType": "",
+            "refId": "A",
+            "relativeTimeRange": {
+              "from": 86400,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "B"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "min"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "A",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "reducer": "max",
+              "refId": "B",
+              "type": "reduce"
+            },
+            "queryType": "",
+            "refId": "B",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          },
+          {
+            "datasourceUid": "__expr__",
+            "model": {
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [
+                      50
+                    ],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": [
+                      "C"
+                    ]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "last"
+                  },
+                  "type": "query"
+                }
+              ],
+              "datasource": {
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "B",
+              "intervalMs": 1000,
+              "maxDataPoints": 43200,
+              "refId": "C",
+              "type": "threshold"
+            },
+            "queryType": "",
+            "refId": "C",
+            "relativeTimeRange": {
+              "from": 0,
+              "to": 0
+            }
+          }
+        ],
+        "execErrState": "Error",
+        "folderUID": "aeiv1lxk3wagwf",
+        "for": "0s",
+        "isPaused": false,
+        "keep_firing_for": "0s",
+        "noDataState": "NoData",
+        "notification_settings": {
+          "receiver": "AlertSound"
+        },
+        "orgID": 1,
+        "record": null,
+        "ruleGroup": "10s interval",
+        "title": "ESS IMON",
+        "uid": "fejgvi2ua4agwc"
+      }
+    ],
+    "title": "10s interval"
+  }
+]
