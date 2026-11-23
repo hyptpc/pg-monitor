@@ -5,7 +5,7 @@ dhcp
 ess
 gl840-logger1
 gl840-logger2
-hallprobe-shs1
+hallprobe-d5
 hallprobe-shs2
 hddaq
 magnet
@@ -16,4 +16,5 @@ pps
 service
 shs
 spark
+target
 trigger

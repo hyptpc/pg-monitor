@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=/home/oper/share/pg-monitor/systemd/epics.env
+EnvironmentFile=-/home/oper/share/pg-monitor/systemd/secret.env
 ExecStart=/home/oper/share/pg-monitor/script/pg-updater %i
 WorkingDirectory=/home/oper/share/pg-monitor
 Restart=always

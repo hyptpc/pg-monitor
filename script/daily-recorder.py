@@ -2,7 +2,7 @@ import logging
 import os
 import gzip
 import psycopg2
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from myenv import db_config, get_logger
 
@@ -33,7 +33,8 @@ if __name__ == '__main__':
       logger.info(f'  ⚠ No data in table: {table}. Skipping.')
       continue
     current_date = min_ts.date()
-    end_date = max_ts.date()
+    # end_date = max_ts.date()
+    end_date = min(max_ts.date(), date.today() - timedelta(days=1))
     while current_date <= end_date:
       fname = f'{table}_{current_date}.csv.gz'
       filepath = os.path.join(output_dir, fname)

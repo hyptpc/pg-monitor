@@ -16,7 +16,7 @@ logger = get_logger(module_name)
 spark_dir = mdo3032.SAVE_DIR
 allow = {".jpg", ".jpeg", ".png"}
 
-WEBHOOK_URL = 'https://discord.com/api/webhooks/1424709205130088468/FAWcP01LDWF7xi1ETLs93aOEeTepHB4yVoZ0awPFUEpE8DidTQ2KqdqzFxPANaeKQDGD' # E72 spark
+WEBHOOK_URL = os.environ.get('SPARK_WEBHOOK_URL')
 
 shutdown = threading.Event()
 
@@ -65,6 +65,9 @@ def send_image(file_path, content="Captured image", wait=True):
   """Send the saved image to Discord webhook (best-effort)."""
   params = {"wait": "true"} if wait else None
   data = {"content": content}
+  if not WEBHOOK_URL:
+    logger.critical('SPARK_WEBHOOK_URL is not set; skip posting')
+    raise
   try:
     with open(file_path, "rb") as f:
       files = {"file": (pathlib.Path(file_path).name, f)}

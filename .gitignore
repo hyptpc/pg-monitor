@@ -5,3 +5,4 @@ __pycache__
 *.wants/
 csv
 test/
+systemd/secret.env

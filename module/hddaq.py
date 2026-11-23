@@ -13,7 +13,7 @@ from myenv import db_config, get_logger
 module_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = get_logger(module_name)
 
-data_path = '/misc/data/e72'
+data_path = '/misc/raid/hddaq/e72_2025'
 comment_path = os.path.join(data_path, 'misc/comment.txt')
 recorder_path = os.path.join(data_path, 'recorder.log')
 
