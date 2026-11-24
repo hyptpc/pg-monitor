@@ -946,7 +946,9 @@
     "preload": false,
     "refresh": "10s",
     "schemaVersion": 41,
-    "tags": [],
+    "tags": [
+      "e72"
+    ],
     "templating": {
       "list": []
     },

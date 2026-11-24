@@ -1,0 +1,854 @@
+{
+  "dashboard": {
+    "editable": true,
+    "graphTooltip": 1,
+    "panels": [
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Seconds since the last row per crate (pg-updater@caenhv1/2/3). Orange > 60 s, red > 5 min.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 60
+                },
+                {
+                  "color": "red",
+                  "value": 300
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "titleSize": 14,
+            "valueSize": 22
+          },
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT ip_address AS crate, EXTRACT(EPOCH FROM now() - max(timestamp)) AS age\nFROM caenhv WHERE timestamp > now() - interval '1 day' GROUP BY 1 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Data age",
+        "transformations": [
+          {
+            "id": "rowsToFields",
+            "options": {}
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Named channels with Pw on / all named channels (all crates).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 12,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) FILTER (WHERE pw) || ' / ' || count(*) FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) * FROM caenhv\n  WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) l WHERE channel_name <> 'n/a' AND channel_name !~ '^CHANNEL[0-9]+$'",
+            "refId": "A"
+          }
+        ],
+        "title": "Channels ON",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Channels with OverCurrent, OverVoltage, UnderVoltage, trip, MaxV, disabled, unplugged, ... (all crates).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 16,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) FILTER (WHERE channel_status::int & 61432 > 0) FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) * FROM caenhv\n  WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) l",
+            "refId": "A"
+          }
+        ],
+        "title": "Alarms",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Channels ramping up or down.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 20,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) FILTER (WHERE channel_status::int & 6 > 0) FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) * FROM caenhv\n  WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) l",
+            "refId": "A"
+          }
+        ],
+        "title": "Ramping",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "V in V, I in µA. ΔV = VMon - V0Set and I/I0Set are shown for powered channels; I/I0Set near 100 % means close to the current limit (trip). Unused channels (n/a, CHANNELnn) are hidden unless \"Unused\" is set.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "filterable": true
+            },
+            "mappings": [],
+            "noValue": "",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Slot"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 50
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Ch"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 50
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Board"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Crate"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Pw"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 60
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "#808080",
+                          "index": 1,
+                          "text": "off"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 0,
+                          "text": "ON"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "V0Set"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: V"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "VMon"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: V"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "ΔV"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: V"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": -10
+                      },
+                      {
+                        "color": "text",
+                        "value": -3
+                      },
+                      {
+                        "color": "orange",
+                        "value": 3
+                      },
+                      {
+                        "color": "red",
+                        "value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "I0Set"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: µA"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "IMon"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: µA"
+                },
+                {
+                  "id": "decimals",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "I/I0Set"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percent"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "text",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": 80
+                      },
+                      {
+                        "color": "red",
+                        "value": 95
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Sev"
+              },
+              "properties": [
+                {
+                  "id": "custom.hidden",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Status"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "pattern": ".*(Over|Under|Trip|MaxV|Disabled|Err|Unplugged|Protection|Fail).*",
+                        "result": {
+                          "color": "red",
+                          "index": 0
+                        }
+                      },
+                      "type": "regex"
+                    },
+                    {
+                      "options": {
+                        "pattern": ".*Ramp.*",
+                        "result": {
+                          "color": "orange",
+                          "index": 1
+                        }
+                      },
+                      "type": "regex"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 20,
+          "w": 24,
+          "x": 0,
+          "y": 4
+        },
+        "id": 5,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  ip_address AS \"Crate\", board_slot AS \"Slot\", split_part(board_name, ' ', 1) AS \"Board\", channel AS \"Ch\",\n  channel_name AS \"Name\", pw::int AS \"Pw\",\n  v0set AS \"V0Set\", vmon AS \"VMon\", CASE WHEN pw THEN vmon - v0set END AS \"ΔV\",\n  i0set AS \"I0Set\", imon AS \"IMon\", CASE WHEN pw AND i0set > 0 THEN imon / i0set * 100 END AS \"I/I0Set\",\n  CASE WHEN s & 61432 > 0 THEN 2 WHEN s & 6 > 0 THEN 1 ELSE 0 END AS \"Sev\",\n  concat_ws(' ', CASE WHEN s & 2 > 0 THEN 'RampUp' END, CASE WHEN s & 4 > 0 THEN 'RampDown' END, CASE WHEN s & 8 > 0 THEN 'OverCurrent' END, CASE WHEN s & 16 > 0 THEN 'OverVoltage' END, CASE WHEN s & 32 > 0 THEN 'UnderVoltage' END, CASE WHEN s & 64 > 0 THEN 'ExtTrip' END, CASE WHEN s & 128 > 0 THEN 'MaxV' END, CASE WHEN s & 256 > 0 THEN 'ExtDisabled' END, CASE WHEN s & 512 > 0 THEN 'IntTrip' END, CASE WHEN s & 1024 > 0 THEN 'CalibErr' END, CASE WHEN s & 2048 > 0 THEN 'Unplugged' END, CASE WHEN s & 8192 > 0 THEN 'OVProtection' END, CASE WHEN s & 16384 > 0 THEN 'PowerFail' END, CASE WHEN s & 32768 > 0 THEN 'TempError' END) AS \"Status\"\nFROM (SELECT *, channel_status::int AS s FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) * FROM caenhv\n  WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) l) l\nWHERE ip_address IN (${crate:sqlstring}) AND (${unused} = 1 OR channel_name <> 'n/a' AND channel_name !~ '^CHANNEL[0-9]+$')\nORDER BY 1, 2, 4",
+            "refId": "A"
+          }
+        ],
+        "title": "Channels (latest)",
+        "type": "table"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 24
+        },
+        "id": 6,
+        "panels": [],
+        "repeat": "crate",
+        "title": "$crate",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": 120000
+            },
+            "unit": "suffix: V"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 25
+        },
+        "id": 7,
+        "interval": "30s",
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), channel_name AS metric, avg(vmon) AS value\nFROM caenhv WHERE $__timeFilter(timestamp) AND ip_address = '${crate:raw}' AND channel_name IN (${channel:sqlstring})\nGROUP BY 1, 2 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "VMon",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": 120000
+            },
+            "unit": "suffix: µA"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 25
+        },
+        "id": 8,
+        "interval": "30s",
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), channel_name AS metric, avg(imon) AS value\nFROM caenhv WHERE $__timeFilter(timestamp) AND ip_address = '${crate:raw}' AND channel_name IN (${channel:sqlstring})\nGROUP BY 1, 2 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "IMon",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 41,
+    "tags": [
+      "e72"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "deiuvse1meygwe"
+          },
+          "definition": "SELECT DISTINCT ip_address FROM caenhv WHERE timestamp > now() - interval '10 minutes' ORDER BY 1",
+          "includeAll": true,
+          "label": "Crate",
+          "multi": true,
+          "name": "crate",
+          "options": [],
+          "query": "SELECT DISTINCT ip_address FROM caenhv WHERE timestamp > now() - interval '10 minutes' ORDER BY 1",
+          "refresh": 1,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "hide",
+            "value": "0"
+          },
+          "label": "Unused channels",
+          "name": "unused",
+          "options": [
+            {
+              "selected": true,
+              "text": "hide",
+              "value": "0"
+            },
+            {
+              "selected": false,
+              "text": "show",
+              "value": "1"
+            }
+          ],
+          "query": "hide : 0,show : 1",
+          "type": "custom"
+        },
+        {
+          "current": {
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "deiuvse1meygwe"
+          },
+          "definition": "SELECT channel_name FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) * FROM caenhv\n  WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) l WHERE ip_address IN (${crate:sqlstring}) AND (${unused} = 1 OR channel_name <> 'n/a' AND channel_name !~ '^CHANNEL[0-9]+$')\nORDER BY ip_address, board_slot, channel",
+          "includeAll": true,
+          "label": "Trend channels",
+          "multi": true,
+          "name": "channel",
+          "options": [],
+          "query": "SELECT channel_name FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) * FROM caenhv\n  WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) l WHERE ip_address IN (${crate:sqlstring}) AND (${unused} = 1 OR channel_name <> 'n/a' AND channel_name !~ '^CHANNEL[0-9]+$')\nORDER BY ip_address, board_slot, channel",
+          "refresh": 1,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timezone": "browser",
+    "title": "CAEN HV",
+    "uid": "caenhv"
+  },
+  "folderUid": "aeiv1lxk3wagwf"
+}

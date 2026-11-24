@@ -1,4 +1,6 @@
 acc
+caenhv1
+caenhv2
 caenhv3
 cryomag
 dhcp
@@ -11,6 +13,7 @@ hddaq
 magnet
 massflow
 mpod
+mppchv
 omniace
 pps
 service

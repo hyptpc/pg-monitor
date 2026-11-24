@@ -280,7 +280,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, vmon as \"vmon_cat\" FROM caenhv WHERE board_slot = 2 and channel_name = 'Cathode' ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT timestamp, vmon AS \"vmon_cat\" FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 2 AND channel_name = 'Cathode' AND timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -309,7 +309,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, vmon as \"vmon_gem\" FROM caenhv WHERE board_slot = 0 and channel_name = 'GEM' ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT timestamp, vmon AS \"vmon_gem\" FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 0 AND channel_name = 'GEM' AND timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1",
             "refId": "B",
             "sql": {
               "columns": [
@@ -388,7 +388,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, imon as \"imon_cat\" FROM caenhv WHERE board_slot = 2 and channel_name = 'Cathode' ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT timestamp, imon AS \"imon_cat\" FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 2 AND channel_name = 'Cathode' AND timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -417,7 +417,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, imon as \"imon_gem\" FROM caenhv WHERE board_slot = 0 and channel_name = 'GEM' ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT timestamp, imon AS \"imon_gem\" FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 0 AND channel_name = 'GEM' AND timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1",
             "refId": "B",
             "sql": {
               "columns": [
@@ -446,7 +446,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\n  timestamp AS \"time\",\n  COALESCE(SUM(imon) FILTER (WHERE board_slot = 2 and channel_name = 'Cathode'), 0)\n+ COALESCE(SUM(imon) FILTER (WHERE board_slot = 0 and channel_name = 'GEM'), 0) AS imon_total\nFROM caenhv\nWHERE ip_address = 'caenhv3'\n  AND $__timeFilter(timestamp)        -- Grafana なら有効\n  AND channel_name IN ('Cathode','GEM')\nGROUP BY 1\nORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT max(timestamp) AS \"time\",\n  COALESCE((SELECT imon FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 2 AND channel_name = 'Cathode' AND timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1), 0)\n+ COALESCE((SELECT imon FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 0 AND channel_name = 'GEM' AND timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1), 0) AS imon_total\nFROM caenhv WHERE ip_address = 'caenhv3' AND timestamp > now() - interval '5 minutes'",
             "refId": "C",
             "sql": {
               "columns": [
@@ -703,6 +703,7 @@
           "y": 9
         },
         "id": 7,
+        "interval": "5s",
         "options": {
           "legend": {
             "calcs": [],
@@ -722,7 +723,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, vmon as \"vmon_cat\" FROM caenhv WHERE board_slot = 2 and channel_name = 'Cathode'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(vmon) AS \"vmon_cat\"\nFROM caenhv WHERE $__timeFilter(timestamp) AND ip_address = 'caenhv3' AND board_slot = 2 AND channel_name = 'Cathode'\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -751,7 +752,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, vmon as \"vmon_gem\" FROM caenhv WHERE board_slot = 0 and channel_name = 'GEM'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(vmon) AS \"vmon_gem\"\nFROM caenhv WHERE $__timeFilter(timestamp) AND ip_address = 'caenhv3' AND board_slot = 0 AND channel_name = 'GEM'\nGROUP BY 1 ORDER BY 1",
             "refId": "B",
             "sql": {
               "columns": [
@@ -1011,6 +1012,7 @@
           "y": 17
         },
         "id": 6,
+        "interval": "5s",
         "options": {
           "legend": {
             "calcs": [],
@@ -1030,7 +1032,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, imon as \"imon_cat\" FROM caenhv WHERE board_slot = 2 and channel_name = 'Cathode'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(imon) AS \"imon_cat\"\nFROM caenhv WHERE $__timeFilter(timestamp) AND ip_address = 'caenhv3' AND board_slot = 2 AND channel_name = 'Cathode'\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1059,7 +1061,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, imon as \"imon_gem\" FROM caenhv WHERE board_slot = 0 and channel_name = 'GEM'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(imon) AS \"imon_gem\"\nFROM caenhv WHERE $__timeFilter(timestamp) AND ip_address = 'caenhv3' AND board_slot = 0 AND channel_name = 'GEM'\nGROUP BY 1 ORDER BY 1",
             "refId": "B",
             "sql": {
               "columns": [
@@ -1088,7 +1090,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\n  timestamp AS \"time\",\n  COALESCE(SUM(imon) FILTER (WHERE board_slot = 2 and channel_name = 'Cathode'), 0)\n+ COALESCE(SUM(imon) FILTER (WHERE board_slot = 0 and channel_name = 'GEM'), 0) AS imon_total\nFROM caenhv\nWHERE ip_address = 'caenhv3'\n  AND $__timeFilter(timestamp)        -- Grafana なら有効\n  AND channel_name IN ('Cathode','GEM')\nGROUP BY 1\nORDER BY 1 DESC\nLIMIT 100000\n",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  COALESCE(avg(imon) FILTER (WHERE board_slot = 2 AND channel_name = 'Cathode'), 0)\n+ COALESCE(avg(imon) FILTER (WHERE board_slot = 0 AND channel_name = 'GEM'), 0) AS imon_total\nFROM caenhv\nWHERE $__timeFilter(timestamp) AND ip_address = 'caenhv3' AND channel_name IN ('Cathode', 'GEM')\nGROUP BY 1 ORDER BY 1",
             "refId": "C",
             "sql": {
               "columns": [
@@ -1117,7 +1119,9 @@
     "preload": false,
     "refresh": "10s",
     "schemaVersion": 41,
-    "tags": [],
+    "tags": [
+      "e72"
+    ],
     "templating": {
       "list": [
         {

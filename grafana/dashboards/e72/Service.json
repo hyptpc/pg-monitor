@@ -26,124 +26,48 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "pg-updater@ services listed in module/service_list.txt that are active.",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "color-text",
-                "wrapText": true
-              },
-              "inspect": false,
-              "minWidth": 50
-            },
-            "mappings": [
-              {
-                "options": {
-                  "active": {
-                    "color": "green",
-                    "index": 0
-                  },
-                  "inactive": {
-                    "color": "red",
-                    "index": 1
-                  }
-                },
-                "type": "value"
-              },
-              {
-                "options": {
-                  "pattern": ".*WARNING.*",
-                  "result": {
-                    "color": "yellow",
-                    "index": 2
-                  }
-                },
-                "type": "regex"
-              },
-              {
-                "options": {
-                  "pattern": ".*ERROR.*",
-                  "result": {
-                    "color": "yellow",
-                    "index": 3
-                  }
-                },
-                "type": "regex"
-              }
-            ],
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text"
+                  "color": "text",
+                  "value": null
                 }
               ]
             }
           },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "status"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 99
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "timestamp"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 188
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "name"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 224
-                }
-              ]
-            }
-          ]
+          "overrides": []
         },
         "gridPos": {
-          "h": 17,
-          "w": 24,
+          "h": 4,
+          "w": 6,
           "x": 0,
           "y": 0
         },
         "id": 1,
         "options": {
-          "cellHeight": "sm",
-          "footer": {
-            "countRows": false,
-            "fields": "",
-            "reducer": [
-              "sum"
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
             ],
-            "show": false
+            "fields": "/.*/",
+            "values": false
           },
-          "showHeader": true,
-          "sortBy": []
+          "showPercentChange": false,
+          "textMode": "value"
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -153,41 +77,495 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT DISTINCT ON (name)\n  timestamp,\n  name,\n  status,\n  last_log\nFROM service\nORDER BY name, timestamp DESC;\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "WITH l AS (\n  SELECT DISTINCT ON (name) timestamp, replace(name, 'pg-updater@', '') AS name, status,\n         regexp_replace(last_log, '^\\w{3} +\\d+ [0-9:]+ \\S+ \\S+: ', '') AS msg,\n         substring(last_log from '^\\w{3} +\\d+ [0-9:]+') AS logtime\n  FROM service WHERE timestamp > now() - interval '10 minutes'\n  ORDER BY name, timestamp DESC)\nSELECT count(*) FILTER (WHERE status = 'active') || ' / ' || count(*) FROM l",
+            "refId": "A"
           }
         ],
-        "title": "Service list",
-        "transparent": true,
+        "title": "Active",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 6,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH l AS (\n  SELECT DISTINCT ON (name) timestamp, replace(name, 'pg-updater@', '') AS name, status,\n         regexp_replace(last_log, '^\\w{3} +\\d+ [0-9:]+ \\S+ \\S+: ', '') AS msg,\n         substring(last_log from '^\\w{3} +\\d+ [0-9:]+') AS logtime\n  FROM service WHERE timestamp > now() - interval '10 minutes'\n  ORDER BY name, timestamp DESC)\nSELECT count(*) FILTER (WHERE status <> 'active') FROM l",
+            "refId": "A"
+          }
+        ],
+        "title": "Not active",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Services whose newest journal line is an [ERROR]. Often transient (e.g. EPICS gateway unreachable when the accelerator is off); check Data age on Summary.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH l AS (\n  SELECT DISTINCT ON (name) timestamp, replace(name, 'pg-updater@', '') AS name, status,\n         regexp_replace(last_log, '^\\w{3} +\\d+ [0-9:]+ \\S+ \\S+: ', '') AS msg,\n         substring(last_log from '^\\w{3} +\\d+ [0-9:]+') AS logtime\n  FROM service WHERE timestamp > now() - interval '10 minutes'\n  ORDER BY name, timestamp DESC)\nSELECT count(*) FILTER (WHERE msg ~ '\\[ERROR\\]') FROM l",
+            "refId": "A"
+          }
+        ],
+        "title": "Last log is ERROR",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "service.py checks every 30 s.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 90
+                },
+                {
+                  "color": "red",
+                  "value": 300
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - max(timestamp)) FROM service WHERE timestamp > now() - interval '1 day'",
+            "refId": "A"
+          }
+        ],
+        "title": "Last check",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Newest journal line of each pg-updater@ service. Not-active services first, then ERROR, WARNING.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "filterable": true
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Service"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 160
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Status"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.align",
+                  "value": "left"
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "text",
+                          "index": 0,
+                          "text": "active"
+                        },
+                        "1": {
+                          "color": "orange",
+                          "index": 1,
+                          "text": "inactive"
+                        },
+                        "2": {
+                          "color": "red",
+                          "index": 2,
+                          "text": "failed"
+                        },
+                        "3": {
+                          "color": "purple",
+                          "index": 3,
+                          "text": "unknown"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Level"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "ERROR": {
+                          "color": "red",
+                          "index": 0
+                        },
+                        "INFO": {
+                          "color": "text",
+                          "index": 2
+                        },
+                        "WARNING": {
+                          "color": "orange",
+                          "index": 1
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Log time"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 130
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 19,
+          "w": 24,
+          "x": 0,
+          "y": 4
+        },
+        "id": 5,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH l AS (\n  SELECT DISTINCT ON (name) timestamp, replace(name, 'pg-updater@', '') AS name, status,\n         regexp_replace(last_log, '^\\w{3} +\\d+ [0-9:]+ \\S+ \\S+: ', '') AS msg,\n         substring(last_log from '^\\w{3} +\\d+ [0-9:]+') AS logtime\n  FROM service WHERE timestamp > now() - interval '10 minutes'\n  ORDER BY name, timestamp DESC)\nSELECT\n  name AS \"Service\",\n  CASE status WHEN 'active' THEN 0 WHEN 'inactive' THEN 1 WHEN 'failed' THEN 2 ELSE 3 END AS \"Status\",\n  CASE WHEN msg ~ '\\[ERROR\\]' THEN 'ERROR' WHEN msg ~ '\\[WARNING\\]' THEN 'WARNING'\n       WHEN msg ~ '\\[INFO\\]' THEN 'INFO' ELSE '' END AS \"Level\",\n  logtime AS \"Log time\",\n  regexp_replace(msg, '^\\([^)]*\\) \\[\\w+\\] ', '') AS \"Last log line\"\nFROM l\nORDER BY CASE WHEN status <> 'active' THEN 0 WHEN msg ~ '\\[ERROR\\]' THEN 1 WHEN msg ~ '\\[WARNING\\]' THEN 2 ELSE 3 END, name",
+            "refId": "A"
+          }
+        ],
+        "title": "Services",
         "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "fillOpacity": 80,
+              "lineWidth": 0
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "green",
+                    "index": 0,
+                    "text": "active"
+                  },
+                  "1": {
+                    "color": "orange",
+                    "index": 1,
+                    "text": "inactive"
+                  },
+                  "2": {
+                    "color": "red",
+                    "index": 2,
+                    "text": "failed"
+                  },
+                  "3": {
+                    "color": "purple",
+                    "index": 3,
+                    "text": "unknown"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 14,
+          "w": 24,
+          "x": 0,
+          "y": 23
+        },
+        "id": 6,
+        "interval": "1m",
+        "options": {
+          "alignValue": "left",
+          "legend": {
+            "showLegend": false
+          },
+          "mergeValues": true,
+          "rowHeight": 0.8,
+          "showValue": "never",
+          "tooltip": {
+            "mode": "single"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), replace(name, 'pg-updater@', '') AS metric,\n  max(CASE status WHEN 'active' THEN 0 WHEN 'inactive' THEN 1 WHEN 'failed' THEN 2 ELSE 3 END) AS value\nFROM service WHERE $__timeFilter(timestamp)\nGROUP BY 1, 2 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Status history",
+        "type": "state-timeline"
       }
     ],
     "preload": false,
-    "refresh": "auto",
+    "refresh": "1m",
     "schemaVersion": 41,
-    "tags": [],
+    "tags": [
+      "e72"
+    ],
     "templating": {
       "list": []
     },
     "time": {
-      "from": "now-6h",
+      "from": "now-24h",
       "to": "now"
     },
     "timepicker": {},

@@ -1,4 +1,5 @@
 import os
+import re
 import psycopg
 import socket
 import time
@@ -33,6 +34,24 @@ def send(sock, command):
     buf += chunk
   return buf.split(TERM, 1)[0].decode().strip()
 
+NUMBER = re.compile(r'[+-]?(\d+\.?\d*|\.\d+)(E[+-]?\d+)?', re.IGNORECASE)
+
+def parse_field(reply):
+  ''' Parse a RDGFIELD? reply.  The probe sometimes garbles the line:
+  it restarts the reply after sending part of it ('-0.0-0.00002E+00',
+  '--0.00002E+00') or sends it twice ('-0.00002E+00;-0.00002E+00',
+  '-0.00002E+00\r-0.00002E+00').  Take the last ';'/CR-separated piece and
+  drop a leading fragment only if it is a prefix of the number that follows.
+  Raise ValueError for anything else, so the reading is skipped. '''
+  piece = re.split(r'[;\r\n]+', reply.strip())[-1]
+  for i in range(len(piece)):
+    head, tail = piece[:i], piece[i:]
+    if tail.startswith(head) and NUMBER.fullmatch(tail):
+      if i:
+        logger.debug(f'repaired reply {reply!r} -> {tail}')
+      return float(tail)
+  raise ValueError(f'malformed reply {reply!r}')
+
 def main():
   try:
     with socket.create_connection(('192.168.20.19', 4196)) as sock:
@@ -47,7 +66,7 @@ def main():
       timeouts = 0
       while True:
         try:
-          f = float(send(sock, b'RDGFIELD?'))
+          f = parse_field(send(sock, b'RDGFIELD?'))
           logger.debug(f'{f} {u}')
           if conn is None or conn.closed:
             conn = psycopg.connect(**db_config, autocommit=True)

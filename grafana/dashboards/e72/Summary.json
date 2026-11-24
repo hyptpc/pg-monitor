@@ -79,6 +79,27 @@
       {
         "icon": "dashboard",
         "targetBlank": false,
+        "title": "CAEN HV",
+        "type": "link",
+        "url": "/d/caenhv"
+      },
+      {
+        "icon": "dashboard",
+        "targetBlank": false,
+        "title": "MPPC HV",
+        "type": "link",
+        "url": "/d/een5dd9sbda80c"
+      },
+      {
+        "icon": "dashboard",
+        "targetBlank": false,
+        "title": "HypTPC",
+        "type": "link",
+        "url": "/d/c1ad6aa1-7414-4b43-9ab6-4b69eb9ec0db"
+      },
+      {
+        "icon": "dashboard",
+        "targetBlank": false,
         "title": "DAQ",
         "type": "link",
         "url": "/d/daq"
@@ -109,7 +130,7 @@
         },
         "id": 1,
         "panels": [],
-        "title": "Data age (seconds since last update)",
+        "title": "Data age (seconds since last update) / Alerts",
         "type": "row"
       },
       {
@@ -117,7 +138,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Orange > 60 s, red > 5 min or no data for a day (\"stopped\"). Trigger is written on change and hourly, so it turns orange only after 1.5 h.",
+        "description": "Seconds since the last row of each source (SHS1/SHS2/D5 = Hall probes, Log1/Log2 = GL840 loggers, Flow = inlet mass flow). Orange > 60 s, red > 5 min or no data for a day (\"stopped\"). CAEN / MPPC show the oldest of their crates / controllers (caenhv1-3; raspi1, raspi2, BHT_BLCVth, T2_SCH_BH2). Trigger is written on change and hourly, so it turns orange only after 1.5 h.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -155,7 +176,7 @@
                 }
               ]
             },
-            "unit": "s"
+            "unit": "suffix: s"
           },
           "overrides": [
             {
@@ -183,6 +204,10 @@
                       }
                     ]
                   }
+                },
+                {
+                  "id": "unit",
+                  "value": "s"
                 }
               ]
             }
@@ -190,7 +215,7 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 24,
+          "w": 20,
           "x": 0,
           "y": 1
         },
@@ -224,12 +249,45 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM acc WHERE timestamp > now() - interval '1 day')) AS \"Accelerator\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM pps WHERE timestamp > now() - interval '1 day')) AS \"PPS\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM magnet WHERE timestamp > now() - interval '1 day')) AS \"Magnet\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM cryomag WHERE timestamp > now() - interval '1 day')) AS \"SHS PS\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE timestamp > now() - interval '1 day' AND name = 'shs1')) AS \"Probe SHS1\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE timestamp > now() - interval '1 day' AND name = 'shs2')) AS \"Probe SHS2\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE timestamp > now() - interval '1 day' AND name = 'd5')) AS \"Probe D5\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM ess WHERE timestamp > now() - interval '1 day')) AS \"ESS\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM target WHERE timestamp > now() - interval '1 day')) AS \"Target\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM slit WHERE timestamp > now() - interval '1 day')) AS \"Slit\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM omniace WHERE timestamp > now() - interval '1 day')) AS \"Omniace\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM gl840 WHERE timestamp > now() - interval '1 day' AND ip_address LIKE 'logger1.%')) AS \"Logger1\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM gl840 WHERE timestamp > now() - interval '1 day' AND ip_address LIKE 'logger2.%')) AS \"Logger2\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM massflow WHERE timestamp > now() - interval '1 day' AND hostname = '192.168.20.14')) AS \"Massflow\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM trigger WHERE timestamp > now() - interval '1 day')) AS \"Trigger\"",
+            "rawSql": "SELECT\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM acc WHERE timestamp > now() - interval '1 day')) AS \"Acc\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM pps WHERE timestamp > now() - interval '1 day')) AS \"PPS\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM magnet WHERE timestamp > now() - interval '1 day')) AS \"Magnet\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM cryomag WHERE timestamp > now() - interval '1 day')) AS \"SHS PS\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE timestamp > now() - interval '1 day' AND name = 'shs1')) AS \"SHS1\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE timestamp > now() - interval '1 day' AND name = 'shs2')) AS \"SHS2\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE timestamp > now() - interval '1 day' AND name = 'd5')) AS \"D5\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM ess WHERE timestamp > now() - interval '1 day')) AS \"ESS\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM target WHERE timestamp > now() - interval '1 day')) AS \"Target\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM slit WHERE timestamp > now() - interval '1 day')) AS \"Slit\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM omniace WHERE timestamp > now() - interval '1 day')) AS \"Omniace\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM gl840 WHERE timestamp > now() - interval '1 day' AND ip_address LIKE 'logger1.%')) AS \"Log1\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM gl840 WHERE timestamp > now() - interval '1 day' AND ip_address LIKE 'logger2.%')) AS \"Log2\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM massflow WHERE timestamp > now() - interval '1 day' AND hostname = '192.168.20.14')) AS \"Flow\",\n  CASE WHEN (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM caenhv WHERE timestamp > now() - interval '1 day' AND ip_address = 'caenhv1'))) IS NULL OR (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM caenhv WHERE timestamp > now() - interval '1 day' AND ip_address = 'caenhv2'))) IS NULL OR (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM caenhv WHERE timestamp > now() - interval '1 day' AND ip_address = 'caenhv3'))) IS NULL THEN NULL\n    ELSE GREATEST(EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM caenhv WHERE timestamp > now() - interval '1 day' AND ip_address = 'caenhv1')), EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM caenhv WHERE timestamp > now() - interval '1 day' AND ip_address = 'caenhv2')), EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM caenhv WHERE timestamp > now() - interval '1 day' AND ip_address = 'caenhv3'))) END AS \"CAEN\",\n  CASE WHEN (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'raspi1'))) IS NULL OR (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'raspi2'))) IS NULL OR (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'BHT_BLCVth'))) IS NULL OR (EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'T2_SCH_BH2'))) IS NULL THEN NULL\n    ELSE GREATEST(EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'raspi1')), EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'raspi2')), EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'BHT_BLCVth')), EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM mppchv WHERE timestamp > now() - interval '1 day' AND controller = 'T2_SCH_BH2'))) END AS \"MPPC\",\n  EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM trigger WHERE timestamp > now() - interval '1 day')) AS \"Trigger\"",
             "refId": "A"
           }
         ],
         "title": "",
         "type": "stat"
+      },
+      {
+        "description": "Grafana alert rules that are firing or pending.",
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 20,
+          "y": 1
+        },
+        "id": 3,
+        "options": {
+          "alertInstanceLabelFilter": "",
+          "alertName": "",
+          "dashboardAlerts": false,
+          "datasource": null,
+          "folder": null,
+          "groupBy": [],
+          "groupMode": "default",
+          "maxItems": 10,
+          "showInstances": false,
+          "sortOrder": 1,
+          "stateFilter": {
+            "error": true,
+            "firing": true,
+            "noData": true,
+            "normal": false,
+            "pending": true,
+            "recovering": true
+          },
+          "viewMode": "list"
+        },
+        "title": "Firing alerts",
+        "type": "alertlist"
       },
       {
         "collapsed": false,
@@ -239,7 +297,7 @@
           "x": 0,
           "y": 4
         },
-        "id": 3,
+        "id": 4,
         "panels": [],
         "title": "Accelerator",
         "type": "row"
@@ -295,7 +353,7 @@
           "x": 0,
           "y": 5
         },
-        "id": 4,
+        "id": 5,
         "links": [
           {
             "title": "Open Accelerator",
@@ -370,7 +428,7 @@
           "x": 6,
           "y": 5
         },
-        "id": 5,
+        "id": 6,
         "links": [
           {
             "title": "Open Accelerator",
@@ -442,7 +500,7 @@
           "x": 9,
           "y": 5
         },
-        "id": 6,
+        "id": 7,
         "links": [
           {
             "title": "Open Accelerator",
@@ -514,7 +572,7 @@
           "x": 12,
           "y": 5
         },
-        "id": 7,
+        "id": 8,
         "links": [
           {
             "title": "Open Accelerator",
@@ -586,7 +644,7 @@
           "x": 16,
           "y": 5
         },
-        "id": 8,
+        "id": 9,
         "links": [
           {
             "title": "Open Accelerator",
@@ -658,7 +716,7 @@
           "x": 20,
           "y": 5
         },
-        "id": 9,
+        "id": 10,
         "links": [
           {
             "title": "Open Accelerator",
@@ -705,7 +763,7 @@
           "x": 0,
           "y": 8
         },
-        "id": 10,
+        "id": 11,
         "panels": [],
         "title": "Beamline",
         "type": "row"
@@ -842,7 +900,7 @@
           "x": 0,
           "y": 9
         },
-        "id": 11,
+        "id": 12,
         "links": [
           {
             "title": "Open Beamline Magnet",
@@ -905,7 +963,7 @@
           "x": 12,
           "y": 9
         },
-        "id": 12,
+        "id": 13,
         "links": [
           {
             "title": "Open Slit",
@@ -956,7 +1014,7 @@
           "x": 0,
           "y": 16
         },
-        "id": 13,
+        "id": 14,
         "panels": [],
         "title": "Spectrometer",
         "type": "row"
@@ -994,7 +1052,7 @@
           "x": 0,
           "y": 17
         },
-        "id": 14,
+        "id": 15,
         "links": [
           {
             "title": "Open SHS magnet",
@@ -1066,7 +1124,7 @@
           "x": 4,
           "y": 17
         },
-        "id": 15,
+        "id": 16,
         "links": [
           {
             "title": "Open Field",
@@ -1137,7 +1195,7 @@
           "x": 8,
           "y": 17
         },
-        "id": 16,
+        "id": 17,
         "links": [
           {
             "title": "Open Field",
@@ -1209,7 +1267,7 @@
           "x": 12,
           "y": 17
         },
-        "id": 17,
+        "id": 18,
         "links": [
           {
             "title": "Open ESS",
@@ -1285,7 +1343,7 @@
           "x": 18,
           "y": 17
         },
-        "id": 18,
+        "id": 19,
         "links": [
           {
             "title": "Open ESS",
@@ -1336,7 +1394,7 @@
           "x": 0,
           "y": 20
         },
-        "id": 19,
+        "id": 20,
         "panels": [],
         "title": "Target / Hall",
         "type": "row"
@@ -1370,11 +1428,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 6,
+          "w": 5,
           "x": 0,
           "y": 21
         },
-        "id": 20,
+        "id": 21,
         "links": [
           {
             "title": "Open Target",
@@ -1447,10 +1505,10 @@
         "gridPos": {
           "h": 3,
           "w": 4,
-          "x": 6,
+          "x": 5,
           "y": 21
         },
-        "id": 21,
+        "id": 22,
         "links": [
           {
             "title": "Open Target",
@@ -1533,11 +1591,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 5,
-          "x": 10,
+          "w": 4,
+          "x": 9,
           "y": 21
         },
-        "id": 22,
+        "id": 23,
         "links": [
           {
             "title": "Open Target",
@@ -1581,6 +1639,86 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "CAEN: channels with OverCurrent / OverVoltage / UnderVoltage / trip / MaxV / disabled / unplugged ... MPPC: ports with overcurrent protection or current out of spec.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 13,
+          "y": 21
+        },
+        "id": 24,
+        "links": [
+          {
+            "title": "Open CAEN HV",
+            "url": "/d/caenhv"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "titleSize": 14,
+            "valueSize": 28
+          },
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  (SELECT count(*) FROM (SELECT DISTINCT ON (ip_address, board_slot, channel) channel_status FROM caenhv\n     WHERE timestamp > now() - interval '2 minutes' ORDER BY ip_address, board_slot, channel, timestamp DESC) c\n   WHERE channel_status::int & 61432 > 0) AS \"CAEN\",\n  (SELECT count(*) FROM (SELECT DISTINCT ON (controller, port) overcurrent, current_out_of_spec FROM mppchv\n     WHERE timestamp > now() - interval '2 minutes' ORDER BY controller, port, timestamp DESC) m\n   WHERE overcurrent OR current_out_of_spec) AS \"MPPC\"\n",
+            "refId": "A"
+          }
+        ],
+        "title": "HV alarms",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -1605,11 +1743,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 9,
-          "x": 15,
+          "w": 7,
+          "x": 17,
           "y": 21
         },
-        "id": 23,
+        "id": 25,
         "options": {
           "colorMode": "value",
           "graphMode": "none",
@@ -1654,9 +1792,9 @@
           "x": 0,
           "y": 24
         },
-        "id": 24,
+        "id": 26,
         "panels": [],
-        "title": "TPC gas",
+        "title": "TPC",
         "type": "row"
       },
       {
@@ -1696,11 +1834,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 5,
+          "w": 4,
           "x": 0,
           "y": 25
         },
-        "id": 25,
+        "id": 27,
         "links": [
           {
             "title": "Open Gas",
@@ -1736,7 +1874,7 @@
             "refId": "A"
           }
         ],
-        "title": "Differential pressure",
+        "title": "Diff. pressure",
         "type": "stat"
       },
       {
@@ -1776,11 +1914,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 5,
+          "w": 3,
+          "x": 4,
           "y": 25
         },
-        "id": 26,
+        "id": 28,
         "links": [
           {
             "title": "Open Gas",
@@ -1852,11 +1990,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 9,
+          "w": 3,
+          "x": 7,
           "y": 25
         },
-        "id": 27,
+        "id": 29,
         "links": [
           {
             "title": "Open Gas",
@@ -1932,11 +2070,11 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 5,
-          "x": 13,
+          "w": 3,
+          "x": 10,
           "y": 25
         },
-        "id": 28,
+        "id": 30,
         "links": [
           {
             "title": "Open Gas",
@@ -1980,7 +2118,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Inlet mass flow (192.168.20.14). Red when below 0.1 L/min (no flow).",
+        "description": "Inlet mass flow monitor value (192.168.20.14). Red when below 0.1 L/min.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -2008,15 +2146,189 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 6,
-          "x": 18,
+          "w": 3,
+          "x": 13,
           "y": 25
         },
-        "id": 29,
+        "id": 31,
         "links": [
           {
             "title": "Open Gas",
             "url": "/d/eekkq2558fk74f"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT fmon FROM massflow WHERE hostname = '192.168.20.14' ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Flow mon",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Latest IMon of caenhv3 GEM + Cathode (same as imon_total on HypTPC).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "suffix: µA"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 16,
+          "y": 25
+        },
+        "id": 32,
+        "links": [
+          {
+            "title": "Open HypTPC",
+            "url": "/d/c1ad6aa1-7414-4b43-9ab6-4b69eb9ec0db"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT (SELECT imon FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 2 AND channel_name = 'Cathode'\n          AND timestamp > now() - interval '2 minutes' ORDER BY timestamp DESC LIMIT 1)\n     + (SELECT imon FROM caenhv WHERE ip_address = 'caenhv3' AND board_slot = 0 AND channel_name = 'GEM'\n          AND timestamp > now() - interval '2 minutes' ORDER BY timestamp DESC LIMIT 1)",
+            "refId": "A"
+          }
+        ],
+        "title": "I GEM + Cathode",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Number of recorded sparks in the last 4 h / 1 day. Red above the reference rate of 6 per hour (> 24 in 4 h, > 144 in 1 day).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 25
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "1 d"
+              },
+              "properties": [
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "text",
+                        "value": null
+                      },
+                      {
+                        "color": "red",
+                        "value": 145
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 20,
+          "y": 25
+        },
+        "id": 33,
+        "links": [
+          {
+            "title": "Open HypTPC",
+            "url": "/d/c1ad6aa1-7414-4b43-9ab6-4b69eb9ec0db"
           }
         ],
         "options": {
@@ -2048,11 +2360,11 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT fset AS set, fmon AS mon FROM massflow WHERE hostname = '192.168.20.14' ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT count(*) FILTER (WHERE timestamp > now() - interval '4 hours') AS \"4 h\", count(*) AS \"1 d\"\nFROM spark WHERE timestamp > now() - interval '1 day'",
             "refId": "A"
           }
         ],
-        "title": "Input flow",
+        "title": "Sparks",
         "type": "stat"
       },
       {
@@ -2063,7 +2375,7 @@
           "x": 0,
           "y": 28
         },
-        "id": 30,
+        "id": 34,
         "panels": [],
         "title": "DAQ",
         "type": "row"
@@ -2101,7 +2413,7 @@
           "x": 0,
           "y": 29
         },
-        "id": 31,
+        "id": 35,
         "links": [
           {
             "title": "Open DAQ",
@@ -2187,7 +2499,7 @@
           "x": 3,
           "y": 29
         },
-        "id": 32,
+        "id": 36,
         "links": [
           {
             "title": "Open DAQ",
@@ -2258,7 +2570,7 @@
           "x": 6,
           "y": 29
         },
-        "id": 33,
+        "id": 37,
         "links": [
           {
             "title": "Open DAQ",
@@ -2344,7 +2656,7 @@
           "x": 9,
           "y": 29
         },
-        "id": 34,
+        "id": 38,
         "links": [
           {
             "title": "Open DAQ",
@@ -2414,7 +2726,7 @@
           "x": 12,
           "y": 29
         },
-        "id": 35,
+        "id": 39,
         "links": [
           {
             "title": "Open DAQ",
@@ -2487,7 +2799,7 @@
           "x": 17,
           "y": 29
         },
-        "id": 36,
+        "id": 40,
         "links": [
           {
             "title": "Open DAQ",
@@ -2533,7 +2845,9 @@
     "preload": false,
     "refresh": "10s",
     "schemaVersion": 41,
-    "tags": [],
+    "tags": [
+      "e72"
+    ],
     "templating": {
       "list": []
     },

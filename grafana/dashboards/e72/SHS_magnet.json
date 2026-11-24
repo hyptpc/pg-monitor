@@ -2900,7 +2900,9 @@
     "preload": false,
     "refresh": "auto",
     "schemaVersion": 41,
-    "tags": [],
+    "tags": [
+      "e72"
+    ],
     "templating": {
       "list": []
     },
