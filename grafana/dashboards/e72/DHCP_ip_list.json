@@ -26,40 +26,21 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Hosts that answered the last arp-scan (status true and seen within 25 min).",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "color-text"
-              },
-              "inspect": false
-            },
-            "mappings": [
-              {
-                "options": {
-                  "false": {
-                    "color": "text",
-                    "index": 1,
-                    "text": "inactive"
-                  },
-                  "true": {
-                    "color": "green",
-                    "index": 0,
-                    "text": "active"
-                  }
-                },
-                "type": "value"
-              }
-            ],
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text"
+                  "color": "text",
+                  "value": null
                 }
               ]
             }
@@ -67,25 +48,26 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 21,
-          "w": 24,
+          "h": 4,
+          "w": 6,
           "x": 0,
           "y": 0
         },
         "id": 1,
         "options": {
-          "cellHeight": "sm",
-          "footer": {
-            "countRows": false,
-            "fields": "",
-            "reducer": [
-              "sum"
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
             ],
-            "show": false
+            "fields": "",
+            "values": false
           },
-          "showHeader": true
+          "showPercentChange": false,
+          "textMode": "value"
         },
-        "pluginVersion": "11.6.0",
         "targets": [
           {
             "datasource": {
@@ -95,35 +77,367 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT DISTINCT ON (ip_address)\n    *\nFROM dhcp\nORDER BY ip_address, timestamp DESC;",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            },
-            "table": "dhcp"
+            "rawSql": "WITH RECURSIVE k AS (\n  (SELECT ip_address, interface FROM dhcp ORDER BY ip_address, interface LIMIT 1)\n  UNION ALL\n  SELECT n.ip_address, n.interface FROM k, LATERAL (\n    SELECT ip_address, interface FROM dhcp d WHERE (d.ip_address, d.interface) > (k.ip_address, k.interface)\n    ORDER BY ip_address, interface LIMIT 1) n\n), l AS (\n  SELECT d.*, (d.status AND d.timestamp > now() - interval '25 minutes')::int AS online\n  FROM k, LATERAL (SELECT * FROM dhcp d WHERE d.ip_address = k.ip_address AND d.interface = k.interface\n                   ORDER BY timestamp DESC LIMIT 1) d\n)\nSELECT sum(online) FROM l",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Online",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Hosts seen before but not in the last scan.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 6,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH RECURSIVE k AS (\n  (SELECT ip_address, interface FROM dhcp ORDER BY ip_address, interface LIMIT 1)\n  UNION ALL\n  SELECT n.ip_address, n.interface FROM k, LATERAL (\n    SELECT ip_address, interface FROM dhcp d WHERE (d.ip_address, d.interface) > (k.ip_address, k.interface)\n    ORDER BY ip_address, interface LIMIT 1) n\n), l AS (\n  SELECT d.*, (d.status AND d.timestamp > now() - interval '25 minutes')::int AS online\n  FROM k, LATERAL (SELECT * FROM dhcp d WHERE d.ip_address = k.ip_address AND d.interface = k.interface\n                   ORDER BY timestamp DESC LIMIT 1) d\n)\nSELECT count(*) - sum(online) FROM l",
+            "refId": "A"
+          }
+        ],
+        "title": "Offline",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "dhcp.py runs arp-scan every 10 min. Orange > 15 min, red > 30 min.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 900
+                },
+                {
+                  "color": "red",
+                  "value": 1800
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - max(timestamp)) FROM dhcp WHERE timestamp > now() - interval '1 day'",
+            "refId": "A"
+          }
+        ],
+        "title": "Last scan",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Online hosts with no reverse-DNS name: devices not registered in DNS (possibly unknown devices).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH RECURSIVE k AS (\n  (SELECT ip_address, interface FROM dhcp ORDER BY ip_address, interface LIMIT 1)\n  UNION ALL\n  SELECT n.ip_address, n.interface FROM k, LATERAL (\n    SELECT ip_address, interface FROM dhcp d WHERE (d.ip_address, d.interface) > (k.ip_address, k.interface)\n    ORDER BY ip_address, interface LIMIT 1) n\n), l AS (\n  SELECT d.*, (d.status AND d.timestamp > now() - interval '25 minutes')::int AS online\n  FROM k, LATERAL (SELECT * FROM dhcp d WHERE d.ip_address = k.ip_address AND d.interface = k.interface\n                   ORDER BY timestamp DESC LIMIT 1) d\n)\nSELECT count(*) FILTER (WHERE online = 1 AND hostname IS NULL) FROM l",
+            "refId": "A"
+          }
+        ],
+        "title": "Online without DNS name",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Latest arp-scan result per IP. Online first, then by IP. Use the column filter (funnel icon) to search.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "filterable": true
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "State"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.align",
+                  "value": "left"
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "#808080",
+                          "index": 1,
+                          "text": "offline"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 0,
+                          "text": "online"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "IP"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 140
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "MAC"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 160
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Interface"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 100
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Last seen"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "dateTimeFromNow"
+                },
+                {
+                  "id": "custom.width",
+                  "value": 130
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 26,
+          "w": 24,
+          "x": 0,
+          "y": 4
+        },
+        "id": 5,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH RECURSIVE k AS (\n  (SELECT ip_address, interface FROM dhcp ORDER BY ip_address, interface LIMIT 1)\n  UNION ALL\n  SELECT n.ip_address, n.interface FROM k, LATERAL (\n    SELECT ip_address, interface FROM dhcp d WHERE (d.ip_address, d.interface) > (k.ip_address, k.interface)\n    ORDER BY ip_address, interface LIMIT 1) n\n), l AS (\n  SELECT d.*, (d.status AND d.timestamp > now() - interval '25 minutes')::int AS online\n  FROM k, LATERAL (SELECT * FROM dhcp d WHERE d.ip_address = k.ip_address AND d.interface = k.interface\n                   ORDER BY timestamp DESC LIMIT 1) d\n)\nSELECT\n  online AS \"State\",\n  host(ip_address) AS \"IP\",\n  hostname AS \"Hostname\",\n  domain AS \"Domain\",\n  vendor AS \"Vendor\",\n  mac_address AS \"MAC\",\n  interface AS \"Interface\",\n  timestamp AS \"Last seen\"\nFROM l\nORDER BY online DESC, ip_address",
+            "refId": "A"
+          }
+        ],
+        "title": "Hosts",
         "type": "table"
       }
     ],
     "preload": false,
-    "refresh": "auto",
+    "refresh": "1m",
     "schemaVersion": 41,
     "tags": [],
     "templating": {

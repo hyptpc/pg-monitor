@@ -1,0 +1,1542 @@
+{
+  "dashboard": {
+    "description": "Current run, trigger setting and run list (replaces DAQ-Control and Trigger).",
+    "editable": true,
+    "panels": [
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT run_number FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Run",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "text",
+                    "index": 1,
+                    "text": "STOPPED"
+                  },
+                  "1": {
+                    "color": "green",
+                    "index": 0,
+                    "text": "RUNNING"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 3,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT (stop_time IS NULL)::int FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Status",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Elapsed time of the current run, or length of the last run if stopped.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "dthms"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 6,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT EXTRACT(EPOCH FROM coalesce(stop_time, now()) - start_time) FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Duration",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "ON when recorder.log has an entry for this run (data written to disk). Filled in after the run stops.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "orange",
+                    "index": 3,
+                    "text": "OFF"
+                  },
+                  "1": {
+                    "color": "green",
+                    "index": 2,
+                    "text": "ON"
+                  },
+                  "false": {
+                    "color": "orange",
+                    "index": 1,
+                    "text": "OFF"
+                  },
+                  "true": {
+                    "color": "green",
+                    "index": 0,
+                    "text": "ON"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 9,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT recorder::int FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Recorder",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "From recorder.log, after the run stops.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 12,
+          "y": 0
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT event_number FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Events",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "From recorder.log, after the run stops.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "bytes"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 15,
+          "y": 0
+        },
+        "id": 6,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT data_size_bytes FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Data size",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 0
+        },
+        "id": 7,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "valueSize": 20
+          },
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT comment FROM hddaq ORDER BY run_number DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Comment",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 8,
+          "x": 0,
+          "y": 4
+        },
+        "id": 8,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "valueSize": 24
+          },
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT param_file FROM trigger ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Trigger parameter file",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Selected clock source (RGN4).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 8,
+          "y": 4
+        },
+        "id": 9,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "valueSize": 24
+          },
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT coalesce(nullif(concat_ws(' + ',\n  CASE WHEN rgn4_sel_extclk = 1 THEN 'External' END,\n  CASE WHEN rgn4_sel_clk10m = 1 THEN '10 MHz' END,\n  CASE WHEN rgn4_sel_clk1m = 1 THEN '1 MHz' END,\n  CASE WHEN rgn4_sel_clk100k = 1 THEN '100 kHz' END,\n  CASE WHEN rgn4_sel_clk10k = 1 THEN '10 kHz' END,\n  CASE WHEN rgn4_sel_clk1k = 1 THEN '1 kHz' END,\n  CASE WHEN rgn4_sel_rsv2 = 1 THEN 'Reserve2' END), ''), 'none') AS clock\nFROM trigger ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Clock",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "RGN4 spill gate (0: Off, 1: Spill On, 2: Spill Off, 3: OR).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "orange",
+                    "index": 0,
+                    "text": "Off"
+                  },
+                  "1": {
+                    "index": 1,
+                    "text": "Spill On"
+                  },
+                  "2": {
+                    "index": 2,
+                    "text": "Spill Off"
+                  },
+                  "3": {
+                    "index": 3,
+                    "text": "OR (On + Off)"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 12,
+          "y": 4
+        },
+        "id": 10,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "valueSize": 24
+          },
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT rgn4_gate FROM trigger ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Clock gate",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "RGN1 SEL_TOF segment selector (TOF_SEG1-24 in the param file; bit i = segment i+1), currently used for BH2. Raw register value in parentheses.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 5,
+          "x": 15,
+          "y": 4
+        },
+        "id": 11,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "text": {
+            "valueSize": 24
+          },
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT CASE WHEN count(i) = 0 THEN 'none'\n  WHEN count(i) = max(i) - min(i) + 1 THEN format('seg %s–%s', min(i) + 1, max(i) + 1)\n  ELSE 'seg ' || string_agg((i + 1)::text, ',' ORDER BY i) END || format(' (%s)', max(v)) AS sel\nFROM (SELECT rgn1_sel_tof AS v FROM trigger ORDER BY timestamp DESC LIMIT 1) r\nLEFT JOIN generate_series(0, 23) i ON (r.v >> i) & 1 = 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Selector (BH2)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "module/trigger.py writes when the setting changes and at least once an hour. Orange > 1.5 h, red > 3 h (module stopped?).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 5400
+                },
+                {
+                  "color": "red",
+                  "value": 10800
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 20,
+          "y": 4
+        },
+        "id": 12,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - timestamp) FROM trigger ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Trigger data age",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "From hul-trig-ctrl last.log. Condition: × = coincidence, / = veto. Prescale = RGN3 PS register + 1. PS-OR = trigger included in the prescaled OR (RGN3 SEL_PSOR bit). Gate = spill gate (0: Off, 1: Spill On, 2: Spill Off, 3: OR), as in hul-trig-ctrl param files.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Trigger"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Prescale"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 100
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "PS-OR"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "text",
+                          "index": 1,
+                          "text": "off"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 0,
+                          "text": "ON"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Gate"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 130
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "orange",
+                          "index": 0,
+                          "text": "Off"
+                        },
+                        "1": {
+                          "index": 1,
+                          "text": "Spill On"
+                        },
+                        "2": {
+                          "index": 2,
+                          "text": "Spill Off"
+                        },
+                        "3": {
+                          "index": 3,
+                          "text": "OR (On + Off)"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 24,
+          "x": 0,
+          "y": 7
+        },
+        "id": 13,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT t.name AS \"Trigger\",\n  regexp_replace(t.cond, 'x', ' × ', 'g') AS \"Condition\",\n  t.ps + 1 AS \"Prescale\",\n  (r.rgn3_sel_psor >> t.i) & 1 AS \"PS-OR\",\n  t.gate AS \"Gate\"\nFROM (SELECT * FROM trigger ORDER BY timestamp DESC LIMIT 1) r,\nLATERAL (VALUES\n  ('A', r.trig_a, r.rgn3_ps_r2a, 0, r.rgn3_gate_r2a), ('B', r.trig_b, r.rgn3_ps_r2b, 1, r.rgn3_gate_r2b),\n  ('C', r.trig_c, r.rgn3_ps_r2c, 2, r.rgn3_gate_r2c), ('D', r.trig_d, r.rgn3_ps_r2d, 3, r.rgn3_gate_r2d),\n  ('E', r.trig_e, r.rgn3_ps_r2e, 4, r.rgn3_gate_r2e), ('F', r.trig_f, r.rgn3_ps_r2f, 5, r.rgn3_gate_r2f)\n) AS t(name, cond, ps, i, gate)\nORDER BY t.name",
+            "refId": "A"
+          }
+        ],
+        "title": "Trigger setting",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "filterable": true
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Run"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 70
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Status"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "RUNNING": {
+                          "color": "green",
+                          "index": 0
+                        },
+                        "stopped": {
+                          "color": "text",
+                          "index": 1
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Start"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 170
+                },
+                {
+                  "id": "unit",
+                  "value": "dateTimeAsIso"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Stop"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 170
+                },
+                {
+                  "id": "unit",
+                  "value": "dateTimeAsIso"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Duration"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 110
+                },
+                {
+                  "id": "unit",
+                  "value": "dthms"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Recorder"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 100
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "orange",
+                          "index": 3,
+                          "text": "OFF"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 2,
+                          "text": "ON"
+                        },
+                        "false": {
+                          "color": "orange",
+                          "index": 1,
+                          "text": "OFF"
+                        },
+                        "true": {
+                          "color": "green",
+                          "index": 0,
+                          "text": "ON"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Events"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 110
+                },
+                {
+                  "id": "unit",
+                  "value": "locale"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Size"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 100
+                },
+                {
+                  "id": "unit",
+                  "value": "bytes"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "id": 14,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT run_number AS \"Run\",\n  CASE WHEN stop_time IS NULL THEN 'RUNNING' ELSE 'stopped' END AS \"Status\",\n  start_time AS \"Start\", stop_time AS \"Stop\",\n  EXTRACT(EPOCH FROM coalesce(stop_time, now()) - start_time) AS \"Duration\",\n  recorder::int AS \"Recorder\", event_number AS \"Events\", data_size_bytes AS \"Size\",\n  comment AS \"Comment\"\nFROM hddaq\nORDER BY run_number DESC\nLIMIT 50",
+            "refId": "A"
+          }
+        ],
+        "title": "Recent runs",
+        "type": "table"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 28
+        },
+        "id": 15,
+        "panels": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "description": "Every run in hddaq, newest first. Use the column filters to search.",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  },
+                  "filterable": true
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Run"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 70
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Status"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 90
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "type": "color-text"
+                      }
+                    },
+                    {
+                      "id": "mappings",
+                      "value": [
+                        {
+                          "options": {
+                            "RUNNING": {
+                              "color": "green",
+                              "index": 0
+                            },
+                            "stopped": {
+                              "color": "text",
+                              "index": 1
+                            }
+                          },
+                          "type": "value"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Start"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 170
+                    },
+                    {
+                      "id": "unit",
+                      "value": "dateTimeAsIso"
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Stop"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 170
+                    },
+                    {
+                      "id": "unit",
+                      "value": "dateTimeAsIso"
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Duration"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 110
+                    },
+                    {
+                      "id": "unit",
+                      "value": "dthms"
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Recorder"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 100
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "type": "color-text"
+                      }
+                    },
+                    {
+                      "id": "mappings",
+                      "value": [
+                        {
+                          "options": {
+                            "0": {
+                              "color": "orange",
+                              "index": 3,
+                              "text": "OFF"
+                            },
+                            "1": {
+                              "color": "green",
+                              "index": 2,
+                              "text": "ON"
+                            },
+                            "false": {
+                              "color": "orange",
+                              "index": 1,
+                              "text": "OFF"
+                            },
+                            "true": {
+                              "color": "green",
+                              "index": 0,
+                              "text": "ON"
+                            }
+                          },
+                          "type": "value"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Events"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 110
+                    },
+                    {
+                      "id": "unit",
+                      "value": "locale"
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Size"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 100
+                    },
+                    {
+                      "id": "unit",
+                      "value": "bytes"
+                    },
+                    {
+                      "id": "decimals",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 20,
+              "w": 24,
+              "x": 0,
+              "y": 29
+            },
+            "id": 16,
+            "options": {
+              "cellHeight": "sm",
+              "footer": {
+                "show": false
+              },
+              "showHeader": true
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "grafana-postgresql-datasource",
+                  "uid": "deiuvse1meygwe"
+                },
+                "editorMode": "code",
+                "format": "table",
+                "rawQuery": true,
+                "rawSql": "SELECT run_number AS \"Run\",\n  CASE WHEN stop_time IS NULL THEN 'RUNNING' ELSE 'stopped' END AS \"Status\",\n  start_time AS \"Start\", stop_time AS \"Stop\",\n  EXTRACT(EPOCH FROM coalesce(stop_time, now()) - start_time) AS \"Duration\",\n  recorder::int AS \"Recorder\", event_number AS \"Events\", data_size_bytes AS \"Size\",\n  comment AS \"Comment\"\nFROM hddaq\nORDER BY run_number DESC",
+                "refId": "A"
+              }
+            ],
+            "title": "All runs",
+            "type": "table"
+          }
+        ],
+        "title": "All runs",
+        "type": "row"
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 41,
+    "tags": [
+      "e72"
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timezone": "browser",
+    "title": "DAQ",
+    "uid": "daq"
+  },
+  "folderUid": "aeiv1lxk3wagwf"
+}

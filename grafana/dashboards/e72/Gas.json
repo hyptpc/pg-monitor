@@ -1974,7 +1974,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, fmon as \"fmon_in\" FROM massflow WHERE hostname = '192.168.20.14'",
+            "rawSql": "SELECT timestamp, fmon as \"fmon_in\" FROM massflow WHERE $__timeFilter(timestamp) AND hostname = '192.168.20.14' ORDER BY timestamp",
             "refId": "B",
             "sql": {
               "columns": [
@@ -2003,7 +2003,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, fmon as \"fmon_out\" FROM massflow WHERE hostname = '192.168.20.17'",
+            "rawSql": "SELECT timestamp, fmon as \"fmon_out\" FROM massflow WHERE $__timeFilter(timestamp) AND hostname = '192.168.20.17' ORDER BY timestamp",
             "refId": "C",
             "sql": {
               "columns": [
@@ -2467,7 +2467,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, fmon as \"fmon_in\" FROM massflow WHERE hostname = '192.168.20.14'",
+            "rawSql": "SELECT timestamp, fmon as \"fmon_in\" FROM massflow WHERE $__timeFilter(timestamp) AND hostname = '192.168.20.14' ORDER BY timestamp",
             "refId": "B",
             "sql": {
               "columns": [
@@ -2496,7 +2496,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, fmon as \"fmon_out\" FROM massflow WHERE hostname = '192.168.20.17'",
+            "rawSql": "SELECT timestamp, fmon as \"fmon_out\" FROM massflow WHERE $__timeFilter(timestamp) AND hostname = '192.168.20.17' ORDER BY timestamp",
             "refId": "C",
             "sql": {
               "columns": [

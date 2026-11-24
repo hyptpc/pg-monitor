@@ -31,176 +31,22 @@
             "color": {
               "mode": "thresholds"
             },
+            "decimals": 0,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
-                }
-              ]
-            },
-            "unit": "locale"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 2,
-          "w": 12,
-          "x": 0,
-          "y": 0
-        },
-        "id": 2,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "/.*/",
-            "values": false
-          },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "11.6.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT timestamp from acc;",
-            "refId": "A",
-            "sql": {
-              "columns": [
+                  "color": "green",
+                  "value": null
+                },
                 {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
+                  "color": "orange",
+                  "value": 30
+                },
                 {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "",
-        "transparent": true,
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "deiuvse1meygwe"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
-                }
-              ]
-            },
-            "unit": "locale"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 4,
-          "w": 12,
-          "x": 12,
-          "y": 0
-        },
-        "id": 1,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "none",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "/.*/",
-            "values": false
-          },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "11.6.0",
-        "targets": [
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT run_no, shot_no from acc",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "",
-        "transparent": true,
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "deiuvse1meygwe"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
+                  "color": "red",
+                  "value": 120
                 }
               ]
             },
@@ -210,29 +56,27 @@
         },
         "gridPos": {
           "h": 4,
-          "w": 12,
+          "w": 4,
           "x": 0,
-          "y": 2
+          "y": 0
         },
-        "id": 3,
+        "id": 1,
         "options": {
           "colorMode": "value",
           "graphMode": "none",
-          "justifyMode": "auto",
+          "justifyMode": "center",
           "orientation": "auto",
-          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "fields": "/.*/",
+            "fields": "",
             "values": false
           },
           "showPercentChange": false,
-          "textMode": "auto",
+          "textMode": "value",
           "wideLayout": true
         },
-        "pluginVersion": "11.6.0",
         "targets": [
           {
             "datasource": {
@@ -242,29 +86,11 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT mr_cycle, sx_splen from acc",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - timestamp) AS age FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Data age",
         "type": "stat"
       },
       {
@@ -275,46 +101,47 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "thresholds"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
+            "decimals": 0,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 }
               ]
             },
-            "unit": "kwatt"
+            "unit": "none"
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 4
+          "h": 4,
+          "w": 4,
+          "x": 4,
+          "y": 0
         },
-        "id": 4,
+        "id": 2,
         "options": {
           "colorMode": "value",
           "graphMode": "none",
-          "justifyMode": "auto",
+          "justifyMode": "center",
           "orientation": "auto",
-          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "fields": "/.*/",
+            "fields": "",
             "values": false
           },
           "showPercentChange": false,
-          "textMode": "auto",
+          "textMode": "value_and_name",
           "wideLayout": true
         },
-        "pluginVersion": "11.6.0",
         "targets": [
           {
             "datasource": {
@@ -324,29 +151,11 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT mr_power, syim_power from acc",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT run_no AS \"Run\", shot_no AS \"Shot\" FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Run / Shot",
         "type": "stat"
       },
       {
@@ -357,14 +166,36 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "thresholds"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
-            "mappings": [],
+            "mappings": [
+              {
+                "options": {
+                  "pattern": "^(A-|8GeV)",
+                  "result": {
+                    "color": "green",
+                    "index": 0
+                  }
+                },
+                "type": "regex"
+              },
+              {
+                "options": {
+                  "Other": {
+                    "color": "text",
+                    "index": 1
+                  }
+                },
+                "type": "value"
+              }
+            ],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 }
               ]
             }
@@ -373,17 +204,16 @@
         },
         "gridPos": {
           "h": 4,
-          "w": 12,
-          "x": 0,
-          "y": 6
+          "w": 8,
+          "x": 8,
+          "y": 0
         },
-        "id": 5,
+        "id": 3,
         "options": {
           "colorMode": "value",
           "graphMode": "none",
-          "justifyMode": "auto",
+          "justifyMode": "center",
           "orientation": "auto",
-          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -392,10 +222,9 @@
             "values": false
           },
           "showPercentChange": false,
-          "textMode": "auto",
+          "textMode": "value",
           "wideLayout": true
         },
-        "pluginVersion": "11.6.0",
         "targets": [
           {
             "datasource": {
@@ -405,33 +234,849 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT opr_mode from acc",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT opr_mode FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Operation mode",
         "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 16,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT mr_cycle FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "MR cycle",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 20,
+          "y": 0
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT sx_splen FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Spill length",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "kwatt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 0,
+          "y": 4
+        },
+        "id": 6,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT mr_power FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "MR power",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "kwatt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 4,
+          "y": 4
+        },
+        "id": 7,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT syim_power FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SY IM power",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "sci"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 8,
+          "y": 4
+        },
+        "id": 8,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT mr_p3_intensity FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "MR P3 intensity",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "sci"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 12,
+          "y": 4
+        },
+        "id": 9,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT syim_intensity FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SY IM intensity",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 16,
+          "y": 4
+        },
+        "id": 10,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT sx_duty FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SX duty",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 20,
+          "y": 4
+        },
+        "id": 11,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT sx_ext_effi FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SX extraction efficiency",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "fillOpacity": 70,
+              "lineWidth": 0
+            },
+            "mappings": [
+              {
+                "options": {
+                  "pattern": "^(A-|8GeV)",
+                  "result": {
+                    "color": "green",
+                    "index": 0
+                  }
+                },
+                "type": "regex"
+              },
+              {
+                "options": {
+                  "Other": {
+                    "color": "text",
+                    "index": 1
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "id": 12,
+        "options": {
+          "alignValue": "left",
+          "legend": {
+            "showLegend": false
+          },
+          "mergeValues": true,
+          "rowHeight": 0.8,
+          "showValue": "auto",
+          "tooltip": {
+            "mode": "single"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), last(opr_mode, timestamp) AS mode\nFROM acc\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Operation mode",
+        "type": "state-timeline"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMax": null,
+              "axisSoftMin": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "kwatt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 12
+        },
+        "id": 13,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(NULLIF(mr_power, 'NaN')) AS \"MR\", avg(NULLIF(syim_power, 'NaN')) AS \"SY IM\"\nFROM acc\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Beam power",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMax": null,
+              "axisSoftMin": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "sci"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 12
+        },
+        "id": 14,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(NULLIF(mr_p3_intensity, 'NaN')) AS \"MR P3\", avg(NULLIF(syim_intensity, 'NaN')) AS \"SY IM\"\nFROM acc\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Intensity",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Extraction efficiency sometimes reports junk values (>1000 % or negative); the axis is clipped to 0-110 %.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMax": 100,
+              "axisSoftMin": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "max": 110,
+            "min": 0,
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 20
+        },
+        "id": 15,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(NULLIF(sx_ext_effi, 'NaN')) AS \"Extraction efficiency\"\nFROM acc\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SX extraction efficiency",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMax": 100,
+              "axisSoftMin": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 20
+        },
+        "id": 16,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(NULLIF(sx_duty, 'NaN')) AS \"Duty\"\nFROM acc\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SX duty",
+        "type": "timeseries"
       }
     ],
     "preload": false,
+    "refresh": "10s",
     "schemaVersion": 41,
     "tags": [],
     "templating": {

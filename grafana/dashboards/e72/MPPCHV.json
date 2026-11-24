@@ -26,54 +26,61 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Seconds since the last imported row per controller (raspi-mppchv -> sync_db.sh -> module/mppchv.py, normally 20-40 s). Orange > 60 s, red > 5 min.",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "auto"
-              },
-              "inspect": false
-            },
+            "decimals": 0,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 60
                 },
                 {
                   "color": "red",
-                  "value": 80
+                  "value": 300
                 }
               ]
-            }
+            },
+            "unit": "s"
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 15,
+          "h": 3,
           "w": 24,
           "x": 0,
           "y": 0
         },
         "id": 1,
         "options": {
-          "cellHeight": "sm",
-          "footer": {
-            "countRows": false,
-            "fields": "",
-            "reducer": [
-              "sum"
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
             ],
-            "show": false
+            "fields": "",
+            "values": false
           },
-          "showHeader": true
+          "showPercentChange": false,
+          "text": {
+            "titleSize": 14,
+            "valueSize": 22
+          },
+          "textMode": "value_and_name",
+          "wideLayout": true
         },
-        "pluginVersion": "11.6.1",
         "targets": [
           {
             "datasource": {
@@ -83,40 +90,479 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT DISTINCT ON (host, channel) *\nFROM mppchv\nORDER BY host, channel, timestamp DESC;\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT controller, EXTRACT(EPOCH FROM now() - max(timestamp)) AS age\nFROM mppchv WHERE timestamp > now() - interval '1 day' AND controller IN (${controller:sqlstring}) GROUP BY 1 ORDER BY 1",
+            "refId": "A"
           }
         ],
-        "title": "Panel Title",
-        "transparent": true,
+        "title": "Data age",
+        "transformations": [
+          {
+            "id": "rowsToFields",
+            "options": {}
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Imon in mA. Temp is shown only when the module reports the sensor in range (unconnected sensors read ~70-80 degC). Alarm: OCP = overcurrent protection active, I spec = current out of spec.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              }
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Port"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 70
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "HV"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "text",
+                          "index": 1,
+                          "text": "OFF"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 0,
+                          "text": "ON"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Vmon"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: V"
+                },
+                {
+                  "id": "decimals",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Imon"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: mA"
+                },
+                {
+                  "id": "decimals",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Temp"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "celsius"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Alarm"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 110
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "text",
+                          "index": 0,
+                          "text": "OK"
+                        },
+                        "1": {
+                          "color": "orange",
+                          "index": 1,
+                          "text": "I spec"
+                        },
+                        "2": {
+                          "color": "red",
+                          "index": 2,
+                          "text": "OCP"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Age"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "s"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "text",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": 60
+                      },
+                      {
+                        "color": "red",
+                        "value": 300
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 15,
+          "w": 24,
+          "x": 0,
+          "y": 3
+        },
+        "id": 2,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  controller AS \"Controller\", port AS \"Port\", hvon::int AS \"HV\",\n  vmon AS \"Vmon\", imon AS \"Imon\",\n  CASE WHEN temp_in_range THEN temp END AS \"Temp\",\n  CASE WHEN overcurrent THEN 2 WHEN current_out_of_spec THEN 1 ELSE 0 END AS \"Alarm\",\n  EXTRACT(EPOCH FROM now() - timestamp) AS \"Age\"\nFROM (SELECT DISTINCT ON (controller, port) * FROM mppchv\n      WHERE timestamp > now() - interval '1 day' AND controller IN (${controller:sqlstring})\n      ORDER BY controller, port, timestamp DESC) l\nORDER BY 1, 2",
+            "refId": "A"
+          }
+        ],
+        "title": "Channels (latest)",
         "type": "table"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 18
+        },
+        "id": 3,
+        "panels": [],
+        "repeat": "controller",
+        "title": "$controller",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": 120000
+            },
+            "unit": "suffix: V"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 19
+        },
+        "id": 4,
+        "interval": "30s",
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), 'port ' || port AS metric, avg(vmon) AS value\nFROM mppchv WHERE $__timeFilter(timestamp) AND controller = '${controller:raw}'\nGROUP BY 1, 2 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Vmon",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": 120000
+            },
+            "unit": "suffix: mA"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 19
+        },
+        "id": 5,
+        "interval": "30s",
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), 'port ' || port AS metric, avg(imon) AS value\nFROM mppchv WHERE $__timeFilter(timestamp) AND controller = '${controller:raw}'\nGROUP BY 1, 2 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Imon",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": 120000
+            },
+            "unit": "celsius"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 19
+        },
+        "id": 6,
+        "interval": "30s",
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), 'port ' || port AS metric, avg(temp) AS value\nFROM mppchv WHERE $__timeFilter(timestamp) AND controller = '${controller:raw}' AND temp_in_range\nGROUP BY 1, 2 ORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Temperature (sensor in range)",
+        "type": "timeseries"
       }
     ],
     "preload": false,
+    "refresh": "30s",
     "schemaVersion": 41,
     "tags": [],
     "templating": {
-      "list": []
+      "list": [
+        {
+          "current": {
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "deiuvse1meygwe"
+          },
+          "definition": "SELECT DISTINCT controller FROM mppchv WHERE timestamp > now() - interval '7 days' ORDER BY 1",
+          "includeAll": true,
+          "label": "Controller",
+          "multi": true,
+          "name": "controller",
+          "options": [],
+          "query": "SELECT DISTINCT controller FROM mppchv WHERE timestamp > now() - interval '7 days' ORDER BY 1",
+          "refresh": 1,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
     },
     "time": {
-      "from": "now-6h",
+      "from": "now-24h",
       "to": "now"
     },
     "timepicker": {},

@@ -27,66 +27,58 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Seconds since the last row from module/target.py (about every 10 s). Orange > 60 s, red > 180 s.",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "mappings": [
-              {
-                "options": {
-                  "false": {
-                    "color": "red",
-                    "index": 1,
-                    "text": "OFF"
-                  },
-                  "true": {
-                    "color": "green",
-                    "index": 0,
-                    "text": "ON"
-                  }
-                },
-                "type": "value"
-              }
-            ],
-            "max": 320,
-            "min": 0,
+            "decimals": 0,
+            "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 60
+                },
+                {
+                  "color": "red",
+                  "value": 180
                 }
               ]
-            }
+            },
+            "unit": "s"
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 2,
-          "w": 24,
+          "h": 4,
+          "w": 4,
           "x": 0,
           "y": 0
         },
         "id": 1,
         "options": {
           "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "fields": "/.*/",
+            "fields": "",
             "values": false
           },
           "showPercentChange": false,
           "textMode": "value",
           "wideLayout": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -96,29 +88,11 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp\nFROM target\nORDER BY timestamp DESC\nLIMIT 1",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - timestamp) AS age FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Data age",
         "type": "stat"
       },
       {
@@ -129,17 +103,18 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "thresholds"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
             "mappings": [
               {
                 "options": {
-                  "false": {
-                    "color": "red",
+                  "0": {
+                    "color": "text",
                     "index": 1,
                     "text": "OFF"
                   },
-                  "true": {
+                  "1": {
                     "color": "green",
                     "index": 0,
                     "text": "ON"
@@ -148,13 +123,12 @@
                 "type": "value"
               }
             ],
-            "max": 320,
-            "min": 0,
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 }
               ]
             }
@@ -163,292 +137,27 @@
         },
         "gridPos": {
           "h": 4,
-          "w": 9,
-          "x": 0,
-          "y": 2
-        },
-        "id": 7,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "/.*/",
-            "values": false
-          },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "12.0.2",
-        "targets": [
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT fan_on, ref_on\nFROM target\nORDER BY timestamp DESC\nLIMIT 1",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Status",
-        "transparent": true,
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "deiuvse1meygwe"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [
-              {
-                "options": {
-                  "false": {
-                    "color": "green",
-                    "index": 0,
-                    "text": "OFF"
-                  },
-                  "true": {
-                    "color": "red",
-                    "index": 1,
-                    "text": "ON"
-                  }
-                },
-                "type": "value"
-              }
-            ],
-            "max": 320,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 4,
-          "w": 15,
-          "x": 9,
-          "y": 2
-        },
-        "id": 6,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "/.*/",
-            "values": false
-          },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "12.0.2",
-        "targets": [
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT alert_ybox, alert_gl860, alert_h2leak, alert_user\nFROM target\nORDER BY timestamp DESC\nLIMIT 1",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Status",
-        "transparent": true,
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "deiuvse1meygwe"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
-                }
-              ]
-            },
-            "unit": "m3"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 4,
-          "x": 0,
-          "y": 6
-        },
-        "id": 10,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "/.*/",
-            "values": false
-          },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "12.0.2",
-        "targets": [
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT hdexhaust_flow\nFROM target\nORDER BY timestamp DESC\nLIMIT 1",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "",
-        "transparent": true,
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "deiuvse1meygwe"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
-                }
-              ]
-            },
-            "unit": "pressurepa"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
           "w": 4,
           "x": 4,
-          "y": 6
+          "y": 0
         },
-        "id": 8,
+        "id": 2,
         "options": {
           "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "fields": "/.*/",
+            "fields": "",
             "values": false
           },
           "showPercentChange": false,
-          "textMode": "auto",
+          "textMode": "value",
           "wideLayout": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -458,29 +167,11 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT press_diff\nFROM target\nORDER BY timestamp DESC\nLIMIT 1",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT ref_on::int AS \"Refrigerator\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Refrigerator",
         "type": "stat"
       },
       {
@@ -491,46 +182,61 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "thresholds"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
-            "mappings": [],
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "text",
+                    "index": 1,
+                    "text": "OFF"
+                  },
+                  "1": {
+                    "color": "green",
+                    "index": 0,
+                    "text": "ON"
+                  }
+                },
+                "type": "value"
+              }
+            ],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 }
               ]
-            },
-            "unit": "percent"
+            }
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 3,
-          "w": 12,
+          "h": 4,
+          "w": 4,
           "x": 8,
-          "y": 6
+          "y": 0
         },
-        "id": 9,
+        "id": 3,
         "options": {
           "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "fields": "/.*/",
+            "fields": "",
             "values": false
           },
           "showPercentChange": false,
-          "textMode": "auto",
+          "textMode": "value",
           "wideLayout": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -540,29 +246,91 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT h2leak_1, h2leak_2, h2leak_3\nFROM target\nORDER BY timestamp DESC\nLIMIT 1",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT fan_on::int AS \"Fan\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "Fan",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Alarm bits from the target control system.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "green",
+                    "index": 1,
+                    "text": "OK"
+                  },
+                  "1": {
+                    "color": "red",
+                    "index": 0,
+                    "text": "ALARM"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT alert_ybox::int AS \"Y-box\", alert_gl860::int AS \"GL860\", alert_h2leak::int AS \"H2 leak\", alert_user::int AS \"User\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Alarms",
         "type": "stat"
       },
       {
@@ -573,53 +341,17 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
+            "decimals": 2,
             "mappings": [],
-            "max": 320,
-            "min": 0,
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
-                },
-                {
-                  "color": "red",
-                  "value": 80
+                  "color": "green",
+                  "value": null
                 }
               ]
             },
@@ -628,28 +360,28 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
+          "h": 4,
+          "w": 6,
           "x": 0,
-          "y": 9
+          "y": 4
         },
         "id": 5,
         "options": {
-          "legend": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
+            "fields": "",
+            "values": false
           },
-          "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
-            "sort": "none"
-          }
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -659,30 +391,12 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, temp_ref1st, temp_cond_up, temp_cond_dw, temp_tgt_up, temp_tgt_dw, temp_room\nFROM target",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT temp_tgt_up AS \"up\", temp_tgt_dw AS \"down\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "Temperature",
-        "transparent": true,
-        "type": "timeseries"
+        "title": "Target temperature",
+        "type": "stat"
       },
       {
         "datasource": {
@@ -692,53 +406,17 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
+            "decimals": 1,
             "mappings": [],
-            "max": 1200,
-            "min": 700,
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
-                },
-                {
-                  "color": "red",
-                  "value": 80
+                  "color": "green",
+                  "value": null
                 }
               ]
             },
@@ -747,28 +425,28 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 9
+          "h": 4,
+          "w": 4,
+          "x": 6,
+          "y": 4
         },
-        "id": 2,
+        "id": 6,
         "options": {
-          "legend": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
+            "fields": "",
+            "values": false
           },
-          "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
-            "sort": "none"
-          }
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -778,29 +456,465 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, h2_press\nFROM target",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT h2_press AS \"H2\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "H2 Pressure",
-        "transparent": true,
+        "title": "H2 pressure",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "volt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 10,
+          "y": 4
+        },
+        "id": 7,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT heater_v AS \"V\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Heater",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "pressurepa"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 14,
+          "y": 4
+        },
+        "id": 8,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT vac_cryo AS \"cryostat\", vac_tank AS \"tank\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Vacuum (CC-10)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "kelvin"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 20,
+          "y": 4
+        },
+        "id": 9,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT temp_room AS \"room\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Room",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "id": 10,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT h2leak_1 AS \"#1\", h2leak_2 AS \"#2\", h2leak_3 AS \"#3\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "H2 leak detectors",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "pressurepa"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 8
+        },
+        "id": 11,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT press_diff AS \"dP\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Differential pressure",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "m3"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 8
+        },
+        "id": 12,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT hdexhaust_flow AS \"flow\" FROM target ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "HD exhaust flow",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Room temperature is shown separately so that the cold stages keep a useful scale.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "decimals": 2,
+            "unit": "kelvin"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 12
+        },
+        "id": 13,
+        "interval": "10s",
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(temp_ref1st) AS \"Refrigerator 1st\", avg(temp_cond_up) AS \"Condenser up\", avg(temp_cond_dw) AS \"Condenser down\", avg(temp_tgt_up) AS \"Target up\", avg(temp_tgt_dw) AS \"Target down\"\nFROM target\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Cryogenic temperatures",
         "type": "timeseries"
       },
       {
@@ -814,53 +928,79 @@
               "mode": "palette-classic"
             },
             "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
+              "axisSoftMin": null,
               "drawStyle": "line",
               "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
               "lineWidth": 1,
-              "pointSize": 5,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "decimals": 1,
+            "unit": "Torr"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 12
+        },
+        "id": 14,
+        "interval": "10s",
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(h2_press) AS \"H2 pressure\"\nFROM target\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "H2 pressure",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
               "scaleDistribution": {
                 "log": 10,
                 "type": "log"
               },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "max": 10,
-            "min": 1e-05,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
+              "showPoints": "never",
+              "spanNulls": false
             },
             "unit": "pressurepa"
           },
@@ -870,25 +1010,26 @@
           "h": 8,
           "w": 12,
           "x": 0,
-          "y": 17
+          "y": 20
         },
-        "id": 3,
+        "id": 15,
+        "interval": "10s",
         "options": {
           "legend": {
             "calcs": [
-              "lastNotNull"
+              "lastNotNull",
+              "min",
+              "max"
             ],
-            "displayMode": "list",
-            "placement": "bottom",
+            "displayMode": "table",
+            "placement": "right",
             "showLegend": true
           },
           "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
+            "mode": "multi",
             "sort": "none"
           }
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -896,31 +1037,13 @@
               "uid": "deiuvse1meygwe"
             },
             "editorMode": "code",
-            "format": "table",
+            "format": "time_series",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, vac_cryo, vac_tank\nFROM target",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(vac_cryo) AS \"Cryostat\", avg(vac_tank) AS \"Tank\"\nFROM target\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
           }
         ],
-        "title": "Vacuum CC-10",
-        "transparent": true,
+        "title": "Vacuum (CC-10)",
         "type": "timeseries"
       },
       {
@@ -934,49 +1057,14 @@
               "mode": "palette-classic"
             },
             "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
+              "axisSoftMin": 0,
               "drawStyle": "line",
               "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
               "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
+              "showPoints": "never",
+              "spanNulls": false
             },
-            "mappings": [],
-            "max": 40,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green"
-                }
-              ]
-            },
+            "decimals": 2,
             "unit": "volt"
           },
           "overrides": []
@@ -985,25 +1073,26 @@
           "h": 8,
           "w": 12,
           "x": 12,
-          "y": 17
+          "y": 20
         },
-        "id": 4,
+        "id": 16,
+        "interval": "10s",
         "options": {
           "legend": {
             "calcs": [
-              "lastNotNull"
+              "lastNotNull",
+              "min",
+              "max"
             ],
-            "displayMode": "list",
-            "placement": "bottom",
+            "displayMode": "table",
+            "placement": "right",
             "showLegend": true
           },
           "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
+            "mode": "multi",
             "sort": "none"
           }
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1011,36 +1100,164 @@
               "uid": "deiuvse1meygwe"
             },
             "editorMode": "code",
-            "format": "table",
+            "format": "time_series",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, heater_v\nFROM target",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(heater_v) AS \"Heater\"\nFROM target\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
           }
         ],
-        "title": "Heater Voltage",
-        "transparent": true,
+        "title": "Heater voltage",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 28
+        },
+        "id": 17,
+        "interval": "10s",
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(h2leak_1) AS \"#1\", avg(h2leak_2) AS \"#2\", avg(h2leak_3) AS \"#3\"\nFROM target\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "H2 leak detectors",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "decimals": 1,
+            "unit": "pressurepa"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "HD exhaust flow"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "m3"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.axisPlacement",
+                  "value": "right"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 28
+        },
+        "id": 18,
+        "interval": "10s",
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(press_diff) AS \"Differential pressure\", avg(hdexhaust_flow) AS \"HD exhaust flow\"\nFROM target\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Differential pressure / HD exhaust flow",
         "type": "timeseries"
       }
     ],
     "preload": false,
-    "refresh": "auto",
+    "refresh": "10s",
     "schemaVersion": 41,
     "tags": [],
     "templating": {

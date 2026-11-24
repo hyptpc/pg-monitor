@@ -352,7 +352,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT * FROM slit",
+            "rawSql": "SELECT * FROM slit WHERE $__timeFilter(timestamp) ORDER BY timestamp",
             "refId": "A",
             "sql": {
               "columns": [

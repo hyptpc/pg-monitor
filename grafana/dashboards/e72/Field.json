@@ -26,54 +26,21 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Hall probes (module/hallprobe-*.py), table field, about 1 Hz each.",
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "fixedColor": "text",
+              "mode": "fixed"
             },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
+            "decimals": 4,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
-                },
-                {
-                  "color": "red",
-                  "value": 80
+                  "color": "green",
+                  "value": null
                 }
               ]
             },
@@ -82,28 +49,28 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
+          "h": 4,
+          "w": 4,
           "x": 0,
           "y": 0
         },
         "id": 1,
         "options": {
-          "legend": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
             "calcs": [
               "lastNotNull"
             ],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
+            "fields": "",
+            "values": false
           },
-          "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
-            "sort": "none"
-          }
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -113,97 +80,650 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT *\nFROM field\nWHERE name = 'shs1'\nORDER BY timestamp DESC\nLIMIT 100000",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [
-                    {
-                      "name": "field",
-                      "type": "functionParameter"
-                    }
-                  ],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            },
-            "table": "field"
-          },
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "hide": false,
-            "rawQuery": true,
-            "rawSql": "SELECT *\nFROM field\nWHERE name = 'shs2'\nORDER BY timestamp DESC\nLIMIT 100000\n",
-            "refId": "B",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          },
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "hide": false,
-            "rawQuery": true,
-            "rawSql": "SELECT *\nFROM field\nWHERE name = 'd5'\nORDER BY timestamp DESC\nLIMIT 100000\n",
-            "refId": "C",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT field FROM field WHERE name = 'shs1' ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "transparent": true,
+        "title": "SHS probe1",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Hall probes (module/hallprobe-*.py), table field, about 1 Hz each.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 4,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "T"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 4,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT field FROM field WHERE name = 'shs2' ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SHS probe2",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Cryomag power supply output current (table cryomag).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "amp"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 8,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT iout FROM cryomag ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SHS current",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Hall probes (module/hallprobe-*.py), table field, about 1 Hz each.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "T"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 12,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT field FROM field WHERE name = 'd5' ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "D5 field",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "K18BRD5 cmon from the beamline magnet data (table magnet).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "amp"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 16,
+          "y": 0
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT (magnet_data->'K18BRD5'->>'cmon')::float FROM magnet ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "D5 current",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Seconds since the last row from each hall probe. Orange > 30 s, red > 120 s or no data for 7 days.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [
+              {
+                "options": {
+                  "match": "null",
+                  "result": {
+                    "color": "red",
+                    "index": 0,
+                    "text": "stopped"
+                  }
+                },
+                "type": "special"
+              }
+            ],
+            "noValue": "stopped",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 30
+                },
+                {
+                  "color": "red",
+                  "value": 120
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 20,
+          "y": 0
+        },
+        "id": 6,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE name = 'shs1' AND timestamp > now() - interval '7 days')) AS \"SHS1\", EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE name = 'shs2' AND timestamp > now() - interval '7 days')) AS \"SHS2\", EXTRACT(EPOCH FROM now() - (SELECT max(timestamp) FROM field WHERE name = 'd5' AND timestamp > now() - interval '7 days')) AS \"D5\"",
+            "refId": "A"
+          }
+        ],
+        "title": "Probe data age",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Hall probes (module/hallprobe-*.py), table field, about 1 Hz each.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "T"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 4
+        },
+        "id": 7,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(field) AS \"probe1\"\nFROM field\nWHERE $__timeFilter(timestamp) AND name = 'shs1'\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SHS probe1",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Hall probes (module/hallprobe-*.py), table field, about 1 Hz each.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "T"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 4
+        },
+        "id": 8,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(field) AS \"probe2\"\nFROM field\nWHERE $__timeFilter(timestamp) AND name = 'shs2'\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SHS probe2",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Hall probes (module/hallprobe-*.py), table field, about 1 Hz each.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "unit": "T"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 4
+        },
+        "id": 9,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(field) AS \"D5\"\nFROM field\nWHERE $__timeFilter(timestamp) AND name = 'd5'\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "D5 field",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "decimals": 2,
+            "unit": "amp"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 12
+        },
+        "id": 10,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg(iout) AS \"Iout\", avg(imag) AS \"Imag\"\nFROM cryomag\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SHS current",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisSoftMin": null,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": false
+            },
+            "decimals": 1,
+            "unit": "amp"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 12
+        },
+        "id": 11,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval), avg((magnet_data->'K18BRD5'->>'cmon')::float) AS \"cmon\", avg((magnet_data->'K18BRD5'->>'cset')::float) AS \"cset\"\nFROM magnet\nWHERE $__timeFilter(timestamp)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A"
+          }
+        ],
+        "title": "D5 current",
         "type": "timeseries"
       }
     ],
     "preload": false,
+    "refresh": "10s",
     "schemaVersion": 41,
     "tags": [],
     "templating": {

@@ -26,81 +26,69 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Seconds since the last row in the magnet table. Orange > 60 s, red > 5 min.",
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "mode": "thresholds"
             },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
+            "decimals": 0,
+            "mappings": [
+              {
+                "options": {
+                  "match": "null",
+                  "result": {
+                    "color": "red",
+                    "index": 0,
+                    "text": "stopped"
+                  }
+                },
+                "type": "special"
               }
-            },
-            "mappings": [],
+            ],
+            "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 60
                 },
                 {
                   "color": "red",
-                  "value": 80
+                  "value": 300
                 }
               ]
-            }
+            },
+            "unit": "s"
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 10,
-          "w": 12,
+          "h": 4,
+          "w": 4,
           "x": 0,
           "y": 0
         },
-        "id": 3,
+        "id": 1,
         "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
           },
-          "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
-            "sort": "none"
-          }
+          "showPercentChange": false,
+          "textMode": "value"
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -110,124 +98,377 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT\n  timestamp,\n  (magnet_data->'${magnetchannel}'->>'cset')::float AS ${magnetchannel}_cset\nFROM magnet\nWHERE $__timeFilter(timestamp)\nORDER BY timestamp;\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - max(timestamp)) FROM magnet WHERE timestamp > now() - interval '1 day'",
+            "refId": "A"
           }
         ],
-        "title": "",
-        "type": "timeseries"
+        "title": "Last update",
+        "type": "stat"
       },
       {
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Magnets with |Set| > 1 A / all magnets.",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "color-text"
-              },
-              "inspect": false,
-              "minWidth": 50
-            },
-            "mappings": [
-              {
-                "options": {
-                  "neg": {
-                    "color": "blue",
-                    "index": 0,
-                    "text": "NEG"
-                  },
-                  "pos": {
-                    "color": "red",
-                    "index": 1,
-                    "text": "POS"
-                  }
-                },
-                "type": "value"
-              }
-            ],
+            "mappings": [],
+            "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text"
+                  "color": "text",
+                  "value": null
                 }
               ]
-            },
-            "unit": "A"
+            }
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 22,
-          "w": 12,
-          "x": 12,
+          "h": 4,
+          "w": 4,
+          "x": 4,
           "y": 0
         },
         "id": 2,
         "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) FILTER (WHERE abs((m.value->>'cset')::float) > 1) || ' / ' || count(*) FROM (SELECT timestamp, magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1) l, LATERAL jsonb_each(l.magnet_data) AS m(key, value)",
+            "refId": "A"
+          }
+        ],
+        "title": "Energized",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Largest |Mon - Set| / Set among energized magnets. Orange > 1 %, red > 5 %.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                },
+                {
+                  "color": "red",
+                  "value": 5
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 8,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT max(abs(d)) FROM (SELECT CASE WHEN abs((m.value->>'cset')::float) > 1 THEN (abs((m.value->>'cmon')::float) - abs((m.value->>'cset')::float)) / abs((m.value->>'cset')::float) * 100 END AS d FROM (SELECT timestamp, magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1) l, LATERAL jsonb_each(l.magnet_data) AS m(key, value)) s",
+            "refId": "A"
+          }
+        ],
+        "title": "Max |Dev|",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Beamline order. Set / Mon are raw values. Dev = (|Mon| - |Set|) / |Set|, shown when |Set| > 1 A. Orange beyond ±1 %, red beyond ±5 %.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Magnet"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 110
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "State"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 70
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "text",
+                          "index": 1,
+                          "text": "off"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 0,
+                          "text": "ON"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Set"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: A"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Mon"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "suffix: A"
+                },
+                {
+                  "id": "decimals",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Pol"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 70
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "neg": {
+                          "color": "blue",
+                          "index": 0,
+                          "text": "NEG"
+                        },
+                        "pos": {
+                          "color": "red",
+                          "index": 1,
+                          "text": "POS"
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Dev"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percent"
+                },
+                {
+                  "id": "decimals",
+                  "value": 2
+                },
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": -5
+                      },
+                      {
+                        "color": "text",
+                        "value": -1
+                      },
+                      {
+                        "color": "orange",
+                        "value": 1
+                      },
+                      {
+                        "color": "red",
+                        "value": 5
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 24,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "id": 4,
+        "options": {
           "cellHeight": "sm",
           "footer": {
-            "countRows": false,
-            "fields": "",
-            "reducer": [
-              "sum"
-            ],
             "show": false
           },
           "showHeader": true
         },
-        "pluginVersion": "12.0.2",
         "targets": [
           {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT\n  latest.timestamp,\n  m.key        AS name,\n  (m.value->>'cset')::float AS cset,\n  (m.value->>'cmon')::float AS cmon,\n  m.value->>'pol'           AS pol\nFROM (\n  SELECT * FROM magnet\n  ORDER BY timestamp DESC\n  LIMIT 1\n) AS latest,\nLATERAL jsonb_each(latest.magnet_data) AS m(key, value)\nORDER BY\n  CASE m.key\n    WHEN 'AK11D1'   THEN 1\n    WHEN 'AK18D1'   THEN 2\n    WHEN 'AH18'     THEN 3\n    WHEN 'BSM1'     THEN 4\n    WHEN 'K18Q1'    THEN 5\n    WHEN 'K18Q2'    THEN 6\n    WHEN 'K18D2'    THEN 7\n    WHEN 'K18Q3'    THEN 8\n    WHEN 'K18O1'    THEN 9\n    WHEN 'K18Q4'    THEN 10\n    WHEN 'K18S1'    THEN 11\n    WHEN 'K18CM1'   THEN 12\n    WHEN 'K18CM2'   THEN 13\n    WHEN 'K18S2'    THEN 14\n    WHEN 'K18Q5'    THEN 15\n    WHEN 'K18Q6'    THEN 16\n    WHEN 'K18D3'    THEN 17\n    WHEN 'K18BRS3'  THEN 18\n    WHEN 'K18BRQ7'  THEN 19\n    WHEN 'K18BRD4'  THEN 20\n    WHEN 'K18BRQ8'  THEN 21\n    WHEN 'K18BRD5'  THEN 22\n    WHEN 'DORA'     THEN 23\n    ELSE 999\n  END;",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT\n  m.key AS \"Magnet\",\n  CASE WHEN abs((m.value->>'cset')::float) > 1 THEN 1 ELSE 0 END AS \"State\",\n  (m.value->>'cset')::float AS \"Set\",\n  (m.value->>'cmon')::float AS \"Mon\",\n  m.value->>'pol' AS \"Pol\",\n  CASE WHEN abs((m.value->>'cset')::float) > 1 THEN (abs((m.value->>'cmon')::float) - abs((m.value->>'cset')::float)) / abs((m.value->>'cset')::float) * 100 END AS \"Dev\"\nFROM (SELECT timestamp, magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1) l, LATERAL jsonb_each(l.magnet_data) AS m(key, value)\nORDER BY CASE m.key WHEN 'AK11D1' THEN 0 WHEN 'AK18D1' THEN 1 WHEN 'AH18' THEN 2 WHEN 'BSM1' THEN 3 WHEN 'K18Q1' THEN 4 WHEN 'K18Q2' THEN 5 WHEN 'K18D2' THEN 6 WHEN 'K18Q3' THEN 7 WHEN 'K18O1' THEN 8 WHEN 'K18Q4' THEN 9 WHEN 'K18S1' THEN 10 WHEN 'K18CM1' THEN 11 WHEN 'K18CM2' THEN 12 WHEN 'K18S2' THEN 13 WHEN 'K18Q5' THEN 14 WHEN 'K18Q6' THEN 15 WHEN 'K18D3' THEN 16 WHEN 'K18BRS3' THEN 17 WHEN 'K18BRQ7' THEN 18 WHEN 'K18BRD4' THEN 19 WHEN 'K18BRQ8' THEN 20 WHEN 'K18BRD5' THEN 21 WHEN 'DORA' THEN 22 ELSE 999 END",
+            "refId": "A"
           }
         ],
-        "title": "",
+        "title": "Magnets (latest)",
         "type": "table"
       },
       {
@@ -241,75 +482,82 @@
               "mode": "palette-classic"
             },
             "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
+              "axisSoftMin": 0,
               "drawStyle": "line",
               "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
               "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
+              "showPoints": "never",
+              "spanNulls": 120000
             },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
+            "unit": "suffix: A"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Set"
+              },
+              "properties": [
                 {
-                  "color": "green"
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "yellow",
+                    "mode": "fixed"
+                  }
                 },
                 {
-                  "color": "red",
-                  "value": 80
+                  "id": "custom.lineStyle",
+                  "value": {
+                    "dash": [
+                      8,
+                      6
+                    ],
+                    "fill": "dash"
+                  }
+                },
+                {
+                  "id": "custom.lineWidth",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Mon"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
                 }
               ]
             }
-          },
-          "overrides": []
+          ]
         },
         "gridPos": {
-          "h": 11,
+          "h": 7,
           "w": 12,
-          "x": 0,
-          "y": 10
+          "x": 12,
+          "y": 0
         },
-        "id": 1,
+        "id": 5,
         "options": {
           "legend": {
-            "calcs": [],
             "displayMode": "list",
             "placement": "bottom",
             "showLegend": true
           },
           "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
+            "mode": "multi",
             "sort": "none"
           }
         },
-        "pluginVersion": "12.0.2",
+        "repeat": "magnetchannel",
+        "repeatDirection": "v",
         "targets": [
           {
             "datasource": {
@@ -317,57 +565,56 @@
               "uid": "deiuvse1meygwe"
             },
             "editorMode": "code",
-            "format": "table",
+            "format": "time_series",
             "rawQuery": true,
-            "rawSql": "SELECT\n  timestamp,\n  (magnet_data->'${magnetchannel}'->>'cmon')::float AS ${magnetchannel}_cmon\nFROM magnet\nWHERE $__timeFilter(timestamp)\nORDER BY timestamp;\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg((magnet_data->'${magnetchannel:raw}'->>'cset')::float) AS \"Set\",\n  avg((magnet_data->'${magnetchannel:raw}'->>'cmon')::float) AS \"Mon\"\nFROM magnet WHERE $__timeFilter(timestamp) GROUP BY 1 ORDER BY 1",
+            "refId": "A"
           }
         ],
-        "title": "",
+        "title": "${magnetchannel}",
         "type": "timeseries"
       }
     ],
     "preload": false,
+    "refresh": "30s",
     "schemaVersion": 41,
     "tags": [],
     "templating": {
       "list": [
         {
           "current": {
-            "text": "K18BRQ7",
-            "value": "K18BRQ7"
+            "text": [
+              "AK18D1",
+              "K18D2",
+              "K18CM1",
+              "K18CM2"
+            ],
+            "value": [
+              "AK18D1",
+              "K18D2",
+              "K18CM1",
+              "K18CM2"
+            ]
           },
-          "definition": "SELECT DISTINCT jsonb_object_keys(magnet_data) FROM magnet;",
-          "description": "",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "deiuvse1meygwe"
+          },
+          "definition": "SELECT m.key FROM (SELECT timestamp, magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1) l, LATERAL jsonb_object_keys(l.magnet_data) AS m(key) ORDER BY CASE m.key WHEN 'AK11D1' THEN 0 WHEN 'AK18D1' THEN 1 WHEN 'AH18' THEN 2 WHEN 'BSM1' THEN 3 WHEN 'K18Q1' THEN 4 WHEN 'K18Q2' THEN 5 WHEN 'K18D2' THEN 6 WHEN 'K18Q3' THEN 7 WHEN 'K18O1' THEN 8 WHEN 'K18Q4' THEN 9 WHEN 'K18S1' THEN 10 WHEN 'K18CM1' THEN 11 WHEN 'K18CM2' THEN 12 WHEN 'K18S2' THEN 13 WHEN 'K18Q5' THEN 14 WHEN 'K18Q6' THEN 15 WHEN 'K18D3' THEN 16 WHEN 'K18BRS3' THEN 17 WHEN 'K18BRQ7' THEN 18 WHEN 'K18BRD4' THEN 19 WHEN 'K18BRQ8' THEN 20 WHEN 'K18BRD5' THEN 21 WHEN 'DORA' THEN 22 ELSE 999 END",
+          "includeAll": true,
+          "label": "Trend",
+          "multi": true,
           "name": "magnetchannel",
           "options": [],
-          "query": "SELECT DISTINCT jsonb_object_keys(magnet_data) FROM magnet;",
+          "query": "SELECT m.key FROM (SELECT timestamp, magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1) l, LATERAL jsonb_object_keys(l.magnet_data) AS m(key) ORDER BY CASE m.key WHEN 'AK11D1' THEN 0 WHEN 'AK18D1' THEN 1 WHEN 'AH18' THEN 2 WHEN 'BSM1' THEN 3 WHEN 'K18Q1' THEN 4 WHEN 'K18Q2' THEN 5 WHEN 'K18D2' THEN 6 WHEN 'K18Q3' THEN 7 WHEN 'K18O1' THEN 8 WHEN 'K18Q4' THEN 9 WHEN 'K18S1' THEN 10 WHEN 'K18CM1' THEN 11 WHEN 'K18CM2' THEN 12 WHEN 'K18S2' THEN 13 WHEN 'K18Q5' THEN 14 WHEN 'K18Q6' THEN 15 WHEN 'K18D3' THEN 16 WHEN 'K18BRS3' THEN 17 WHEN 'K18BRQ7' THEN 18 WHEN 'K18BRD4' THEN 19 WHEN 'K18BRQ8' THEN 20 WHEN 'K18BRD5' THEN 21 WHEN 'DORA' THEN 22 ELSE 999 END",
           "refresh": 1,
-          "regex": "",
-          "sort": 1,
+          "sort": 0,
           "type": "query"
         }
       ]
     },
     "time": {
-      "from": "now-6h",
+      "from": "now-24h",
       "to": "now"
     },
     "timepicker": {},

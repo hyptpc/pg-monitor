@@ -461,7 +461,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, temp_ref1st, temp_cond_up, temp_cond_dw, temp_tgt_up, temp_tgt_dw --, temp_room\nFROM target",
+            "rawSql": "SELECT timestamp, temp_ref1st, temp_cond_up, temp_cond_dw, temp_tgt_up, temp_tgt_dw FROM target WHERE $__timeFilter(timestamp) ORDER BY timestamp",
             "refId": "A",
             "sql": {
               "columns": [
@@ -580,7 +580,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, h2_press\nFROM target",
+            "rawSql": "SELECT timestamp, h2_press FROM target WHERE $__timeFilter(timestamp) ORDER BY timestamp",
             "refId": "A",
             "sql": {
               "columns": [

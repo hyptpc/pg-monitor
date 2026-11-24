@@ -194,7 +194,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT * FROM omniace ",
+            "rawSql": "SELECT * FROM omniace WHERE $__timeFilter(timestamp) ORDER BY timestamp",
             "refId": "A",
             "sql": {
               "columns": [
@@ -305,7 +305,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "-- SELECT timestamp, ch11 FROM omniace \nSELECT\n  time_bucket('20 seconds', timestamp) AS bucket,\n  -- time_bucket('5 minutes', timestamp) AS bucket,\n  avg(ch11) AS ch11_20s\nFROM\n  omniace\nGROUP BY\n  bucket\nORDER BY\n  bucket;",
+            "rawSql": "SELECT time_bucket('20 seconds', timestamp) AS bucket, avg(ch11) AS ch11_20s FROM omniace WHERE $__timeFilter(timestamp) GROUP BY bucket ORDER BY bucket",
             "refId": "A",
             "sql": {
               "columns": [
@@ -334,7 +334,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "-- SELECT timestamp, ch11 FROM omniace \nSELECT\n  time_bucket('600 seconds', timestamp) AS bucket,\n  -- time_bucket('5 minutes', timestamp) AS bucket,\n  avg(ch11) AS ch11_600s\nFROM\n  omniace\nGROUP BY\n  bucket\nORDER BY\n  bucket;",
+            "rawSql": "SELECT time_bucket('600 seconds', timestamp) AS bucket, avg(ch11) AS ch11_600s FROM omniace WHERE $__timeFilter(timestamp) GROUP BY bucket ORDER BY bucket",
             "refId": "B",
             "sql": {
               "columns": [
@@ -444,7 +444,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch03_value as \"Magnet\", ch04_value as \"Room\" FROM gl840\nWHERE ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%'\nORDER BY timestamp DESC\nLIMIT 1000000\n",
+            "rawSql": "SELECT timestamp, ch03_value as \"Magnet\", ch04_value as \"Room\" FROM gl840 WHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%') ORDER BY timestamp",
             "refId": "A",
             "sql": {
               "columns": [
