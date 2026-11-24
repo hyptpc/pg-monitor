@@ -506,7 +506,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, neg_vmon1 as \"ESS1 NEG\", pos_vmon1 as \"ESS1 POS\", neg_vmon2 as \"ESS2 NEG\", pos_vmon2 as \"ESS2 POS\" FROM ess\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((neg_vmon1)::float8, 'NaN')) AS \"ESS1 NEG\",\n  avg(NULLIF((pos_vmon1)::float8, 'NaN')) AS \"ESS1 POS\",\n  avg(NULLIF((neg_vmon2)::float8, 'NaN')) AS \"ESS2 NEG\",\n  avg(NULLIF((pos_vmon2)::float8, 'NaN')) AS \"ESS2 POS\"\nFROM ess\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -634,7 +634,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, neg_imon1 as \"ESS1 NEG\", pos_imon1 as \"ESS1 POS\", neg_imon2 as \"ESS2 NEG\", pos_imon2 as \"ESS2 POS\" FROM ess\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((neg_imon1)::float8, 'NaN')) AS \"ESS1 NEG\",\n  avg(NULLIF((pos_imon1)::float8, 'NaN')) AS \"ESS1 POS\",\n  avg(NULLIF((neg_imon2)::float8, 'NaN')) AS \"ESS2 NEG\",\n  avg(NULLIF((pos_imon2)::float8, 'NaN')) AS \"ESS2 POS\"\nFROM ess\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -760,7 +760,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ccg_pmon1 as \"ESS1\", ccg_pmon2 as \"ESS2\" FROM ess\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ccg_pmon1)::float8, 'NaN')) AS \"ESS1\",\n  avg(NULLIF((ccg_pmon2)::float8, 'NaN')) AS \"ESS2\"\nFROM ess\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [

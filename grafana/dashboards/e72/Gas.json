@@ -1792,7 +1792,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch03_value as oxygen, 3.425e13 * EXP(-6137 / (ch04_value + 273.15)) as moisture FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch03_value)::float8, 'NaN')) AS oxygen,\n  avg(NULLIF((3.425e13 * EXP(-6137 / (ch04_value + 273.15)))::float8, 'NaN')) AS moisture\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger2.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1945,7 +1945,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch02_value as diffpres FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch02_value)::float8, 'NaN')) AS diffpres\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger2.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2123,7 +2123,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch09_value as roomtemp FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch09_value)::float8, 'NaN')) AS roomtemp\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger2.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2152,7 +2152,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch04_value as \"tent\" FROM gl840\nWHERE ip_address LIKE 'logger1.%'\nORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch04_value)::float8, 'NaN')) AS \"tent\"\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "B",
             "sql": {
               "columns": [
@@ -2285,7 +2285,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch03_value as oxygen, 3.425e13 * EXP(-6137 / (ch04_value + 273.15)) as moisture FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch03_value)::float8, 'NaN')) AS oxygen,\n  avg(NULLIF((3.425e13 * EXP(-6137 / (ch04_value + 273.15)))::float8, 'NaN')) AS moisture\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger2.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2438,7 +2438,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch02_value as diffpres FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch02_value)::float8, 'NaN')) AS diffpres\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger2.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2616,7 +2616,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch09_value as roomtemp FROM gl840\nWHERE ip_address LIKE 'logger2.%'\nORDER BY timestamp DESC\nLIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch09_value)::float8, 'NaN')) AS roomtemp\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger2.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2645,7 +2645,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch04_value as \"Tent\" FROM gl840\nWHERE ip_address LIKE 'logger1.%'\nORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch04_value)::float8, 'NaN')) AS \"Tent\"\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "B",
             "sql": {
               "columns": [

@@ -1619,7 +1619,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, POWER(10, 2* (ch01_value - 6.5)) as \"CC10 mag\", POWER(10, 2 * (ch02_value -6.5)) as \"CC10 mid\" FROM gl840\nWHERE ip_address LIKE 'logger1.%'\nORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((POWER(10, 2* (ch01_value - 6.5)))::float8, 'NaN')) AS \"CC10 mag\",\n  avg(NULLIF((POWER(10, 2 * (ch02_value -6.5)))::float8, 'NaN')) AS \"CC10 mid\"\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1737,7 +1737,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch03_value as \"Magnet\", ch04_value as \"Room\" FROM gl840\nWHERE ip_address LIKE 'logger1.%'\nORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch03_value)::float8, 'NaN')) AS \"Magnet\",\n  avg(NULLIF((ch04_value)::float8, 'NaN')) AS \"Room\"\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1856,7 +1856,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, POWER(10, 2* (ch01_value - 6.5)) as \"CC10 mag\", POWER(10, 2 * (ch02_value -6.5)) as \"CC10 mid\" FROM gl840\nWHERE ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%'\nORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((POWER(10, 2* (ch01_value - 6.5)))::float8, 'NaN')) AS \"CC10 mag\",\n  avg(NULLIF((POWER(10, 2 * (ch02_value -6.5)))::float8, 'NaN')) AS \"CC10 mid\"\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1974,7 +1974,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch03_value as \"Magnet\", ch04_value as \"Room\" FROM gl840\nWHERE ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%'\nORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch03_value)::float8, 'NaN')) AS \"Magnet\",\n  avg(NULLIF((ch04_value)::float8, 'NaN')) AS \"Room\"\nFROM gl840\nWHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%')\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2165,7 +2165,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, field as \"probe1\" FROM field WHERE name = 'shs1' ORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((field)::float8, 'NaN')) AS \"probe1\"\nFROM field\nWHERE $__timeFilter(timestamp) AND (name = 'shs1')\nGROUP BY 1 ORDER BY 1",
             "refId": "B",
             "sql": {
               "columns": [
@@ -2194,7 +2194,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ABS(field) as \"probe2\" FROM field WHERE name = 'shs2' ORDER BY timestamp DESC LIMIT 100000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ABS(field))::float8, 'NaN')) AS \"probe2\"\nFROM field\nWHERE $__timeFilter(timestamp) AND (name = 'shs2')\nGROUP BY 1 ORDER BY 1",
             "refId": "C",
             "sql": {
               "columns": [
@@ -2441,7 +2441,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \n timestamp,\n ch01 as \"v41\", ch02 as \"v16\", ch03 as \"v102\", ch05 as \"v112\", ch07 as \"v73\",\n ch08 as \"v35\", ch09 as \"v45-vtot\", ch10 as \"vshunt\", ch11 as \"vbl\", ch12 as \"vps\",\n ch13 as \"vhallx5\", ch15 as \"cbi\", ch16 as \"qdtrg\"\nFROM omniace\nORDER BY timestamp DESC LIMIT 10000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch01)::float8, 'NaN')) AS \"v41\",\n  avg(NULLIF((ch02)::float8, 'NaN')) AS \"v16\",\n  avg(NULLIF((ch03)::float8, 'NaN')) AS \"v102\",\n  avg(NULLIF((ch05)::float8, 'NaN')) AS \"v112\",\n  avg(NULLIF((ch07)::float8, 'NaN')) AS \"v73\",\n  avg(NULLIF((ch08)::float8, 'NaN')) AS \"v35\",\n  avg(NULLIF((ch09)::float8, 'NaN')) AS \"v45-vtot\",\n  avg(NULLIF((ch10)::float8, 'NaN')) AS \"vshunt\",\n  avg(NULLIF((ch11)::float8, 'NaN')) AS \"vbl\",\n  avg(NULLIF((ch12)::float8, 'NaN')) AS \"vps\",\n  avg(NULLIF((ch13)::float8, 'NaN')) AS \"vhallx5\",\n  avg(NULLIF((ch15)::float8, 'NaN')) AS \"cbi\",\n  avg(NULLIF((ch16)::float8, 'NaN')) AS \"qdtrg\"\nFROM omniace\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2594,7 +2594,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \n timestamp,\n iout, imag, vout, vmag\nFROM cryomag\nORDER BY timestamp DESC LIMIT 10000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((iout)::float8, 'NaN')) AS iout,\n  avg(NULLIF((imag)::float8, 'NaN')) AS imag,\n  avg(NULLIF((vout)::float8, 'NaN')) AS vout,\n  avg(NULLIF((vmag)::float8, 'NaN')) AS vmag\nFROM cryomag\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2711,7 +2711,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \n timestamp,\n ch01 as \"v41\", ch02 as \"v16\", ch03 as \"v102\", ch05 as \"v112\", ch07 as \"v73\",\n ch08 as \"v35\", ch09 as \"v45-vtot\", ch10 as \"vshunt\", ch11 as \"vbl\", ch12 as \"vps\",\n ch13 as \"vhallx5\", ch15 as \"cbi\", ch16 as \"qdtrg\"\nFROM omniace\nORDER BY timestamp DESC LIMIT 40000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((ch01)::float8, 'NaN')) AS \"v41\",\n  avg(NULLIF((ch02)::float8, 'NaN')) AS \"v16\",\n  avg(NULLIF((ch03)::float8, 'NaN')) AS \"v102\",\n  avg(NULLIF((ch05)::float8, 'NaN')) AS \"v112\",\n  avg(NULLIF((ch07)::float8, 'NaN')) AS \"v73\",\n  avg(NULLIF((ch08)::float8, 'NaN')) AS \"v35\",\n  avg(NULLIF((ch09)::float8, 'NaN')) AS \"v45-vtot\",\n  avg(NULLIF((ch10)::float8, 'NaN')) AS \"vshunt\",\n  avg(NULLIF((ch11)::float8, 'NaN')) AS \"vbl\",\n  avg(NULLIF((ch12)::float8, 'NaN')) AS \"vps\",\n  avg(NULLIF((ch13)::float8, 'NaN')) AS \"vhallx5\",\n  avg(NULLIF((ch15)::float8, 'NaN')) AS \"cbi\",\n  avg(NULLIF((ch16)::float8, 'NaN')) AS \"qdtrg\"\nFROM omniace\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2864,7 +2864,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \n timestamp,\n iout, imag, vout, vmag\nFROM cryomag\nORDER BY timestamp DESC LIMIT 40000",
+            "rawSql": "SELECT $__timeGroupAlias(timestamp, $__interval),\n  avg(NULLIF((iout)::float8, 'NaN')) AS iout,\n  avg(NULLIF((imag)::float8, 'NaN')) AS imag,\n  avg(NULLIF((vout)::float8, 'NaN')) AS vout,\n  avg(NULLIF((vmag)::float8, 'NaN')) AS vmag\nFROM cryomag\nWHERE $__timeFilter(timestamp)\nGROUP BY 1 ORDER BY 1",
             "refId": "A",
             "sql": {
               "columns": [
