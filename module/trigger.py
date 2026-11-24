@@ -9,6 +9,8 @@ logger = get_logger('trigger')
 
 last_log = '/home/oper/share/hul-trig-ctrl/last.log'
 n_rgn2 = 6
+INTERVAL = 5      # seconds between reads of last.log
+HEARTBEAT = 3600  # write the unchanged setting at least this often (s)
 beam_detectors = ['BH1-unused', 'BH2', 'BAC-unused', 'HTOF', 'T0', 'BH2-6']
 scat_detectors = ['BEAM', 'SAC', 'KVC2', 'TOF-unused',
                   'KVC1', 'WC-unused', 'BHT', 'BAC',
@@ -100,30 +102,44 @@ def read_last_log():
     scat = scat_bps(ctrl, coin, beam)
     record[f'trig_{abc.lower()}'] = scat
     
-  timestamp = datetime.now().isoformat()
-  record["timestamp"] = timestamp
+  return record
 
+#______________________________________________________________________________
+def insert(conn, record):
+  record = dict(record, timestamp=datetime.now().astimezone())
   columns = ', '.join(record.keys())
   placeholders = ', '.join(['%s'] * len(record))
-  values = list(record.values())
+  with conn.cursor() as cur:
+    cur.execute(f'INSERT INTO trigger ({columns}) VALUES ({placeholders})',
+                list(record.values()))
 
-  sql = f"INSERT INTO trigger ({columns}) VALUES ({placeholders});"
-  return sql, values
-
+#______________________________________________________________________________
 def main():
   logger.info('start')
+  conn = None
+  last_record = None
+  last_insert = 0.
   while True:
     try:
-      conn = psycopg2.connect(**db_config)
-      cur = conn.cursor()
-      sql, values = read_last_log()
-      cur.execute(sql, values)
-      conn.commit()
-      cur.close()
-      conn.close()
+      record = read_last_log()
+      changed = record != last_record
+      if changed or time.time() - last_insert >= HEARTBEAT:
+        if conn is None or conn.closed:
+          conn = psycopg2.connect(**db_config)
+          conn.autocommit = True
+        insert(conn, record)
+        if changed and last_record is not None:
+          logger.info(f'trigger setting changed: {record.get("param_file")}')
+        last_record = record
+        last_insert = time.time()
+    except psycopg2.Error as e:
+      logger.error(e)
+      if conn is not None:
+        conn.close()
+      conn = None
     except Exception as e:
       logger.error(e)
-    time.sleep(5)
+    time.sleep(INTERVAL)
 
 if __name__ == '__main__':
   main()
