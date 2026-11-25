@@ -1834,7 +1834,7 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
+          "w": 3,
           "x": 0,
           "y": 25
         },
@@ -1915,7 +1915,7 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 4,
+          "x": 3,
           "y": 25
         },
         "id": 28,
@@ -1991,7 +1991,7 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 7,
+          "x": 6,
           "y": 25
         },
         "id": 29,
@@ -2071,7 +2071,7 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 10,
+          "x": 9,
           "y": 25
         },
         "id": 30,
@@ -2147,7 +2147,7 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 13,
+          "x": 12,
           "y": 25
         },
         "id": 31,
@@ -2219,8 +2219,8 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 16,
+          "w": 3,
+          "x": 15,
           "y": 25
         },
         "id": 32,
@@ -2260,6 +2260,86 @@
           }
         ],
         "title": "I GEM + Cathode",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Number of MPOD channels (mpod2) that are ON with Imon ≥ 1 A, from the last 2 min. Normal: 31. Green only at 31.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 31
+                },
+                {
+                  "color": "red",
+                  "value": 32
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 18,
+          "y": 25
+        },
+        "id": 41,
+        "links": [
+          {
+            "title": "Open MPOD",
+            "url": "/d/c11a9908-9ba4-4c1d-b448-386a0ccb9cb9"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) FROM (SELECT DISTINCT ON (channel) status, imon FROM mpod WHERE timestamp > now() - interval '2 minutes' AND channel <> 'Mainframe' ORDER BY channel, timestamp DESC) s WHERE status = 'ON' AND imon >= 1",
+            "refId": "A"
+          }
+        ],
+        "title": "MPOD ON ≥1A",
         "type": "stat"
       },
       {
@@ -2320,8 +2400,8 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 20,
+          "w": 3,
+          "x": 21,
           "y": 25
         },
         "id": 33,
