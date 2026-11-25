@@ -1038,6 +1038,708 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Newest run file on KEKCC HSM (/hsm/had/sks/E72/JPARC2025Nov/e72_2025nov) that is closed (read-only).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 0,
+          "y": 16
+        },
+        "id": 16,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT max(run_number) FROM kekcc_rawdata WHERE readonly",
+            "refId": "A"
+          }
+        ],
+        "title": "KEKCC latest run",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Stopped runs with recorder ON whose file on KEKCC is missing or has a different size from recorder.log.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 3
+                },
+                {
+                  "color": "red",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 6,
+          "y": 16
+        },
+        "id": 17,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) FROM hddaq h LEFT JOIN kekcc_rawdata k USING (run_number)\nWHERE h.recorder AND h.stop_time IS NOT NULL AND h.data_size_bytes > 0\n  AND k.size_bytes IS DISTINCT FROM h.data_size_bytes",
+            "refId": "A"
+          }
+        ],
+        "title": "Runs not on KEKCC",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Total size of the runs counted in 'Runs not on KEKCC'.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 50000000000
+                },
+                {
+                  "color": "red",
+                  "value": 200000000000
+                }
+              ]
+            },
+            "unit": "bytes"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 12,
+          "y": 16
+        },
+        "id": 18,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT coalesce(sum(h.data_size_bytes), 0) FROM hddaq h LEFT JOIN kekcc_rawdata k USING (run_number)\nWHERE h.recorder AND h.stop_time IS NOT NULL AND h.data_size_bytes > 0\n  AND k.size_bytes IS DISTINCT FROM h.data_size_bytes",
+            "refId": "A"
+          }
+        ],
+        "title": "Size not on KEKCC",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "Age of ls-kekcc.txt (hayakawa crontab, every 5 min) as read by module/kekcc.py. Orange > 15 min, red > 30 min.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 900
+                },
+                {
+                  "color": "red",
+                  "value": 1800
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 18,
+          "y": 16
+        },
+        "id": 19,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT EXTRACT(EPOCH FROM now() - listed_at) FROM kekcc_status",
+            "refId": "A"
+          }
+        ],
+        "title": "KEKCC list age",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Filesystem usage on geteb1 (node_exporter). /mnt/raid holds the DAQ rawdata. Orange > 80 %, red > 90 %.",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 80
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 0,
+          "y": 19
+        },
+        "id": 20,
+        "options": {
+          "displayMode": "gradient",
+          "namePlacement": "top",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showUnfilled": true,
+          "valueMode": "color"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * (1 - node_filesystem_avail_bytes{instance=\"geteb1\",fstype=\"xfs\",mountpoint!~\"/boot.*\"} / node_filesystem_size_bytes{instance=\"geteb1\",fstype=\"xfs\",mountpoint!~\"/boot.*\"})",
+            "instant": true,
+            "legendFormat": "{{mountpoint}}",
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "geteb1 disk usage",
+        "type": "bargauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Free space on geteb1:/mnt/raid.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 1,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 5000000000000
+                },
+                {
+                  "color": "green",
+                  "value": 15000000000000
+                }
+              ]
+            },
+            "unit": "bytes"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 0,
+          "y": 27
+        },
+        "id": 21,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "node_filesystem_avail_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"}",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "geteb1 /mnt/raid free",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "CPU usage of geteb1 averaged over all cores (total = 100 % - idle).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": true
+            },
+            "max": 100,
+            "min": 0,
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 6,
+          "x": 6,
+          "y": 19
+        },
+        "id": 22,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * (1 - sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"idle\"}[$__rate_interval])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[$__rate_interval])))",
+            "legendFormat": "total",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"iowait\"}[$__rate_interval])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[$__rate_interval]))",
+            "legendFormat": "iowait",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "geteb1 CPU",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "RX up / TX down. Traffic on geteb1. getdaq: DAQ data from the front-ends (RX). eth0 / k18user: outgoing copies (TX). Idle ports are not shown.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": true
+            },
+            "unit": "Bps"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": ".* TX"
+              },
+              "properties": [
+                {
+                  "id": "custom.transform",
+                  "value": "negative-Y"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 6,
+          "x": 12,
+          "y": 19
+        },
+        "id": 23,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_network_receive_bytes_total{instance=\"geteb1\",device=~\"getdaq|k18daq|k18user|eth0\"}[$__rate_interval])",
+            "legendFormat": "{{device}} RX",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_network_transmit_bytes_total{instance=\"geteb1\",device=~\"getdaq|k18daq|k18user|eth0\"}[$__rate_interval])",
+            "legendFormat": "{{device}} TX",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "geteb1 network",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Read up / write down. Disk throughput on geteb1. sda = /mnt/raid (rawdata), sdb = system disk. Dashed: sda busy % (right axis).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": true
+            },
+            "unit": "Bps"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": ".* write"
+              },
+              "properties": [
+                {
+                  "id": "custom.transform",
+                  "value": "negative-Y"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "sda busy"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percent"
+                },
+                {
+                  "id": "min",
+                  "value": 0
+                },
+                {
+                  "id": "max",
+                  "value": 100
+                },
+                {
+                  "id": "custom.axisPlacement",
+                  "value": "right"
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                },
+                {
+                  "id": "custom.lineStyle",
+                  "value": {
+                    "dash": [
+                      6,
+                      4
+                    ],
+                    "fill": "dash"
+                  }
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "gray",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 6,
+          "x": 18,
+          "y": 19
+        },
+        "id": 24,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_disk_read_bytes_total{instance=\"geteb1\",device=~\"sda|sdb\"}[$__rate_interval])",
+            "legendFormat": "{{device}} read",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_disk_written_bytes_total{instance=\"geteb1\",device=~\"sda|sdb\"}[$__rate_interval])",
+            "legendFormat": "{{device}} write",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * rate(node_disk_io_time_seconds_total{instance=\"geteb1\",device=\"sda\"}[$__rate_interval])",
+            "legendFormat": "sda busy",
+            "range": true,
+            "refId": "C"
+          }
+        ],
+        "title": "geteb1 disk IO",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
         "fieldConfig": {
           "defaults": {
             "custom": {
@@ -1238,6 +1940,46 @@
                   "value": 1
                 }
               ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "KEKCC"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 90
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "done": {
+                          "color": "green",
+                          "index": 0
+                        },
+                        "partial": {
+                          "color": "blue",
+                          "index": 1
+                        },
+                        "pending": {
+                          "color": "orange",
+                          "index": 2
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -1245,7 +1987,7 @@
           "h": 12,
           "w": 24,
           "x": 0,
-          "y": 16
+          "y": 30
         },
         "id": 14,
         "options": {
@@ -1264,7 +2006,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT run_number AS \"Run\",\n  CASE WHEN stop_time IS NULL THEN 'RUNNING' ELSE 'stopped' END AS \"Status\",\n  start_time AS \"Start\", stop_time AS \"Stop\",\n  EXTRACT(EPOCH FROM coalesce(stop_time, now()) - start_time) AS \"Duration\",\n  recorder::int AS \"Recorder\", event_number AS \"Events\", data_size_bytes AS \"Size\",\n  comment AS \"Comment\"\nFROM hddaq\nORDER BY run_number DESC\nLIMIT 50",
+            "rawSql": "SELECT h.run_number AS \"Run\",\n  CASE WHEN h.stop_time IS NULL THEN 'RUNNING' ELSE 'stopped' END AS \"Status\",\n  h.start_time AS \"Start\", h.stop_time AS \"Stop\",\n  EXTRACT(EPOCH FROM coalesce(h.stop_time, now()) - h.start_time) AS \"Duration\",\n  h.recorder::int AS \"Recorder\", h.event_number AS \"Events\", h.data_size_bytes AS \"Size\",\n  CASE WHEN NOT h.recorder OR h.stop_time IS NULL OR NOT h.data_size_bytes > 0 THEN ''\n       WHEN k.size_bytes = h.data_size_bytes THEN 'done'\n       WHEN k.run_number IS NOT NULL THEN 'partial'\n       ELSE 'pending' END AS \"KEKCC\",\n  h.comment AS \"Comment\"\nFROM hddaq h LEFT JOIN kekcc_rawdata k USING (run_number)\nORDER BY h.run_number DESC\nLIMIT 50",
             "refId": "A"
           }
         ],
@@ -1277,7 +2019,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 28
+          "y": 42
         },
         "id": 15,
         "panels": [
@@ -1494,7 +2236,7 @@
               "h": 20,
               "w": 24,
               "x": 0,
-              "y": 29
+              "y": 43
             },
             "id": 16,
             "options": {
