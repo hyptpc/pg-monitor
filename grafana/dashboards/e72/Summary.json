@@ -773,94 +773,40 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Set / monitor current. Dev = (|Mon| - Set) / Set, shown when Set > 1 A. Orange beyond ±1 %, red beyond ±5 %.",
+        "description": "Top: monitor current |Mon|. Bottom: polarity. Set and deviation: open Beamline Magnet.",
         "fieldConfig": {
           "defaults": {
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "auto"
-              }
+            "color": {
+              "mode": "thresholds"
             },
+            "decimals": 2,
             "mappings": [],
+            "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
+                  "color": "text",
                   "value": null
                 }
               ]
-            }
+            },
+            "unit": "suffix: A"
           },
           "overrides": [
             {
               "matcher": {
-                "id": "byName",
-                "options": "Set"
+                "id": "byRegexp",
+                "options": ".* pol$"
               },
               "properties": [
+                {
+                  "id": "displayName",
+                  "value": "pol"
+                },
                 {
                   "id": "unit",
-                  "value": "suffix: A"
-                },
-                {
-                  "id": "decimals",
-                  "value": 2
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Mon"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "suffix: A"
-                },
-                {
-                  "id": "decimals",
-                  "value": 2
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Pol"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 60
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Dev"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "percent"
-                },
-                {
-                  "id": "decimals",
-                  "value": 2
-                },
-                {
-                  "id": "custom.width",
-                  "value": 90
-                },
-                {
-                  "id": "custom.cellOptions",
-                  "value": {
-                    "type": "color-text"
-                  }
+                  "value": "string"
                 },
                 {
                   "id": "thresholds",
@@ -868,27 +814,29 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "red",
+                        "color": "text",
                         "value": null
-                      },
-                      {
-                        "color": "orange",
-                        "value": -5
-                      },
-                      {
-                        "color": "green",
-                        "value": -1
-                      },
-                      {
-                        "color": "orange",
-                        "value": 1
-                      },
-                      {
-                        "color": "red",
-                        "value": 5
                       }
                     ]
                   }
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "options": {
+                        "neg": {
+                          "color": "#8FB3E0",
+                          "index": 1
+                        },
+                        "pos": {
+                          "color": "#E8A0A0",
+                          "index": 0
+                        }
+                      },
+                      "type": "value"
+                    }
+                  ]
                 }
               ]
             }
@@ -908,11 +856,20 @@
           }
         ],
         "options": {
-          "cellHeight": "sm",
-          "footer": {
-            "show": false
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
           },
-          "showHeader": true
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
         },
         "targets": [
           {
@@ -923,12 +880,12 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT m.name AS \"Magnet\",\n  (l.magnet_data->m.key->>'cset')::float AS \"Set\",\n  abs((l.magnet_data->m.key->>'cmon')::float) AS \"Mon\",\n  l.magnet_data->m.key->>'pol' AS \"Pol\",\n  CASE WHEN abs((l.magnet_data->m.key->>'cset')::float) > 1\n       THEN 100 * (abs((l.magnet_data->m.key->>'cmon')::float) - (l.magnet_data->m.key->>'cset')::float)\n                / (l.magnet_data->m.key->>'cset')::float END AS \"Dev\"\nFROM (SELECT magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1) l,\n     (VALUES ('BSM1', 'BSM1', 0), ('K1.8 D1', 'AK18D1', 1), ('CM1', 'K18CM1', 2), ('CM2', 'K18CM2', 3), ('K1.8BR D5', 'K18BRD5', 4)) AS m(name, key, ord)\nORDER BY m.ord",
+            "rawSql": "WITH l AS (SELECT magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1),\nv AS (\n  SELECT m.name,\n    abs((l.magnet_data->m.key->>'cmon')::float) AS mon,\n    l.magnet_data->m.key->>'pol' AS pol\n  FROM l, (VALUES\n  ('BSM1', 'BSM1', 0),\n  ('K1.8 D1', 'AK18D1', 1),\n  ('CM1', 'K18CM1', 2),\n  ('CM2', 'K18CM2', 3),\n  ('K1.8BR D5', 'K18BRD5', 4)) AS m(name, key, ord))\nSELECT\n  max(mon) FILTER (WHERE name = 'BSM1') AS \"BSM1\" ,\n  max(mon) FILTER (WHERE name = 'K1.8 D1') AS \"K1.8 D1\" ,\n  max(mon) FILTER (WHERE name = 'CM1') AS \"CM1\" ,\n  max(mon) FILTER (WHERE name = 'CM2') AS \"CM2\" ,\n  max(mon) FILTER (WHERE name = 'K1.8BR D5') AS \"K1.8BR D5\" ,\n  max(pol) FILTER (WHERE name = 'BSM1') AS \"BSM1 pol\" ,\n  max(pol) FILTER (WHERE name = 'K1.8 D1') AS \"K1.8 D1 pol\" ,\n  max(pol) FILTER (WHERE name = 'CM1') AS \"CM1 pol\" ,\n  max(pol) FILTER (WHERE name = 'CM2') AS \"CM2 pol\" ,\n  max(pol) FILTER (WHERE name = 'K1.8BR D5') AS \"K1.8BR D5 pol\" \nFROM v",
             "refId": "A"
           }
         ],
         "title": "Magnets",
-        "type": "table"
+        "type": "stat"
       },
       {
         "datasource": {
@@ -1191,7 +1148,7 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
+          "w": 3,
           "x": 8,
           "y": 17
         },
@@ -1239,6 +1196,79 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "From the D5 Hall probe: p [GeV/c] = 0.29979 × |B| × ρ with ρ = 2.0408 m (8D240S, L = 195.9 cm, θ = 55°; Agari et al., PTEP 2012 02B009, Table 2), i.e. p = 0.6118 × |B|. Assumes the probe reads the central field of the design; empty if the probe has not updated for 1 min.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 3,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "suffix: GeV/c"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 11,
+          "y": 17
+        },
+        "id": 42,
+        "links": [
+          {
+            "title": "Open Field",
+            "url": "/d/85676c30-e583-4289-9c8f-c39a395b8cde"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT 0.6118 * abs(field) FROM field WHERE name = 'd5' AND timestamp > now() - interval '1 minute' ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "p (D5)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -1263,8 +1293,8 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 6,
-          "x": 12,
+          "w": 5,
+          "x": 14,
           "y": 17
         },
         "id": 18,
@@ -1339,8 +1369,8 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 6,
-          "x": 18,
+          "w": 5,
+          "x": 19,
           "y": 17
         },
         "id": 19,
