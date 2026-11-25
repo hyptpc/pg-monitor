@@ -4,6 +4,19 @@
     "editable": true,
     "panels": [
       {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 30,
+        "panels": [],
+        "title": "DAQ",
+        "type": "row"
+      },
+      {
         "datasource": {
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
@@ -34,7 +47,7 @@
           "h": 4,
           "w": 3,
           "x": 0,
-          "y": 0
+          "y": 1
         },
         "id": 1,
         "options": {
@@ -114,7 +127,7 @@
           "h": 4,
           "w": 3,
           "x": 3,
-          "y": 0
+          "y": 1
         },
         "id": 2,
         "options": {
@@ -180,7 +193,7 @@
           "h": 4,
           "w": 3,
           "x": 6,
-          "y": 0
+          "y": 1
         },
         "id": 3,
         "options": {
@@ -271,7 +284,7 @@
           "h": 4,
           "w": 3,
           "x": 9,
-          "y": 0
+          "y": 1
         },
         "id": 4,
         "options": {
@@ -337,7 +350,7 @@
           "h": 4,
           "w": 3,
           "x": 12,
-          "y": 0
+          "y": 1
         },
         "id": 5,
         "options": {
@@ -404,7 +417,7 @@
           "h": 4,
           "w": 3,
           "x": 15,
-          "y": 0
+          "y": 1
         },
         "id": 6,
         "options": {
@@ -468,7 +481,7 @@
           "h": 4,
           "w": 6,
           "x": 18,
-          "y": 0
+          "y": 1
         },
         "id": 7,
         "options": {
@@ -535,7 +548,7 @@
           "h": 3,
           "w": 8,
           "x": 0,
-          "y": 4
+          "y": 5
         },
         "id": 8,
         "options": {
@@ -603,7 +616,7 @@
           "h": 3,
           "w": 4,
           "x": 8,
-          "y": 4
+          "y": 5
         },
         "id": 9,
         "options": {
@@ -694,7 +707,7 @@
           "h": 3,
           "w": 3,
           "x": 12,
-          "y": 4
+          "y": 5
         },
         "id": 10,
         "options": {
@@ -762,7 +775,7 @@
           "h": 3,
           "w": 5,
           "x": 15,
-          "y": 4
+          "y": 5
         },
         "id": 11,
         "options": {
@@ -839,7 +852,7 @@
           "h": 3,
           "w": 4,
           "x": 20,
-          "y": 4
+          "y": 5
         },
         "id": 12,
         "options": {
@@ -1007,7 +1020,7 @@
           "h": 9,
           "w": 24,
           "x": 0,
-          "y": 7
+          "y": 8
         },
         "id": 13,
         "options": {
@@ -1064,7 +1077,7 @@
           "h": 3,
           "w": 6,
           "x": 0,
-          "y": 16
+          "y": 17
         },
         "id": 16,
         "options": {
@@ -1137,7 +1150,7 @@
           "h": 3,
           "w": 6,
           "x": 6,
-          "y": 16
+          "y": 17
         },
         "id": 17,
         "options": {
@@ -1211,7 +1224,7 @@
           "h": 3,
           "w": 6,
           "x": 12,
-          "y": 16
+          "y": 17
         },
         "id": 18,
         "options": {
@@ -1285,7 +1298,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 16
+          "y": 17
         },
         "id": 19,
         "options": {
@@ -1319,421 +1332,6 @@
         ],
         "title": "KEKCC list age",
         "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "df007ec6g9p8gc"
-        },
-        "description": "Filesystem usage on geteb1 (node_exporter). /mnt/raid holds the DAQ rawdata. Orange > 80 %, red > 90 %.",
-        "fieldConfig": {
-          "defaults": {
-            "decimals": 1,
-            "max": 100,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "orange",
-                  "value": 80
-                },
-                {
-                  "color": "red",
-                  "value": 90
-                }
-              ]
-            },
-            "unit": "percent"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 6,
-          "x": 0,
-          "y": 19
-        },
-        "id": 20,
-        "options": {
-          "displayMode": "gradient",
-          "namePlacement": "top",
-          "orientation": "horizontal",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showUnfilled": true,
-          "valueMode": "color"
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "100 * (1 - node_filesystem_avail_bytes{instance=\"geteb1\",fstype=\"xfs\",mountpoint!~\"/boot.*\"} / node_filesystem_size_bytes{instance=\"geteb1\",fstype=\"xfs\",mountpoint!~\"/boot.*\"})",
-            "instant": true,
-            "legendFormat": "{{mountpoint}}",
-            "range": false,
-            "refId": "A"
-          }
-        ],
-        "title": "geteb1 disk usage",
-        "type": "bargauge"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "df007ec6g9p8gc"
-        },
-        "description": "Free space on geteb1:/mnt/raid.",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "decimals": 1,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "red",
-                  "value": null
-                },
-                {
-                  "color": "orange",
-                  "value": 5000000000000
-                },
-                {
-                  "color": "green",
-                  "value": 15000000000000
-                }
-              ]
-            },
-            "unit": "bytes"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 6,
-          "x": 0,
-          "y": 27
-        },
-        "id": 21,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "none",
-          "justifyMode": "center",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "textMode": "value"
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "node_filesystem_avail_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"}",
-            "instant": true,
-            "range": false,
-            "refId": "A"
-          }
-        ],
-        "title": "geteb1 /mnt/raid free",
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "df007ec6g9p8gc"
-        },
-        "description": "CPU usage of geteb1 averaged over all cores (total = 100 % - idle).",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "drawStyle": "line",
-              "fillOpacity": 10,
-              "lineWidth": 1,
-              "showPoints": "never",
-              "spanNulls": true
-            },
-            "max": 100,
-            "min": 0,
-            "unit": "percent"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 11,
-          "w": 6,
-          "x": 6,
-          "y": 19
-        },
-        "id": 22,
-        "options": {
-          "legend": {
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "100 * (1 - sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"idle\"}[$__rate_interval])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[$__rate_interval])))",
-            "legendFormat": "total",
-            "range": true,
-            "refId": "A"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "100 * sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"iowait\"}[$__rate_interval])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[$__rate_interval]))",
-            "legendFormat": "iowait",
-            "range": true,
-            "refId": "B"
-          }
-        ],
-        "title": "geteb1 CPU",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "df007ec6g9p8gc"
-        },
-        "description": "RX up / TX down. Traffic on geteb1. getdaq: DAQ data from the front-ends (RX). eth0 / k18user: outgoing copies (TX). Idle ports are not shown.",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "drawStyle": "line",
-              "fillOpacity": 10,
-              "lineWidth": 1,
-              "showPoints": "never",
-              "spanNulls": true
-            },
-            "unit": "Bps"
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".* TX"
-              },
-              "properties": [
-                {
-                  "id": "custom.transform",
-                  "value": "negative-Y"
-                }
-              ]
-            }
-          ]
-        },
-        "gridPos": {
-          "h": 11,
-          "w": 6,
-          "x": 12,
-          "y": 19
-        },
-        "id": 23,
-        "options": {
-          "legend": {
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "rate(node_network_receive_bytes_total{instance=\"geteb1\",device=~\"getdaq|k18daq|k18user|eth0\"}[$__rate_interval])",
-            "legendFormat": "{{device}} RX",
-            "range": true,
-            "refId": "A"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "rate(node_network_transmit_bytes_total{instance=\"geteb1\",device=~\"getdaq|k18daq|k18user|eth0\"}[$__rate_interval])",
-            "legendFormat": "{{device}} TX",
-            "range": true,
-            "refId": "B"
-          }
-        ],
-        "title": "geteb1 network",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "df007ec6g9p8gc"
-        },
-        "description": "Read up / write down. Disk throughput on geteb1. sda = /mnt/raid (rawdata), sdb = system disk. Dashed: sda busy % (right axis).",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "drawStyle": "line",
-              "fillOpacity": 10,
-              "lineWidth": 1,
-              "showPoints": "never",
-              "spanNulls": true
-            },
-            "unit": "Bps"
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byRegexp",
-                "options": ".* write"
-              },
-              "properties": [
-                {
-                  "id": "custom.transform",
-                  "value": "negative-Y"
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "sda busy"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "percent"
-                },
-                {
-                  "id": "min",
-                  "value": 0
-                },
-                {
-                  "id": "max",
-                  "value": 100
-                },
-                {
-                  "id": "custom.axisPlacement",
-                  "value": "right"
-                },
-                {
-                  "id": "custom.fillOpacity",
-                  "value": 0
-                },
-                {
-                  "id": "custom.lineStyle",
-                  "value": {
-                    "dash": [
-                      6,
-                      4
-                    ],
-                    "fill": "dash"
-                  }
-                },
-                {
-                  "id": "color",
-                  "value": {
-                    "fixedColor": "gray",
-                    "mode": "fixed"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        "gridPos": {
-          "h": 11,
-          "w": 6,
-          "x": 18,
-          "y": 19
-        },
-        "id": 24,
-        "options": {
-          "legend": {
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "rate(node_disk_read_bytes_total{instance=\"geteb1\",device=~\"sda|sdb\"}[$__rate_interval])",
-            "legendFormat": "{{device}} read",
-            "range": true,
-            "refId": "A"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "rate(node_disk_written_bytes_total{instance=\"geteb1\",device=~\"sda|sdb\"}[$__rate_interval])",
-            "legendFormat": "{{device}} write",
-            "range": true,
-            "refId": "B"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "df007ec6g9p8gc"
-            },
-            "expr": "100 * rate(node_disk_io_time_seconds_total{instance=\"geteb1\",device=\"sda\"}[$__rate_interval])",
-            "legendFormat": "sda busy",
-            "range": true,
-            "refId": "C"
-          }
-        ],
-        "title": "geteb1 disk IO",
-        "type": "timeseries"
       },
       {
         "datasource": {
@@ -1984,10 +1582,10 @@
           ]
         },
         "gridPos": {
-          "h": 12,
+          "h": 7,
           "w": 24,
           "x": 0,
-          "y": 30
+          "y": 20
         },
         "id": 14,
         "options": {
@@ -2014,12 +1612,712 @@
         "type": "table"
       },
       {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 27
+        },
+        "id": 29,
+        "panels": [],
+        "title": "geteb1 (/mnt/raid = rawdata)",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Usage of geteb1:/mnt/raid (DAQ rawdata). Orange > 80 %, red > 90 %.",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 80
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 0,
+          "y": 28
+        },
+        "id": 20,
+        "options": {
+          "minVizHeight": 60,
+          "minVizWidth": 60,
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * (1 - node_filesystem_avail_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"} / node_filesystem_size_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"})",
+            "instant": true,
+            "legendFormat": "/mnt/raid",
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "RAID usage",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Free space on geteb1:/mnt/raid.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 1,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 5000000000000
+                },
+                {
+                  "color": "green",
+                  "value": 15000000000000
+                }
+              ]
+            },
+            "unit": "bytes"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 4,
+          "y": 28
+        },
+        "id": 21,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "value"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "node_filesystem_avail_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"}",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "RAID free",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "geteb1 CPU usage, all cores (2 min average).",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 70
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 8,
+          "y": 28
+        },
+        "id": 25,
+        "options": {
+          "minVizHeight": 60,
+          "minVizWidth": 60,
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * (1 - sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"idle\"}[2m])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[2m])))",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "CPU",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "DAQ data received on getdaq (10 GbE = 1.25 GB/s full scale). Orange > 70 %, red > 90 %.",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 1250000000,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 875000000
+                },
+                {
+                  "color": "red",
+                  "value": 1125000000
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 12,
+          "y": 28
+        },
+        "id": 26,
+        "options": {
+          "minVizHeight": 60,
+          "minVizWidth": 60,
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_network_receive_bytes_total{instance=\"geteb1\",device=\"getdaq\"}[2m])",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "getdaq RX",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Outgoing traffic on eth0 (1 GbE = 125 MB/s full scale), e.g. copies to KEKCC. Orange > 70 %, red > 90 %.",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 125000000,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 87500000
+                },
+                {
+                  "color": "red",
+                  "value": 112500000
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 16,
+          "y": 28
+        },
+        "id": 27,
+        "options": {
+          "minVizHeight": 60,
+          "minVizWidth": 60,
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_network_transmit_bytes_total{instance=\"geteb1\",device=\"eth0\"}[2m])",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "eth0 TX",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Fraction of time sda (/mnt/raid) is busy with IO (2 min average).",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 70
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 20,
+          "y": 28
+        },
+        "id": 28,
+        "options": {
+          "minVizHeight": 60,
+          "minVizWidth": 60,
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * rate(node_disk_io_time_seconds_total{instance=\"geteb1\",device=\"sda\"}[2m])",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "RAID busy",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "CPU usage of geteb1 averaged over all cores (total = 100 % - idle).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": true
+            },
+            "max": 100,
+            "min": 0,
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 33
+        },
+        "id": 22,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * (1 - sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"idle\"}[$__rate_interval])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[$__rate_interval])))",
+            "legendFormat": "total",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * sum(rate(node_cpu_seconds_total{instance=\"geteb1\",mode=\"iowait\"}[$__rate_interval])) / sum(rate(node_cpu_seconds_total{instance=\"geteb1\"}[$__rate_interval]))",
+            "legendFormat": "iowait",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "CPU trend",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "RX up / TX down. Traffic on geteb1. getdaq: DAQ data from the front-ends (RX). eth0 / k18user: outgoing copies (TX). Idle ports are not shown.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": true
+            },
+            "unit": "Bps"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": ".* TX"
+              },
+              "properties": [
+                {
+                  "id": "custom.transform",
+                  "value": "negative-Y"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 33
+        },
+        "id": 23,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_network_receive_bytes_total{instance=\"geteb1\",device=~\"getdaq|k18daq|k18user|eth0\"}[$__rate_interval])",
+            "legendFormat": "{{device}} RX",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_network_transmit_bytes_total{instance=\"geteb1\",device=~\"getdaq|k18daq|k18user|eth0\"}[$__rate_interval])",
+            "legendFormat": "{{device}} TX",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "Network trend",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "description": "Read up / write down on sda (= /mnt/raid). Dashed: busy % (right axis).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "lineWidth": 1,
+              "showPoints": "never",
+              "spanNulls": true
+            },
+            "unit": "Bps"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "write"
+              },
+              "properties": [
+                {
+                  "id": "custom.transform",
+                  "value": "negative-Y"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "busy"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percent"
+                },
+                {
+                  "id": "min",
+                  "value": 0
+                },
+                {
+                  "id": "max",
+                  "value": 100
+                },
+                {
+                  "id": "custom.axisPlacement",
+                  "value": "right"
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                },
+                {
+                  "id": "custom.lineStyle",
+                  "value": {
+                    "dash": [
+                      6,
+                      4
+                    ],
+                    "fill": "dash"
+                  }
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "gray",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 33
+        },
+        "id": 24,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_disk_read_bytes_total{instance=\"geteb1\",device=\"sda\"}[$__rate_interval])",
+            "legendFormat": "read",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "rate(node_disk_written_bytes_total{instance=\"geteb1\",device=\"sda\"}[$__rate_interval])",
+            "legendFormat": "write",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * rate(node_disk_io_time_seconds_total{instance=\"geteb1\",device=\"sda\"}[$__rate_interval])",
+            "legendFormat": "busy",
+            "range": true,
+            "refId": "C"
+          }
+        ],
+        "title": "RAID IO trend",
+        "type": "timeseries"
+      },
+      {
         "collapsed": true,
         "gridPos": {
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 42
+          "y": 41
         },
         "id": 15,
         "panels": [
@@ -2236,7 +2534,7 @@
               "h": 20,
               "w": 24,
               "x": 0,
-              "y": 43
+              "y": 42
             },
             "id": 16,
             "options": {
