@@ -444,7 +444,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT timestamp, ch03_value as \"Magnet\", ch04_value as \"Room\" FROM gl840 WHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%') ORDER BY timestamp",
+            "rawSql": "SELECT timestamp, ch03_value as \"Magnet\", ch04_value as \"Tent\" FROM gl840 WHERE $__timeFilter(timestamp) AND (ip_address LIKE 'logger1.%' OR ip_address LIKE '192.168.%') ORDER BY timestamp",
             "refId": "A",
             "sql": {
               "columns": [

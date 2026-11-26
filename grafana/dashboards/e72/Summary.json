@@ -163,8 +163,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "orange",
@@ -191,8 +190,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green",
-                        "value": null
+                        "color": "green"
                       },
                       {
                         "color": "orange",
@@ -215,7 +213,7 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 20,
+          "w": 18,
           "x": 0,
           "y": 1
         },
@@ -225,6 +223,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -240,6 +239,7 @@
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -258,10 +258,14 @@
       },
       {
         "description": "Grafana alert rules that are firing or pending.",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 20,
+          "w": 6,
+          "x": 18,
           "y": 1
         },
         "id": 3,
@@ -269,11 +273,10 @@
           "alertInstanceLabelFilter": "",
           "alertName": "",
           "dashboardAlerts": false,
-          "datasource": null,
-          "folder": null,
           "groupBy": [],
           "groupMode": "default",
           "maxItems": 10,
+          "showInactiveAlerts": false,
           "showInstances": false,
           "sortOrder": 1,
           "stateFilter": {
@@ -286,6 +289,7 @@
           },
           "viewMode": "list"
         },
+        "pluginVersion": "12.0.2",
         "title": "Firing alerts",
         "type": "alertlist"
       },
@@ -307,6 +311,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Operation mode.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -339,8 +344,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -349,7 +353,7 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 6,
+          "w": 3,
           "x": 0,
           "y": 5
         },
@@ -365,6 +369,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -379,6 +384,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -392,7 +398,80 @@
             "refId": "A"
           }
         ],
-        "title": "Operation mode",
+        "title": "Op. mode",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "MR run number / shot number (HDSYS:RUN_NO, HDSYS:SHOT_NO).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text"
+                }
+              ]
+            },
+            "unit": "string"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 3,
+          "y": 5
+        },
+        "id": 43,
+        "links": [
+          {
+            "title": "Open Accelerator",
+            "url": "/d/eejhsy1pa39c0b"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.0.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT run_no || ' / ' || shot_no FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Run / Shot",
         "type": "stat"
       },
       {
@@ -413,8 +492,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -440,6 +518,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -451,6 +530,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -485,8 +565,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -512,6 +591,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -523,6 +603,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -557,8 +638,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -568,7 +648,7 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
+          "w": 3,
           "x": 12,
           "y": 5
         },
@@ -584,6 +664,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -595,6 +676,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -624,13 +706,14 @@
             },
             "decimals": 1,
             "mappings": [],
+            "max": 100,
+            "min": 0,
             "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -640,8 +723,8 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 16,
+          "w": 3,
+          "x": 15,
           "y": 5
         },
         "id": 9,
@@ -656,6 +739,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -667,6 +751,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -688,6 +773,81 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Slow extraction spill length (MRSLW:SXOPR_D2:VAL:SpLen).",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "text",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text"
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 18,
+          "y": 5
+        },
+        "id": 44,
+        "links": [
+          {
+            "title": "Open Accelerator",
+            "url": "/d/eejhsy1pa39c0b"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.0.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT sx_splen FROM acc ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "Spill length",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "SX extraction efficiency.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -696,13 +856,14 @@
             },
             "decimals": 1,
             "mappings": [],
+            "max": 100,
+            "min": 0,
             "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -712,8 +873,8 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 20,
+          "w": 3,
+          "x": 21,
           "y": 5
         },
         "id": 10,
@@ -728,6 +889,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -739,6 +901,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -752,7 +915,7 @@
             "refId": "A"
           }
         ],
-        "title": "SX extraction efficiency",
+        "title": "SX eff.",
         "type": "stat"
       },
       {
@@ -773,37 +936,57 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Top: monitor current |Mon|. Bottom: polarity. Set and deviation: open Beamline Magnet.",
+        "description": "Monitor current with polarity sign: + (soft red) = pos, − (soft blue) = neg. Energized = magnets with |Set| > 1 A / all magnets (same as Beamline Magnet). Set and deviation: open Beamline Magnet. Max |Dev| = largest |Mon - Set| / Set among energized magnets (all 21), orange > 1 %, red > 5 % (same as Beamline Magnet).",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
             "decimals": 2,
-            "mappings": [],
+            "mappings": [
+              {
+                "options": {
+                  "pattern": "^-.*",
+                  "result": {
+                    "color": "#8FB3E0",
+                    "index": 0
+                  }
+                },
+                "type": "regex"
+              },
+              {
+                "options": {
+                  "pattern": "^[0-9].*",
+                  "result": {
+                    "color": "#E8A0A0",
+                    "index": 1
+                  }
+                },
+                "type": "regex"
+              }
+            ],
             "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text",
-                  "value": null
+                  "color": "#8FB3E0"
+                },
+                {
+                  "color": "#E8A0A0",
+                  "value": 0
                 }
               ]
             },
-            "unit": "suffix: A"
+            "unit": "string"
           },
           "overrides": [
             {
               "matcher": {
-                "id": "byRegexp",
-                "options": ".* pol$"
+                "id": "byName",
+                "options": "Energized"
               },
               "properties": [
-                {
-                  "id": "displayName",
-                  "value": "pol"
-                },
                 {
                   "id": "unit",
                   "value": "string"
@@ -814,36 +997,60 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "text",
-                        "value": null
+                        "color": "text"
                       }
                     ]
                   }
                 },
                 {
                   "id": "mappings",
-                  "value": [
-                    {
-                      "options": {
-                        "neg": {
-                          "color": "#8FB3E0",
-                          "index": 1
-                        },
-                        "pos": {
-                          "color": "#E8A0A0",
-                          "index": 0
-                        }
+                  "value": []
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Max |Dev|"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percent"
+                },
+                {
+                  "id": "decimals",
+                  "value": 2
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "text"
                       },
-                      "type": "value"
-                    }
-                  ]
+                      {
+                        "color": "orange",
+                        "value": 1
+                      },
+                      {
+                        "color": "red",
+                        "value": 5
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "mappings",
+                  "value": []
                 }
               ]
             }
           ]
         },
         "gridPos": {
-          "h": 7,
+          "h": 3,
           "w": 12,
           "x": 0,
           "y": 9
@@ -860,6 +1067,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -868,9 +1076,13 @@
             "values": false
           },
           "showPercentChange": false,
+          "text": {
+            "titleSize": 14
+          },
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -880,7 +1092,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "WITH l AS (SELECT magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1),\nv AS (\n  SELECT m.name,\n    abs((l.magnet_data->m.key->>'cmon')::float) AS mon,\n    l.magnet_data->m.key->>'pol' AS pol\n  FROM l, (VALUES\n  ('BSM1', 'BSM1', 0),\n  ('K1.8 D1', 'AK18D1', 1),\n  ('CM1', 'K18CM1', 2),\n  ('CM2', 'K18CM2', 3),\n  ('K1.8BR D5', 'K18BRD5', 4)) AS m(name, key, ord))\nSELECT\n  max(mon) FILTER (WHERE name = 'BSM1') AS \"BSM1\" ,\n  max(mon) FILTER (WHERE name = 'K1.8 D1') AS \"K1.8 D1\" ,\n  max(mon) FILTER (WHERE name = 'CM1') AS \"CM1\" ,\n  max(mon) FILTER (WHERE name = 'CM2') AS \"CM2\" ,\n  max(mon) FILTER (WHERE name = 'K1.8BR D5') AS \"K1.8BR D5\" ,\n  max(pol) FILTER (WHERE name = 'BSM1') AS \"BSM1 pol\" ,\n  max(pol) FILTER (WHERE name = 'K1.8 D1') AS \"K1.8 D1 pol\" ,\n  max(pol) FILTER (WHERE name = 'CM1') AS \"CM1 pol\" ,\n  max(pol) FILTER (WHERE name = 'CM2') AS \"CM2 pol\" ,\n  max(pol) FILTER (WHERE name = 'K1.8BR D5') AS \"K1.8BR D5 pol\" \nFROM v",
+            "rawSql": "WITH l AS (SELECT magnet_data FROM magnet ORDER BY timestamp DESC LIMIT 1),\nv AS (\n  SELECT m.name,\n    CASE WHEN l.magnet_data->m.key->>'pol' = 'neg' THEN -1 ELSE 1 END * abs((l.magnet_data->m.key->>'cmon')::float) AS mon\n  FROM l, (VALUES\n  ('H18', 'AH18', 0),\n  ('BSM1', 'BSM1', 1),\n  ('K1.8 D1', 'AK18D1', 2),\n  ('CM1', 'K18CM1', 3),\n  ('CM2', 'K18CM2', 4),\n  ('K1.8BR D5', 'K18BRD5', 5)) AS m(name, key, ord)),\ne AS (\n  SELECT count(*) FILTER (WHERE abs((j.value->>'cset')::float) > 1) || '/' || count(*) AS energized,\n  max(abs(CASE WHEN abs((j.value->>'cset')::float) > 1 THEN (abs((j.value->>'cmon')::float) - abs((j.value->>'cset')::float)) / abs((j.value->>'cset')::float) * 100 END)) AS maxdev\n  FROM l, LATERAL jsonb_each(l.magnet_data) AS j(key, value))\nSELECT\n  (SELECT to_char(round(mon), 'FM99990') || chr(160) || 'A' FROM v WHERE name = 'K1.8 D1') AS \"K1.8 D1\",\n  (SELECT to_char(round(mon), 'FM99990') || chr(160) || 'A' FROM v WHERE name = 'H18') AS \"H18\",\n  (SELECT to_char(round(mon), 'FM99990') || chr(160) || 'A' FROM v WHERE name = 'BSM1') AS \"BSM1\",\n  (SELECT to_char(round(mon), 'FM99990') || chr(160) || 'A' FROM v WHERE name = 'CM1') AS \"CM1\",\n  (SELECT to_char(round(mon), 'FM99990') || chr(160) || 'A' FROM v WHERE name = 'CM2') AS \"CM2\",\n  (SELECT to_char(round(mon), 'FM99990') || chr(160) || 'A' FROM v WHERE name = 'K1.8BR D5') AS \"K1.8BR D5\",\n  (SELECT energized FROM e) AS \"Energized\",\n  (SELECT maxdev FROM e) AS \"Max |Dev|\"",
             "refId": "A"
           }
         ],
@@ -905,8 +1117,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -915,7 +1126,7 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 7,
+          "h": 3,
           "w": 12,
           "x": 12,
           "y": 9
@@ -932,6 +1143,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -941,12 +1153,12 @@
           },
           "showPercentChange": false,
           "text": {
-            "titleSize": 14,
-            "valueSize": 26
+            "titleSize": 14
           },
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -969,7 +1181,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 16
+          "y": 12
         },
         "id": 14,
         "panels": [],
@@ -994,8 +1206,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1005,9 +1216,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
+          "w": 3,
           "x": 0,
-          "y": 17
+          "y": 13
         },
         "id": 15,
         "links": [
@@ -1021,6 +1232,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1032,6 +1244,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1053,6 +1266,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Hall probe 1 (shs1).",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -1066,8 +1280,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1077,9 +1290,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 4,
-          "y": 17
+          "w": 3,
+          "x": 3,
+          "y": 13
         },
         "id": 16,
         "links": [
@@ -1093,6 +1306,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1104,6 +1318,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1117,7 +1332,88 @@
             "refId": "A"
           }
         ],
-        "title": "SHS field (probe1)",
+        "title": "SHS field",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "deiuvse1meygwe"
+        },
+        "description": "SHS coil temperature: higher of TCX01 (upper coil bobbin) and TCX02 (bottom coil bobbin). Empty if no data for 5 min. Orange ≥ 6 K, red ≥ 8 K.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text"
+                },
+                {
+                  "color": "orange",
+                  "value": 6
+                },
+                {
+                  "color": "red",
+                  "value": 8
+                }
+              ]
+            },
+            "unit": "kelvin"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 6,
+          "y": 13
+        },
+        "id": 45,
+        "links": [
+          {
+            "title": "Open SHS magnet",
+            "url": "/d/bej2uft3tyd4wa"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.0.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "deiuvse1meygwe"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT greatest(ia_tcx01, ia_tcx02) FROM shs WHERE timestamp > now() - interval '5 minutes' ORDER BY timestamp DESC LIMIT 1",
+            "refId": "A"
+          }
+        ],
+        "title": "SHS coil",
         "type": "stat"
       },
       {
@@ -1131,14 +1427,14 @@
               "fixedColor": "text",
               "mode": "fixed"
             },
+            "decimals": 5,
             "mappings": [],
             "noValue": "—",
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1149,8 +1445,8 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 8,
-          "y": 17
+          "x": 9,
+          "y": 13
         },
         "id": 17,
         "links": [
@@ -1164,6 +1460,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1175,6 +1472,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1210,8 +1508,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1222,8 +1519,8 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 11,
-          "y": 17
+          "x": 12,
+          "y": 13
         },
         "id": 42,
         "links": [
@@ -1237,6 +1534,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1248,6 +1546,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1282,8 +1581,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1293,9 +1591,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 5,
-          "x": 14,
-          "y": 17
+          "w": 9,
+          "x": 15,
+          "y": 13
         },
         "id": 18,
         "links": [
@@ -1309,6 +1607,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "vertical",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1324,6 +1623,7 @@
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1333,87 +1633,11 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT neg_vset1 AS set, neg_vmon1 AS mon FROM ess ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT neg_vset1 AS \"NEG set\", neg_vmon1 AS \"NEG mon\", pos_vset1 AS \"POS set\", pos_vmon1 AS \"POS mon\" FROM ess ORDER BY timestamp DESC LIMIT 1",
             "refId": "A"
           }
         ],
-        "title": "ESS1 NEG",
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "deiuvse1meygwe"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "fixedColor": "text",
-              "mode": "fixed"
-            },
-            "decimals": 1,
-            "mappings": [],
-            "noValue": "—",
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                }
-              ]
-            },
-            "unit": "kvolt"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 5,
-          "x": 19,
-          "y": 17
-        },
-        "id": 19,
-        "links": [
-          {
-            "title": "Open ESS",
-            "url": "/d/deiuy5tnommm8c"
-          }
-        ],
-        "options": {
-          "colorMode": "value",
-          "graphMode": "none",
-          "justifyMode": "center",
-          "orientation": "vertical",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showPercentChange": false,
-          "text": {
-            "titleSize": 14,
-            "valueSize": 28
-          },
-          "textMode": "value_and_name",
-          "wideLayout": true
-        },
-        "targets": [
-          {
-            "datasource": {
-              "type": "grafana-postgresql-datasource",
-              "uid": "deiuvse1meygwe"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT pos_vset1 AS set, pos_vmon1 AS mon FROM ess ORDER BY timestamp DESC LIMIT 1",
-            "refId": "A"
-          }
-        ],
-        "title": "ESS1 POS",
+        "title": "ESS1",
         "type": "stat"
       },
       {
@@ -1422,7 +1646,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 20
+          "y": 16
         },
         "id": 20,
         "panels": [],
@@ -1447,8 +1671,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1458,9 +1681,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 5,
+          "w": 6,
           "x": 0,
-          "y": 21
+          "y": 17
         },
         "id": 21,
         "links": [
@@ -1474,6 +1697,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "vertical",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1489,6 +1713,7 @@
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1523,8 +1748,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1534,9 +1758,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 5,
-          "y": 21
+          "w": 3,
+          "x": 6,
+          "y": 17
         },
         "id": 22,
         "links": [
@@ -1550,6 +1774,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1561,6 +1786,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1582,7 +1808,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "ALARM if any of Y-box / GL860 / H2 leak / User is set.",
+        "description": "Target alarms. ALARM if any of Y-box / GL860 / H2 leak / User is set.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -1611,8 +1837,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -1621,9 +1846,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
+          "w": 3,
           "x": 9,
-          "y": 21
+          "y": 17
         },
         "id": 23,
         "links": [
@@ -1637,6 +1862,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1648,6 +1874,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1661,7 +1888,7 @@
             "refId": "A"
           }
         ],
-        "title": "Target alarms",
+        "title": "Tgt alarms",
         "type": "stat"
       },
       {
@@ -1682,8 +1909,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text",
-                  "value": null
+                  "color": "text"
                 },
                 {
                   "color": "red",
@@ -1697,9 +1923,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 4,
-          "x": 13,
-          "y": 21
+          "w": 3,
+          "x": 12,
+          "y": 17
         },
         "id": 24,
         "links": [
@@ -1713,6 +1939,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "vertical",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1728,6 +1955,7 @@
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1749,6 +1977,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Room = logger2 ch09, Tent = logger1 ch04, Magnet = logger1 ch03 (labels as on the Gas dashboard).",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -1762,8 +1991,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -1773,9 +2001,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 7,
-          "x": 17,
-          "y": 21
+          "w": 9,
+          "x": 15,
+          "y": 17
         },
         "id": 25,
         "options": {
@@ -1783,6 +2011,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "vertical",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1798,6 +2027,7 @@
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1807,7 +2037,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT ch04_value AS \"Room\", ch03_value AS \"Magnet\" FROM gl840 WHERE ip_address LIKE 'logger1.%' ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT (SELECT ch09_value FROM gl840 WHERE ip_address LIKE 'logger2.%' ORDER BY timestamp DESC LIMIT 1) AS \"Room\",\n  l1.ch04_value AS \"Tent\", l1.ch03_value AS \"Magnet\"\nFROM (SELECT ch03_value, ch04_value FROM gl840 WHERE ip_address LIKE 'logger1.%' ORDER BY timestamp DESC LIMIT 1) l1",
             "refId": "A"
           }
         ],
@@ -1820,7 +2050,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 24
+          "y": 20
         },
         "id": 26,
         "panels": [],
@@ -1832,7 +2062,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Same thresholds as the Grafana alert: red below 20 or above 150.",
+        "description": "Diff. pressure. Same thresholds as the Grafana alert: red below 20 or above 150.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -1845,8 +2075,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "red",
-                  "value": null
+                  "color": "red"
                 },
                 {
                   "color": "text",
@@ -1866,7 +2095,7 @@
           "h": 3,
           "w": 3,
           "x": 0,
-          "y": 25
+          "y": 21
         },
         "id": 27,
         "links": [
@@ -1880,6 +2109,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1891,6 +2121,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -1904,7 +2135,7 @@
             "refId": "A"
           }
         ],
-        "title": "Diff. pressure",
+        "title": "ΔP",
         "type": "stat"
       },
       {
@@ -1925,8 +2156,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text",
-                  "value": null
+                  "color": "text"
                 },
                 {
                   "color": "#EAB839",
@@ -1946,7 +2176,7 @@
           "h": 3,
           "w": 3,
           "x": 3,
-          "y": 25
+          "y": 21
         },
         "id": 28,
         "links": [
@@ -1960,6 +2190,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -1971,6 +2202,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2005,8 +2237,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text",
-                  "value": null
+                  "color": "text"
                 },
                 {
                   "color": "#EAB839",
@@ -2022,7 +2253,7 @@
           "h": 3,
           "w": 3,
           "x": 6,
-          "y": 25
+          "y": 21
         },
         "id": 29,
         "links": [
@@ -2036,6 +2267,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2047,6 +2279,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2081,8 +2314,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text",
-                  "value": null
+                  "color": "text"
                 },
                 {
                   "color": "#EAB839",
@@ -2102,7 +2334,7 @@
           "h": 3,
           "w": 3,
           "x": 9,
-          "y": 25
+          "y": 21
         },
         "id": 30,
         "links": [
@@ -2116,6 +2348,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2127,6 +2360,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2161,8 +2395,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "red",
-                  "value": null
+                  "color": "red"
                 },
                 {
                   "color": "text",
@@ -2178,7 +2411,7 @@
           "h": 3,
           "w": 3,
           "x": 12,
-          "y": 25
+          "y": 21
         },
         "id": 31,
         "links": [
@@ -2192,6 +2425,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2203,6 +2437,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2224,7 +2459,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Latest IMon of caenhv3 GEM + Cathode (same as imon_total on HypTPC).",
+        "description": "I GEM + Cathode. Latest IMon of caenhv3 GEM + Cathode (same as imon_total on HypTPC).",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -2238,8 +2473,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -2251,7 +2485,7 @@
           "h": 3,
           "w": 3,
           "x": 15,
-          "y": 25
+          "y": 21
         },
         "id": 32,
         "links": [
@@ -2265,6 +2499,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2276,6 +2511,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2289,7 +2525,7 @@
             "refId": "A"
           }
         ],
-        "title": "I GEM + Cathode",
+        "title": "GEM+Cath",
         "type": "stat"
       },
       {
@@ -2297,7 +2533,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
-        "description": "Number of MPOD channels (mpod2) that are ON with Imon ≥ 1 A, from the last 2 min. Normal: 31. Green only at 31.",
+        "description": "MPOD ON ≥1A. Number of MPOD channels (mpod2) that are ON with Imon ≥ 1 A, from the last 2 min. Normal: 31. Green only at 31.",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -2310,8 +2546,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "red",
-                  "value": null
+                  "color": "red"
                 },
                 {
                   "color": "green",
@@ -2331,7 +2566,7 @@
           "h": 3,
           "w": 3,
           "x": 18,
-          "y": 25
+          "y": 21
         },
         "id": 41,
         "links": [
@@ -2345,6 +2580,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2356,6 +2592,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2369,7 +2606,7 @@
             "refId": "A"
           }
         ],
-        "title": "MPOD ON ≥1A",
+        "title": "MPOD ON",
         "type": "stat"
       },
       {
@@ -2390,8 +2627,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "text",
-                  "value": null
+                  "color": "text"
                 },
                 {
                   "color": "red",
@@ -2414,8 +2650,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "text",
-                        "value": null
+                        "color": "text"
                       },
                       {
                         "color": "red",
@@ -2432,7 +2667,7 @@
           "h": 3,
           "w": 3,
           "x": 21,
-          "y": 25
+          "y": 21
         },
         "id": 33,
         "links": [
@@ -2446,6 +2681,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "vertical",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2461,6 +2697,7 @@
           "textMode": "value_and_name",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2483,7 +2720,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 28
+          "y": 24
         },
         "id": 34,
         "panels": [],
@@ -2508,8 +2745,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -2519,9 +2755,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 3,
+          "w": 2,
           "x": 0,
-          "y": 29
+          "y": 25
         },
         "id": 35,
         "links": [
@@ -2535,6 +2771,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2546,6 +2783,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2595,8 +2833,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -2606,8 +2843,8 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 3,
-          "y": 29
+          "x": 2,
+          "y": 25
         },
         "id": 36,
         "links": [
@@ -2621,6 +2858,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2632,6 +2870,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2665,8 +2904,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             },
@@ -2677,8 +2915,8 @@
         "gridPos": {
           "h": 3,
           "w": 3,
-          "x": 6,
-          "y": 29
+          "x": 5,
+          "y": 25
         },
         "id": 37,
         "links": [
@@ -2692,6 +2930,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2703,6 +2942,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2752,8 +2992,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -2762,9 +3001,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 3,
-          "x": 9,
-          "y": 29
+          "w": 2,
+          "x": 8,
+          "y": 25
         },
         "id": 38,
         "links": [
@@ -2778,6 +3017,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2789,6 +3029,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2802,7 +3043,89 @@
             "refId": "A"
           }
         ],
-        "title": "Recorder",
+        "title": "Rec",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "df007ec6g9p8gc"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 1,
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "noValue": "—",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text"
+                },
+                {
+                  "color": "orange",
+                  "value": 80
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 2,
+          "x": 10,
+          "y": 25
+        },
+        "id": 47,
+        "links": [
+          {
+            "title": "Open DAQ",
+            "url": "/d/daq"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.0.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "df007ec6g9p8gc"
+            },
+            "expr": "100 * (1 - node_filesystem_avail_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"} / node_filesystem_size_bytes{instance=\"geteb1\",mountpoint=\"/mnt/raid\"})",
+            "instant": true,
+            "legendFormat": "/mnt/raid",
+            "range": false,
+            "refId": "A"
+          }
+        ],
+        "title": "RAID",
         "type": "stat"
       },
       {
@@ -2810,6 +3133,7 @@
           "type": "grafana-postgresql-datasource",
           "uid": "deiuvse1meygwe"
         },
+        "description": "Trigger parameter file name (directory and .txt stripped).",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -2822,8 +3146,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -2832,9 +3155,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 5,
+          "w": 3,
           "x": 12,
-          "y": 29
+          "y": 25
         },
         "id": 39,
         "links": [
@@ -2848,6 +3171,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2862,6 +3186,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
@@ -2871,7 +3196,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT param_file FROM trigger ORDER BY timestamp DESC LIMIT 1",
+            "rawSql": "SELECT regexp_replace(param_file, '^.*/|\\.txt$', '', 'g') FROM trigger ORDER BY timestamp DESC LIMIT 1",
             "refId": "A"
           }
         ],
@@ -2895,8 +3220,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -2905,9 +3229,9 @@
         },
         "gridPos": {
           "h": 3,
-          "w": 7,
-          "x": 17,
-          "y": 29
+          "w": 9,
+          "x": 15,
+          "y": 25
         },
         "id": 40,
         "links": [
@@ -2921,6 +3245,7 @@
           "graphMode": "none",
           "justifyMode": "center",
           "orientation": "auto",
+          "percentChangeColorMode": "standard",
           "reduceOptions": {
             "calcs": [
               "lastNotNull"
@@ -2935,6 +3260,7 @@
           "textMode": "value",
           "wideLayout": true
         },
+        "pluginVersion": "12.0.2",
         "targets": [
           {
             "datasource": {
